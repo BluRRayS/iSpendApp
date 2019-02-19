@@ -5,9 +5,9 @@
  */
 /*! normalize.css v3.0.3 | MIT License | github.com/necolas/normalize.css */
 html {
-  font-family: sans-serif;
-  -webkit-text-size-adjust: 100%;
-      -ms-text-size-adjust: 100%;
+    font-family: Verdana, Geneva, sans-serif;
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
 }
 body {
   margin: 0;
@@ -2548,7 +2548,7 @@ output {
 }
 .form-control {
   display: block;
-  width: 100%;
+    width: 50%;
   height: 34px;
   padding: 6px 12px;
   font-size: 14px;
@@ -4589,28 +4589,28 @@ fieldset[disabled] .navbar-default .btn-link:focus {
   color: #ccc;
 }
 .navbar-inverse {
-  background-color: #222;
-  border-color: #080808;
+    background-color: #00C70D;
+    border-color: #00C84D;
 }
 .navbar-inverse .navbar-brand {
-  color: #9d9d9d;
+  color: #FFFFFF;
 }
-.navbar-inverse .navbar-brand:hover,
-.navbar-inverse .navbar-brand:focus {
-  color: #fff;
-  background-color: transparent;
-}
-.navbar-inverse .navbar-text {
-  color: #9d9d9d;
-}
+    .navbar-inverse .navbar-brand:hover,
+    .navbar-inverse .navbar-brand:focus {
+        color: #E0E0E0;
+        background-color: transparent;
+    }
+    .navbar-inverse .navbar-text {
+        color: #fff;
+    }
 .navbar-inverse .navbar-nav > li > a {
-  color: #9d9d9d;
-}
-.navbar-inverse .navbar-nav > li > a:hover,
-.navbar-inverse .navbar-nav > li > a:focus {
   color: #fff;
-  background-color: transparent;
 }
+    .navbar-inverse .navbar-nav > li > a:hover,
+    .navbar-inverse .navbar-nav > li > a:focus {
+        color: #E0E0E0;
+        background-color: transparent;
+    }
 .navbar-inverse .navbar-nav > .active > a,
 .navbar-inverse .navbar-nav > .active > a:hover,
 .navbar-inverse .navbar-nav > .active > a:focus {
@@ -6249,7 +6249,10 @@ button.close {
        -o-transition: .6s ease-in-out left;
           transition: .6s ease-in-out left;
 }
-.carousel-inner > .item > img,
+.carousel-inner > .item > img {
+    height: 450px !important;
+    width: 100% !important;
+}
 .carousel-inner > .item > a > img {
   line-height: 1;
 }
