@@ -1,27 +1,41 @@
-﻿
+﻿@model iSpendApp.Models.NewUser
 @{
     ViewData["Title"] = "Register";
 }
 
-<div class="InlogBox">
+<div class="col-lg-1" style="float: none; margin-left: auto; margin-right: auto; width: 80%" ;>
     <div class="panel-group">
         <div class=" panel panel-default text-center">
             <div class="panel-heading"><h1>Register</h1></div>
             <div class="row">
-                <div class="text-center">
-                    <img src="/images/AccountIcon.svg" style="width: 150px; height: 100%;" /><br />
-                    <form>
-                        <input class="form-control" type="text" placeholder="Username" style="margin: auto" /><br />
-                        <input class="form-control" type="password" placeholder="Password" style="margin: auto" /><br />
-                        <input class="form-control" type="password" placeholder="Repeat Password" style="margin: auto" /><br />
-                        <div class="checkbox">
-                            <label><input type="checkbox" value="">I agree to the terms of use</label>
-                        </div>
-                        <input class="btn" type="submit" placeholder="Login" style="margin: auto" /><br />
-                    </form>
-                    <br />
-                </div>
+                <img src="/images/AccountIcon.svg" style="width: 150px; height: 100%;" /><br />
+                <form asp-controller="User" asp-action="CreateUser">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="form-group">
+                        <input asp-for="Username" class="form-control" type="text" placeholder="Username" style="margin: auto" /><br />
+                        <span asp-validation-for="Username" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <input asp-for="Password" class="form-control" type="password" placeholder="Password" type="text" style="margin: auto" /><br />
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <input asp-for="RepeatedPassword" class="form-control" type="password" placeholder="Repeat Password" style="margin: auto" /><br />
+                        <span asp-validation-for="RepeatedPassword" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <input asp-for="Email" class="form-control" type="email" placeholder="E-mail" style="margin: auto" /><br />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+                    <div class="checkbox form-group">
+                        <label><input asp-for="Agreed" type="checkbox" value="true">I agree to the terms of use</label><br />
+                        <span asp-validation-for="Agreed" class="text-danger"></span>
+                    </div>
+                    <input class="btn" type="submit" placeholder="Login" style="margin: auto" /><br />
+                </form>
+                <br />
             </div>
         </div>
     </div>
 </div>
+

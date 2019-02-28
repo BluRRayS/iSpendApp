@@ -1,0 +1,33 @@
+﻿@using System.Reflection.Metadata.Ecma335
+@model AccountManager
+@{
+    AccountManager manager = new AccountManager();
+    ViewData["Title"] = "Accounts";
+}
+
+<h2>My Accounts</h2>
+
+<p>
+    <a asp-controller="Account" asp-action="CreateView">Create New Account</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var account in manager.GetAccounts())
+        {
+            <tr>
+                <td>
+                    @account.AccountName - €@account.Balance |
+                    @Html.ActionLink("Edit", "Edit", new { id = @account.GetAccountId() }) |
+                    @Html.ActionLink("Details", "Details", new { acc = @account}) |
+                    @Html.ActionLink("Delete", "Delete", new { id = @account.GetAccountId()})
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<p>@manager.ErrorMessage()</p>
