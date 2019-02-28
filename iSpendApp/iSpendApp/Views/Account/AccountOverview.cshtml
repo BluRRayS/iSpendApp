@@ -1,0 +1,31 @@
+﻿@model AccountManager
+@{
+    AccountManager manager = new AccountManager();
+    Account account = manager.GetAccount(ViewBag.Id);
+    ViewData["Title"] = "Transactions";
+}
+
+<h2>Transactions</h2>
+
+<p>
+    <a asp-controller="Transaction" asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var transaction in account.GetTransactions()) {
+        <tr>
+            <td>
+                @transaction.ToString() |
+                @Html.ActionLink("Edit", "Edit", new {/* id=item.PrimaryKey */}) |
+                @Html.ActionLink("Details", "Details", new { /* id = item*/ }) |
+                @Html.ActionLink("Delete", "Delete", new {/* id=item.PrimaryKey */} , new { onclick = "return confirm('Are you sure you wish to delete this Account?');" }) 
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
