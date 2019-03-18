@@ -3,13 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.421
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iSpendApp", "iSpendApp\iSpendApp.csproj", "{7F6B419E-FE61-460C-A07C-29F132FD4C39}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iSpendDAL", "iSpendDAL\iSpendDAL.csproj", "{F45B42F2-ED26-4605-B290-7AE3CFADC1E1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "iSpendBUL", "iSpendLogic\iSpendBUL.csproj", "{59E81A74-225E-428A-99BB-033EE0F4ECAC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iSpendWebApp", "iSpendWebApp\iSpendWebApp.csproj", "{F7A18025-B1A4-4E74-AE79-726258E4698F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "iSpendDAL", "iSpendDAL\iSpendDAL.csproj", "{F45B42F2-ED26-4605-B290-7AE3CFADC1E1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iSpendLogic", "iSpendLogic\iSpendLogic.csproj", "{A731400F-A604-4954-8CE3-BAE82831DC37}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "iSpendWebApp", "iSpendWebApp\iSpendWebApp.csproj", "{F7A18025-B1A4-4E74-AE79-726258E4698F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iSpendInterfaces", "iSpendInterfaces\iSpendInterfaces.csproj", "{38CA913E-EADE-463B-B179-BEFC73D1BD38}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "iSpendUnitTests", "iSpendUnitTests\iSpendUnitTests.csproj", "{5307E7D6-BBA3-4562-B608-3E3BCF83616B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,14 +19,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{7F6B419E-FE61-460C-A07C-29F132FD4C39}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7F6B419E-FE61-460C-A07C-29F132FD4C39}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7F6B419E-FE61-460C-A07C-29F132FD4C39}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7F6B419E-FE61-460C-A07C-29F132FD4C39}.Release|Any CPU.Build.0 = Release|Any CPU
-		{59E81A74-225E-428A-99BB-033EE0F4ECAC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{59E81A74-225E-428A-99BB-033EE0F4ECAC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{59E81A74-225E-428A-99BB-033EE0F4ECAC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{59E81A74-225E-428A-99BB-033EE0F4ECAC}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F45B42F2-ED26-4605-B290-7AE3CFADC1E1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F45B42F2-ED26-4605-B290-7AE3CFADC1E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F45B42F2-ED26-4605-B290-7AE3CFADC1E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -33,6 +27,18 @@ Global
 		{F7A18025-B1A4-4E74-AE79-726258E4698F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F7A18025-B1A4-4E74-AE79-726258E4698F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F7A18025-B1A4-4E74-AE79-726258E4698F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A731400F-A604-4954-8CE3-BAE82831DC37}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A731400F-A604-4954-8CE3-BAE82831DC37}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A731400F-A604-4954-8CE3-BAE82831DC37}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A731400F-A604-4954-8CE3-BAE82831DC37}.Release|Any CPU.Build.0 = Release|Any CPU
+		{38CA913E-EADE-463B-B179-BEFC73D1BD38}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{38CA913E-EADE-463B-B179-BEFC73D1BD38}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{38CA913E-EADE-463B-B179-BEFC73D1BD38}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{38CA913E-EADE-463B-B179-BEFC73D1BD38}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5307E7D6-BBA3-4562-B608-3E3BCF83616B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5307E7D6-BBA3-4562-B608-3E3BCF83616B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5307E7D6-BBA3-4562-B608-3E3BCF83616B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5307E7D6-BBA3-4562-B608-3E3BCF83616B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

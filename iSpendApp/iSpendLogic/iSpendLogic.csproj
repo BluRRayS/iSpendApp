@@ -5,10 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.Data.SqlClient" Version="4.3.0" />
-  </ItemGroup>
-
-  <ItemGroup>
+    <ProjectReference Include="..\iSpendDAL\iSpendDAL.csproj" />
     <ProjectReference Include="..\iSpendInterfaces\iSpendInterfaces.csproj" />
   </ItemGroup>
 

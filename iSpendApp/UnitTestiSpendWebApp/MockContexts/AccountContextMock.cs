@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace iSpendLogic.Models
+namespace UnitTestiSpendWebApp.MockContexts
 {
-    class Transaction
+    class AccountContextMock
     {
     }
 }

@@ -4,7 +4,7 @@ using System.Text;
 
 namespace iSpendLogic.Models
 {
-    class Transaction
+    class Bill
     {
     }
 }

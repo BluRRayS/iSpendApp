@@ -11,7 +11,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\iSpendLogic\iSpendBUL.csproj" />
+    <ProjectReference Include="..\iSpendInterfaces\iSpendInterfaces.csproj" />
+    <ProjectReference Include="..\iSpendLogic\iSpendLogic.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Views\Bill\" />
+    <Folder Include="Views\Transaction\" />
   </ItemGroup>
 
 </Project>

@@ -1,22 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace iSpendWebApp.Models
+namespace iSpendWebApp.Models.User
 {
     public class UserViewModel
     {
         [Display(Name = "Username")]
         [Required(ErrorMessage = "A username is required.")]
         public string UserName { get; set; }
-
-        [Display(Name = "Firstname")]
-        [Required(ErrorMessage = "Your first name is required")]
-        public string FirstName { get; set; }
-        [Display(Name = "Lastname")]
-        public string LastName { get; set; }
 
         [Display(Name = "Email Address")]
         [DataType(DataType.EmailAddress, ErrorMessage = "Enter a valid Email address.")]

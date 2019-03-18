@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using iSpendDAL;
+using iSpendDAL.ContextInterfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -31,8 +33,17 @@ namespace iSpendWebApp
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
+            services.AddSession(options =>
+            {
+                options.IdleTimeout = System.TimeSpan.FromMinutes(15);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+            });
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
+            services.AddSingleton<IAccountContext, AccountContext>();
+            services.AddTransient(_ => new DatabaseConnection(Configuration.GetConnectionString("DefaultConnection")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -51,6 +62,7 @@ namespace iSpendWebApp
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
+            app.UseSession();
 
             app.UseMvc(routes =>
             {

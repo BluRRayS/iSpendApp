@@ -1,4 +1,4 @@
-﻿@model iSpendWebApp.Models.UserViewModel
+﻿@model iSpendWebApp.Models.User.UserViewModel
 
 @{
     ViewData["Title"] = "Login";
@@ -23,14 +23,14 @@
                 <span asp-validation-for="Password" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-default" />
+                <input type="submit" value="Login" class="btn btn-default" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Home</a>
 </div>
 
 @section Scripts {

@@ -1,4 +1,4 @@
-﻿@model iSpendWebApp.Models.UserViewModel
+﻿@model iSpendWebApp.Models.User.UserViewModel
 
 @{
     ViewData["Title"] = "UserDetails";
@@ -15,18 +15,6 @@
         </dt>
         <dd>
             @Html.DisplayFor(model => model.UserName)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.FirstName)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.FirstName)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.LastName)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.LastName)
         </dd>
         <dt>
             @Html.DisplayNameFor(model => model.EmailAddress)
