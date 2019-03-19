@@ -50,7 +50,8 @@ namespace iSpendDAL
         {
             var Account = new AccountDto();
             _connection.SqlConnection.Open();
-            var command = new SqlCommand("SELECT Id,username,password,email,dateOfCreation  FROM dbo.User WHERE username=" + username + "", _connection.SqlConnection);
+            var command = new SqlCommand("SELECT Id,username,password,email,dateOfCreation  FROM [User] WHERE username=@Username", _connection.SqlConnection);
+            command.Parameters.AddWithValue("@Username",username);
             command.ExecuteNonQuery();
             using (var reader = command.ExecuteReader())
             {
@@ -107,5 +108,17 @@ namespace iSpendDAL
             return correct;
         }
 
+
+        public void UpdateUserDetails(IAccount account)
+        {
+            _connection.SqlConnection.Open();
+            var command = new SqlCommand("UPDATE [User] SET username= @Username, password=@Password, email=@Email  WHERE Id=@UserId ", _connection.SqlConnection);
+            command.Parameters.AddWithValue("@UserId", account.UserId);
+            command.Parameters.AddWithValue("@Username", account.Username);
+            command.Parameters.AddWithValue("@Password", account.Password);
+            command.Parameters.AddWithValue("@Email", account.Email);
+            command.ExecuteNonQuery();
+            _connection.SqlConnection.Close();
+        }
     }
 }

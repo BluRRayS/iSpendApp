@@ -6,7 +6,7 @@ using iSpendInterfaces;
 
 namespace iSpendUnitTests.MockContexts
 {
-    class AccountContextMock:IAccountContext
+    internal class AccountContextMock:IAccountContext
     {
         public void AddUser(IAccount account)
         {
@@ -29,6 +29,11 @@ namespace iSpendUnitTests.MockContexts
         }
 
         public bool CheckCredentials(string username, string password)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void UpdateUserDetails(IAccount account)
         {
             throw new NotImplementedException();
         }

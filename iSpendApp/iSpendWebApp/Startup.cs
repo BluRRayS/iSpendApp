@@ -43,6 +43,7 @@ namespace iSpendWebApp
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             services.AddSingleton<IAccountContext, AccountContext>();
+            services.AddSingleton<IBillContext, BillContext>();
             services.AddTransient(_ => new DatabaseConnection(Configuration.GetConnectionString("DefaultConnection")));
         }
 

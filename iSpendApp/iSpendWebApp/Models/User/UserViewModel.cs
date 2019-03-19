@@ -1,22 +1,27 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using iSpendInterfaces;
 
 namespace iSpendWebApp.Models.User
 {
-    public class UserViewModel
+    public class UserViewModel:IAccount
     {
+        public int UserId { get; set; }
+
+
         [Display(Name = "Username")]
         [Required(ErrorMessage = "A username is required.")]
-        public string UserName { get; set; }
+        [MinLength(4)]
+        public string Username { get; set; }
 
         [Display(Name = "Email Address")]
         [DataType(DataType.EmailAddress, ErrorMessage = "Enter a valid Email address.")]
         [Required(ErrorMessage = "An Email is required.")]
-        public string EmailAddress { get; set; }
+        public string Email { get; set; }
 
         [Display(Name = "Confirm Email")]
-        [Required(ErrorMessage = "Confirming your Email is required.")]
         [DataType(DataType.EmailAddress, ErrorMessage = "Please enter a valid Email address.")]
         [Compare("EmailAddress", ErrorMessage = "The Emails don't match.")]
+        [Required]
         public string ConfirmEmail { get; set; }
 
         [Display(Name = "Password")]

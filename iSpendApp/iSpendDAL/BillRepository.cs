@@ -1,29 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using iSpendDAL;
 using iSpendDAL.ContextInterfaces;
 using iSpendInterfaces;
 
-namespace iSpendLogic
+namespace iSpendDAL
 {
-    public class BillLogic
+    public class BillRepository
     {
-        private BillRepository Repository { get; }
+        private readonly IBillContext _context;
 
-        public BillLogic(IBillContext context)
+        public BillRepository(IBillContext context)
         {
-            Repository = new BillRepository(context);
+            _context = context;
         }
 
         public void AddBill(IBill newBill)
         {
-            Repository.AddBill(newBill);
+            _context.AddBill(newBill);
         }
 
         public IEnumerable<IBill> GetUserBills(string username)
         {
-           return Repository.GetUserBills(username);
+           return _context.GetBillsByUsername(username);
         }
     }
 }

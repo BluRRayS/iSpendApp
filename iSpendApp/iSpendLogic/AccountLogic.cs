@@ -24,7 +24,7 @@ namespace iSpendLogic
             Repository.AddUser(newUser);
         }
 
-        public bool Login(string username, string password) //TODO:
+        public bool Login(string username, string password)
         {
             var encryption = new Encrypt();
             password = encryption.Hash(password);
@@ -34,6 +34,19 @@ namespace iSpendLogic
         public bool IsUsernameTaken(string username)
         {
            return Repository.CheckIfUsernameIsTaken(username);
+        }
+
+        public IAccount GetAccountByUsername(string username)
+        {
+            var account = Repository.FindByUsername(username);
+            return account;
+        }
+
+        public void UpdateUserDetails(IAccount account)
+        {
+            var encryption = new Encrypt();
+            account.Password = encryption.Hash(account.Password);
+            Repository.UpdateUserDetails(account);
         }
     }
 }

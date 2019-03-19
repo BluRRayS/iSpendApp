@@ -1,0 +1,51 @@
+﻿@model IEnumerable<iSpendWebApp.Models.BillViewModel>
+
+@{
+    ViewData["Title"] = "BillOverview";
+}
+
+<h2>BillOverview</h2>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.BillId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BillName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BillBalance)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null)
+        {
+            foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.BillId)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.BillName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.BillBalance)
+                    </td>
+                    <td>
+                        @Html.ActionLink("Edit", "Edit", new {/* id=item.PrimaryKey */}) |
+                        @Html.ActionLink("Details", "Details", new {/* id=item.PrimaryKey */}) |
+                        @Html.ActionLink("Delete", "Delete", new {/* id=item.PrimaryKey */})
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>

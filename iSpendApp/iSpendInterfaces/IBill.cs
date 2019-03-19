@@ -4,8 +4,9 @@ using System.Text;
 
 namespace iSpendInterfaces
 {
-    interface IBill
+    public interface IBill
     {
+        int BillId { get; set; }
         string BillName { get; set; }
         decimal BillBalance { get; set; }
         IEnumerable<ITransaction> Transactions { get; set; }

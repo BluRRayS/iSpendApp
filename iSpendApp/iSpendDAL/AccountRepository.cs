@@ -20,14 +20,14 @@ namespace iSpendDAL
             _context.AddUser(newUser);
         }
 
-        public IAccount FindById(IAccount user)
+        public IAccount FindById(int id)
         {
-            return _context.GetAccountById(user.UserId);
+            return _context.GetAccountById(id);
         }
 
-        public IAccount FindByUsername(IAccount user)
+        public IAccount FindByUsername(string username)
         {
-            return _context.GetAccountByUsername(user.Username);
+            return _context.GetAccountByUsername(username);
         }
 
         public bool CheckCredentials(string username, string password)
@@ -40,5 +40,9 @@ namespace iSpendDAL
             return _context.CheckIfUserNameIsTaken(username);
         }
 
+        public void UpdateUserDetails(IAccount account)
+        {
+            _context.UpdateUserDetails(account);
+        }
     }
 }

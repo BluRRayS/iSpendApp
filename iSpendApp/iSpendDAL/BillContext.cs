@@ -1,120 +1,79 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
+using System.Linq;
 using System.Text;
+using iSpendDAL.ContextInterfaces;
+using iSpendDAL.Dto;
+using iSpendInterfaces;
 
 namespace iSpendDAL
 {
-    class BillContext
+    public class BillContext:IBillContext
     {
-        //private string ="Server=mssql.fhict.local;Database=dbi412182;User Id=dbi412182;Password=!LeGo2001;";
-        //private List<IAccount> _accounts;
-        //private List<Transaction> _transactions;
-        //private string _accountName;
-        //private double _accountBalance;
+        private List<IBill> userBills = new List<IBill>();
+        private readonly DatabaseConnection _connection;
 
-        //public AccountContext()
-        //{
-        //    _accounts = new List<Account>();
-        //}
+        public BillContext(DatabaseConnection connection)
+        {
+            _connection = connection;
+        }
 
-        //public void AddAccount(AccountViewModel account)
-        //{
-        //    using (SqlConnection conn = new SqlConnection(connectionString))
-        //    {
-        //        conn.Open();
-        //        SqlCommand command = new SqlCommand("INSERT INTO [Account](Name,Balance,DateOfCreation) VALUES(@Name,@Balance,@DateOfCreation)",conn);
-        //        command.Parameters.AddWithValue("@Name", account.AccountName);
-        //        command.Parameters.AddWithValue("@Balance", account.Balance);
-        //        command.Parameters.AddWithValue("@DateOfCreation", DateTime.Now);
-        //        command.ExecuteNonQuery();
-        //        conn.Close();
-        //    }
-        //}
+        public void AddBill(IBill newBill)//Todo: Add transaction instead of adding balance directly
+        //ToDo: test SubQuery second command.
+        {
+            _connection.SqlConnection.Open();
+            var command = new SqlCommand("INSERT INTO [Account] Name,Balance,DateOfCreation VALUES(@Name,@Balance,@DateOfCreation,@UserId)",_connection.SqlConnection);
+            command.Parameters.AddWithValue("@Name",newBill.BillName);
+            command.Parameters.AddWithValue("@Balance", newBill.BillBalance);
+            command.Parameters.AddWithValue("@DateOfCreation",DateTimeOffset.Now);
+            command.ExecuteNonQuery();
+            command.Parameters.Clear();
+            command = new SqlCommand("INSERT INTO [User_Account] UserId,AccountId VALUES(@UserId,(SELECT SCOPE_IDENTITY() FROM [Account])) ", _connection.SqlConnection);
+            command.Parameters.AddWithValue("@UserId",newBill.AccountIds.First());
+            command.ExecuteNonQuery();
+            _connection.SqlConnection.Close();
+        }
 
-        //public void RemoveAccount(int id)
-        //{
-        //    using (SqlConnection conn = new SqlConnection(connectionString))
-        //    {
-        //        conn.Open();
-        //        SqlCommand command = new SqlCommand("DELETE FROM Account WHERE Id = @Id", conn);
-        //        command.Parameters.AddWithValue("Id", id);
-        //        command.ExecuteNonQuery();
-        //        conn.Close();
-        //    }
-        //}
+        public void RemoveBill(IBill billToRemove)
+        {
+            throw new NotImplementedException();
+        }
 
-        //public IReadOnlyList<Account> GetAllAccounts()
-        //{
-        //    using (SqlConnection conn = new SqlConnection(connectionString))
-        //    {
-        //        conn.Open();
-        //        SqlCommand command = new SqlCommand("SELECT Id,Name,Balance FROM Account Order By Name", conn);
-        //        command.ExecuteNonQuery();
-        //        using (SqlDataReader reader = command.ExecuteReader())
-        //        {
-        //            while (reader.Read())
-        //            {
-        //                _accounts.Add(new Account(reader.GetInt32(0), reader.GetString(1), reader.GetDouble(2)));
-        //            }
-        //        }
-        //        conn.Close();
-        //    }
-        //    return _accounts as IReadOnlyList<Account>;
-        //}
+        public void UpdateBill(IBill billToUpdate)
+        {
+            throw new NotImplementedException();
+        }
 
-        //public Account GetAccount(int accountId)
-        //{
-        //    _accounts.Clear();
-        //    using (SqlConnection conn = new SqlConnection(connectionString))
-        //    {
-        //        conn.Open();
-        //        SqlCommand command = new SqlCommand("SELECT Name,Balance FROM Account", conn);
-        //        command.ExecuteNonQuery();
-        //        using (SqlDataReader reader = command.ExecuteReader())
-        //        {
-        //            while (reader.Read())
-        //            {
-        //                _accounts.Add(new Account(accountId, reader.GetString(0), reader.GetDouble(1)));
-        //            }
-        //        }
-        //        conn.Close();
-        //    }
-        //    return _accounts[0];
-        //}
+        public IEnumerable<IBill> GetBillsByUsername(string username)
+        {
+            userBills.Clear();
+            _connection.SqlConnection.Open();
+            var command = new SqlCommand("SELECT Id,Name,Balance,DateOfCreation FROM [Account] WHERE Id = (SELECT AccountId FROM [User_Account] WHERE UserId = (SELECT Id FROM [User] where UserName = @Username))",_connection.SqlConnection);
+            command.Parameters.AddWithValue("@Username", username);
+            command.ExecuteNonQuery();
+            using (var reader = command.ExecuteReader())
+            {
+                userBills = new List<IBill>();
+                while (reader.Read())
+                {
+                     userBills.Add( new BillDto(reader.GetInt32(0),reader.GetString(1),reader.GetDecimal(3),reader.GetDateTimeOffset(4)));
+                }
+            }
+            _connection.SqlConnection.Close();
+            return userBills;
+        }
 
-        //public IReadOnlyList<Transaction> GetTransactions(int accountId)
-        //{
-        //    using (SqlConnection conn = new SqlConnection(connectionString))
-        //    {
-        //        conn.Open();
-        //        SqlCommand command = new SqlCommand("SELECT * FROM Transaction WHERE Id = @Id",conn);
-        //        command.Parameters.AddWithValue("@Id",accountId);
-        //        command.ExecuteNonQuery();
-        //        using (SqlDataReader reader = command.ExecuteReader())
-        //        {
-        //            while (reader.Read())
-        //            {
-        //                _transactions.Add(new Transaction(reader.GetInt32(0),reader.GetName(1),reader.GetDouble(2)));
-        //            }
-        //        }
-        //        conn.Close();
-        //    }
-        //    return _transactions as IReadOnlyList<Transaction>;
-        //}
+        public IBill GetBillById(int billId)
+        {
+            throw new NotImplementedException();
+        }
 
-        //public void AddTransaction(int accountId,string transactionName,double amount)
-        //{
-        //    using (SqlConnection conn = new SqlConnection(connectionString))
-        //    {
-        //        conn.Open();
-        //        SqlCommand command = new SqlCommand("INSERT INTO [Transaction](Name,Amount,TimeOfTransaction,AccountId) VALUES(@TransactionName,@Amount,@Time,@AccountId)",conn);
-        //        command.Parameters.AddWithValue("@TransactionName",transactionName);
-        //        command.Parameters.AddWithValue("@Amount",amount);
-        //        command.Parameters.AddWithValue("@Time",DateTime.Now);
-        //        command.Parameters.AddWithValue("@AccountId",accountId);
-        //        command.ExecuteNonQuery();
-        //        conn.Close();
-        //    }
-        //}
+        public IEnumerable<ITransaction> GetBillTransactions(int billId)
+        {
+            throw new NotImplementedException();
+        }
+
     }
+
 }

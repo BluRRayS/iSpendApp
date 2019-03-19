@@ -5,7 +5,7 @@ using iSpendInterfaces;
 
 namespace iSpendLogic.Models
 {
-    internal class Account : IAccount
+    public class Account : IAccount
     {
         public int UserId { get; set; }
         public string Username { get; set; }

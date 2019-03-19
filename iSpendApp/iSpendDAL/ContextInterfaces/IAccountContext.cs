@@ -12,5 +12,7 @@ namespace iSpendDAL.ContextInterfaces
         IAccount GetAccountByUsername(string username);
         IAccount GetAccountById(int userId);
         bool CheckCredentials(string username, string password);
+        void UpdateUserDetails(IAccount account);
+
     } 
 }

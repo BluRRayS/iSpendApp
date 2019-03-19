@@ -3,6 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Metadata.Ecma335;
 using System.Threading.Tasks;
+using iSpendDAL.ContextInterfaces;
+using iSpendInterfaces;
+using iSpendLogic;
+using iSpendWebApp.Models;
+using iSpendWebApp.Models.Bill;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,10 +15,26 @@ namespace iSpendWebApp.Controllers
 {
     public class BillController : Controller
     {
+        private readonly IBillContext _billContext;
+
+        public BillController(IBillContext billContext)
+        {
+            _billContext = billContext;
+        }
+
         // GET: Account
         public ActionResult Index()
         {
-            return View("Accounts");
+            var username = HttpContext.Session.GetString("UserSession");
+            if (username != null)
+            {
+                var billLogic = new BillLogic(_billContext);
+                IEnumerable<IBill> models = new List<BillViewModel>();
+                models = billLogic.GetUserBills(username).ToList();
+                return View("BillOverview", models as IEnumerable<BillViewModel>);
+            }
+
+            return RedirectToAction("Login", "User");
         }
 
         // GET: Account/Details/5

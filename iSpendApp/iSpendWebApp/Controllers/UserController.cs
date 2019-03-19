@@ -4,7 +4,9 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using iSpendDAL.ContextInterfaces;
+using iSpendInterfaces;
 using iSpendLogic;
+using iSpendLogic.Models;
 using iSpendWebApp.Models;
 using iSpendWebApp.Models.User;
 using Microsoft.AspNetCore.Http;
@@ -26,6 +28,13 @@ namespace iSpendWebApp.Controllers
         public ActionResult Login()
         {
             return View("Login");
+        }
+
+        //
+        public ActionResult Logout()
+        {
+            HttpContext.Session.Remove("UserSession");
+            return RedirectToAction("Index", "Home");
         }
 
         // POST: User/Login
@@ -50,7 +59,11 @@ namespace iSpendWebApp.Controllers
         {
             if (HttpContext.Session.GetString("UserSession") != null)
             {
-                return View("UserDetails");
+                var model = new UserViewModel();
+                var accountLogic = new AccountLogic(_accountContext);
+                model.Username = accountLogic.GetAccountByUsername(HttpContext.Session.GetString("UserSession")).Username;
+                model.Email = accountLogic.GetAccountByUsername(HttpContext.Session.GetString("UserSession")).Email;
+                return View("UserDetails",model);
             }
 
             return RedirectToAction("Login");
@@ -70,9 +83,9 @@ namespace iSpendWebApp.Controllers
             try
             {
                 var accountLogic = new AccountLogic(_accountContext);
-                if (ModelState.IsValid && accountLogic.IsUsernameTaken(model.UserName)==false)
+                if (ModelState.IsValid && accountLogic.IsUsernameTaken(model.Username)==false)
                 {
-                    accountLogic.AddUser(model.UserName, model.Password, model.EmailAddress);                   
+                    accountLogic.AddUser(model.Username, model.Password, model.Email);                   
                     return RedirectToAction(nameof(Login));
                 }
                 else
@@ -90,11 +103,15 @@ namespace iSpendWebApp.Controllers
         }
 
         // GET: User/Edit/5
-        public ActionResult Edit(int id)
+        public ActionResult Edit()
         {
             if (HttpContext.Session.GetString("UserSession")!=null)
             {
-                return View("EditUser");
+                var model = new EditUserViewModel();
+                var accountLogic = new AccountLogic(_accountContext);
+                model.Username = accountLogic.GetAccountByUsername(HttpContext.Session.GetString("UserSession")).Username;
+                model.Email = accountLogic.GetAccountByUsername(HttpContext.Session.GetString("UserSession")).Email;
+                return View("EditUser",model);
             }
 
             return RedirectToAction("Login");
@@ -104,17 +121,30 @@ namespace iSpendWebApp.Controllers
         // POST: User/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(EditUserViewModel  model)
         {
             try
             {
-                // TODO: Add update logic here
+                var accountLogic = new AccountLogic(_accountContext);
+                if (ModelState.IsValid && accountLogic.IsUsernameTaken(model.Username) == false)
+                {
+                    model.UserId = accountLogic.GetAccountByUsername(HttpContext.Session.GetString("UserSession"))
+                        .UserId;
+                    accountLogic.UpdateUserDetails(model);
+                    HttpContext.Session.SetString("UserSession", model.Username);
+                }
+                else if (accountLogic.IsUsernameTaken(model.Username) == true)
+                {
+                    ViewBag.Message = "That username is already taken please use another.";
+                    return View("EditUser", model);
+                }
 
                 return RedirectToAction("Details");
             }
             catch
             {
-                return View("EditUser");
+                ViewBag.Message = "Oops something went wrong please try again!";
+                return View("EditUser", model);
             }
         }
     }
