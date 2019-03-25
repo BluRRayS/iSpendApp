@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlTypes;
 using System.Text;
 
 namespace iSpendInterfaces
@@ -8,7 +9,7 @@ namespace iSpendInterfaces
     {
         int BillId { get; set; }
         string BillName { get; set; }
-        decimal BillBalance { get; set; }
+        double BillBalance { get; set; }
         IEnumerable<ITransaction> Transactions { get; set; }
         int IconId { get; set; }
         IEnumerable<int> AccountIds { get; set; }

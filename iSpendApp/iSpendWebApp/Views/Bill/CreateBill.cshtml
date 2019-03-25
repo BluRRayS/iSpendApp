@@ -1,8 +1,10 @@
-﻿@model iSpendWebApp.Models.BillViewModel
+﻿@using Microsoft.AspNetCore.Http
+@model iSpendWebApp.Models.BillViewModel
 
 @{
     ViewData["Title"] = "CreateBill";
 }
+
 
 <h2>CreateBill</h2>
 
@@ -33,6 +35,6 @@
     <a asp-action="Index">Back to List</a>
 </div>
 
-@section Scripts {
+@*@section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
+}*@

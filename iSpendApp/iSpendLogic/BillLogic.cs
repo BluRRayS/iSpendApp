@@ -16,9 +16,9 @@ namespace iSpendLogic
             Repository = new BillRepository(context);
         }
 
-        public void AddBill(IBill newBill)
+        public void AddBill(IBill newBill , int userId)
         {
-            Repository.AddBill(newBill);
+            Repository.AddBill(newBill, userId);
         }
 
         public IEnumerable<IBill> GetUserBills(string username)

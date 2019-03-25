@@ -10,8 +10,7 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        @Html.AntiForgeryToken()
-        <form asp-action="Create">
+        <form asp-action="Create" asp-controller="User">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Username" class="control-label"></label>
@@ -47,7 +46,7 @@
 </div>
 
 <div>
-    <a asp-action="Index" asp-controller="Home">Home</a>
+    <a asp-controller="Home" asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {

@@ -7,7 +7,7 @@ namespace iSpendDAL.ContextInterfaces
 {
     public interface IBillContext
     {
-        void AddBill(IBill newBill);
+        void AddBill(IBill newBill,int userId);
 
         void RemoveBill(IBill billToRemove);
 

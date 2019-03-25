@@ -47,6 +47,7 @@ namespace iSpendWebApp.Controllers
             if (accountLogic.Login(username,password))
             {
                 HttpContext.Session.SetString("UserSession",username);
+                HttpContext.Session.SetInt32("UserId",accountLogic.GetAccountByUsername(username).UserId);
                 RedirectToAction("Index", "Home");
                 return RedirectToAction("Index", "Home");
             }

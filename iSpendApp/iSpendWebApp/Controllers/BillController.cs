@@ -7,7 +7,6 @@ using iSpendDAL.ContextInterfaces;
 using iSpendInterfaces;
 using iSpendLogic;
 using iSpendWebApp.Models;
-using iSpendWebApp.Models.Bill;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,22 +15,27 @@ namespace iSpendWebApp.Controllers
     public class BillController : Controller
     {
         private readonly IBillContext _billContext;
-
+        private BillLogic billLogic;
         public BillController(IBillContext billContext)
         {
             _billContext = billContext;
+            billLogic = new BillLogic(_billContext);
         }
 
-        // GET: Account
+        // GET: Bill
         public ActionResult Index()
         {
             var username = HttpContext.Session.GetString("UserSession");
             if (username != null)
             {
-                var billLogic = new BillLogic(_billContext);
-                IEnumerable<IBill> models = new List<BillViewModel>();
-                models = billLogic.GetUserBills(username).ToList();
-                return View("BillOverview", models as IEnumerable<BillViewModel>);
+                var models = new List<BillViewModel>();
+                var context = _billContext.GetBillsByUsername(HttpContext.Session.GetString("UserSession"));
+                foreach (var bill in context)
+                {
+                    models.Add(new BillViewModel(bill.BillId, bill.BillName, bill.BillBalance, bill.Transactions, bill.IconId, bill.AccountIds));
+                }
+
+                return View("BillOverview", models);
             }
 
             return RedirectToAction("Login", "User");
@@ -40,9 +44,9 @@ namespace iSpendWebApp.Controllers
         // GET: Account/Details/5
         public ActionResult Details(int id)
         {
-            if (HttpContext.Session.IsAvailable)
+            if (HttpContext.Session.GetString("UserSession") != null)
             {
-                return View("AccountDetails");
+                return View("BillDetails");
             }
 
             return RedirectToAction("Login", "User");
@@ -51,24 +55,37 @@ namespace iSpendWebApp.Controllers
         // GET: Account/Create
         public ActionResult Create()
         {
-            return View("CreateAccount");
+            if (HttpContext.Session.GetString("UserSession") != null)
+            {
+                return View("CreateBill");
+            }
+
+            return RedirectToAction("Login", "User");
         }
 
         // POST: Account/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create(BillViewModel model)
         {
-            try
+            if (HttpContext.Session.GetString("UserSession") != null)
             {
-                // TODO: Add insert logic here
+                try
+                {
+                    if (ModelState.IsValid)
+                    {       
+                        billLogic.AddBill(model, Convert.ToInt32(HttpContext.Session.GetInt32("UserId")));
+                    }
+                    return RedirectToAction(nameof(Index));
+                }
+                catch
+                {
+                    return View("CreateBill");
+                }
 
-                return RedirectToAction(nameof(Index));
             }
-            catch
-            {
-                return View("CreateAccount");
-            }
+
+            return RedirectToAction("Login", "User");
         }
 
         // GET: Account/Edit/5

@@ -20,7 +20,7 @@ namespace iSpendWebApp.Models.User
 
         [Display(Name = "Confirm Email")]
         [DataType(DataType.EmailAddress, ErrorMessage = "Please enter a valid Email address.")]
-        [Compare("EmailAddress", ErrorMessage = "The Emails don't match.")]
+        [Compare("Email", ErrorMessage = "The Emails don't match.")]
         [Required]
         public string ConfirmEmail { get; set; }
 

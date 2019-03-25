@@ -15,9 +15,9 @@ namespace iSpendDAL
             _context = context;
         }
 
-        public void AddBill(IBill newBill)
+        public void AddBill(IBill newBill, int userId)
         {
-            _context.AddBill(newBill);
+            _context.AddBill(newBill, userId);
         }
 
         public IEnumerable<IBill> GetUserBills(string username)
