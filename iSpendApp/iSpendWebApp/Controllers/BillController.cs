@@ -15,37 +15,31 @@ namespace iSpendWebApp.Controllers
     public class BillController : Controller
     {
         private readonly IBillContext _billContext;
-        private BillLogic billLogic;
+        private readonly BillLogic _billLogic;
         public BillController(IBillContext billContext)
         {
             _billContext = billContext;
-            billLogic = new BillLogic(_billContext);
+            _billLogic = new BillLogic(_billContext);
         }
 
         // GET: Bill
         public ActionResult Index()
         {
             var username = HttpContext.Session.GetString("UserSession");
-            if (username != null)
-            {
-                var models = new List<BillViewModel>();
-                var context = _billContext.GetBillsByUsername(HttpContext.Session.GetString("UserSession"));
-                foreach (var bill in context)
-                {
-                    models.Add(new BillViewModel(bill.BillId, bill.BillName, bill.BillBalance, bill.Transactions, bill.IconId, bill.AccountIds));
-                }
+            if (username == null) return RedirectToAction("Login", "User");
 
-                return View("BillOverview", models);
-            }
+            var context = _billContext.GetBillsByUsername(HttpContext.Session.GetString("UserSession"));
+            var models = context.Select(bill => new BillViewModel(bill.BillId, bill.BillName, bill.BillBalance, bill.Transactions, bill.IconId, bill.AccountIds)).ToList();
+            return View("BillOverview", models);
 
-            return RedirectToAction("Login", "User");
         }
 
         // GET: Account/Details/5
-        public ActionResult Details(int id)
+        public ActionResult Details()
         {
             if (HttpContext.Session.GetString("UserSession") != null)
             {
+
                 return View("BillDetails");
             }
 
@@ -68,54 +62,53 @@ namespace iSpendWebApp.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(BillViewModel model)
         {
-            if (HttpContext.Session.GetString("UserSession") != null)
+            if (HttpContext.Session.GetString("UserSession") == null) return RedirectToAction("Login", "User");
+            try
             {
-                try
+                if (ModelState.IsValid)
                 {
-                    if (ModelState.IsValid)
-                    {       
-                        billLogic.AddBill(model, Convert.ToInt32(HttpContext.Session.GetInt32("UserId")));
-                    }
-                    return RedirectToAction(nameof(Index));
+                    _billLogic.AddBill(model, Convert.ToInt32(HttpContext.Session.GetInt32("UserId")));
                 }
-                catch
-                {
-                    return View("CreateBill");
-                }
-
+                return RedirectToAction(nameof(Index));
             }
-
-            return RedirectToAction("Login", "User");
+            catch
+            {
+                return View("CreateBill");
+            }
         }
 
         // GET: Account/Edit/5
         public ActionResult Edit(int id)
         {
-            return View("EditAccount");
+            var context = _billLogic.GetBillById(id);
+            var model = new BillViewModel(context.BillId,context.BillName,context.BillBalance,context.Transactions,context.IconId,context.AccountIds);
+            return View("EditBill",model);
         }
 
         // POST: Account/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(int id, BillViewModel model)
         {
             try
             {
-                // TODO: Add update logic here
-
+               
+                _billLogic.UpdateBill(id,model.BillName,model.IconId );
                 return RedirectToAction(nameof(Index));
             }
             catch
             {
-                return View("EditAccount");
+                return View("BillOverview");
             }
         }
 
         // GET: Account/Delete/5
         public ActionResult Delete(int id)
         {
-            return RedirectToAction(nameof(Index));
+            if (HttpContext.Session.GetString("UserSession") == null) return RedirectToAction("Login", "User");
+            return View("DeleteBill");
         }
+
 
         // POST: Account/Delete/5
         [HttpPost]
@@ -124,13 +117,13 @@ namespace iSpendWebApp.Controllers
         {
             try
             {
-                // TODO: Add delete logic here
+                _billLogic.RemoveBill(id);
 
                 return RedirectToAction(nameof(Index));
             }
             catch
             {
-                return View();
+                return View("BillOverview");
             }
         }
     }

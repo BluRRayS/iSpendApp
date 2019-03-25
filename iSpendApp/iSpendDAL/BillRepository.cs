@@ -24,5 +24,20 @@ namespace iSpendDAL
         {
            return _context.GetBillsByUsername(username);
         }
+
+        public IBill GetBillById(int id)
+        {
+            return _context.GetBillById(id);
+        }
+
+        public void UpdateBill(int id,string name, int iconId)
+        {
+            _context.UpdateBill(id,name,iconId);
+        }
+
+        public void RemoveBill(int id)
+        {
+            _context.RemoveBill(id);
+        }
     }
 }

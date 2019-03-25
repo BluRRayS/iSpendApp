@@ -9,9 +9,9 @@ namespace iSpendDAL.ContextInterfaces
     {
         void AddBill(IBill newBill,int userId);
 
-        void RemoveBill(IBill billToRemove);
+        void RemoveBill(int billId);
 
-        void UpdateBill(IBill billToUpdate);
+        void UpdateBill(int id, string name, int iconId);
 
         IEnumerable<IBill> GetBillsByUsername(string username);
 

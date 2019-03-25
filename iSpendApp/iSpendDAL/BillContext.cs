@@ -35,14 +35,24 @@ namespace iSpendDAL
             _connection.SqlConnection.Close();
         }
 
-        public void RemoveBill(IBill billToRemove)
+        public void RemoveBill(int billId)
         {
-            throw new NotImplementedException();
+            _connection.SqlConnection.Open();
+            var command = new SqlCommand("DELETE FROM dbo.Account WHERE Id = @Id  DELETE FROM dbo.User_Account WHERE AccountId = @Id ", _connection.SqlConnection);
+            command.Parameters.AddWithValue("@Id", billId);
+            command.ExecuteNonQuery();
+            _connection.SqlConnection.Close();
         }
 
-        public void UpdateBill(IBill billToUpdate)
+        public void UpdateBill(int id, string name, int iconId)
         {
-            throw new NotImplementedException();
+           _connection.SqlConnection.Open();
+           var command = new SqlCommand("UPDATE dbo.Account SET dbo.Account.Name = @Name , dbo.Account.IconId = @IconId WHERE Id = @Id", _connection.SqlConnection);
+           command.Parameters.AddWithValue("@Name",name);
+           command.Parameters.AddWithValue("@IconId",iconId);
+           command.Parameters.AddWithValue("@Id",id);
+           command.ExecuteNonQuery();
+            _connection.SqlConnection.Close();
         }
 
         public IEnumerable<IBill> GetBillsByUsername(string username)
@@ -66,7 +76,23 @@ namespace iSpendDAL
 
         public IBill GetBillById(int billId)
         {
-            throw new NotImplementedException();
+            var bill = new BillDto();
+            _connection.SqlConnection.Open();
+            var command = new SqlCommand("SELECT * FROM dbo.Account WHERE Id = @BillId",_connection.SqlConnection);
+            command.Parameters.AddWithValue("@BillId", billId);
+            command.ExecuteNonQuery();
+            using (var reader = command.ExecuteReader())
+            {                
+                if (reader.Read())
+                {
+                    bill.BillId = reader.GetInt32(0);
+                    bill.BillName = reader.GetString(1);
+                    bill.BillBalance = Convert.ToDouble( reader.GetDecimal(2));
+                    bill.IconId = reader.GetInt32(4);
+                }
+            }
+            _connection.SqlConnection.Close();
+            return bill;
         }
 
         public IEnumerable<ITransaction> GetBillTransactions(int billId)

@@ -25,5 +25,20 @@ namespace iSpendLogic
         {
            return Repository.GetUserBills(username);
         }
+
+        public IBill GetBillById(int id)
+        {
+            return Repository.GetBillById(id);
+        }
+
+        public void UpdateBill(int id,string name, int iconId)
+        {
+            Repository.UpdateBill(id,name, iconId);
+        }
+
+        public void RemoveBill(int id)
+        {
+            Repository.RemoveBill(id);
+        }
     }
 }

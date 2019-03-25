@@ -16,6 +16,11 @@ namespace iSpendDAL.Dto
             DateOfCreation = time;
         }
 
+        public BillDto()
+        {
+                
+        }
+
         public int BillId { get; set; }
         public string BillName { get; set; }
         public double BillBalance { get; set; }

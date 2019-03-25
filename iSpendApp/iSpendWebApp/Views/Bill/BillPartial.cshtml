@@ -1,0 +1,16 @@
+﻿@model iSpendWebApp.Models.BillViewModel
+
+<div align="Center">
+        <div class=" panel panel-default" style="background-color: #E0E1E0; margin: 8px; font-weight: bold; border-color: black">
+            <div class="panel-heading" style="background-color: #1faa00">@Html.DisplayFor(model => model.IconId)</div>
+            <div class="panel-body">
+                @Html.DisplayFor(model => model.BillName)<br />
+                @Html.DisplayFor(model => model.BillBalance)<br />
+                <div>
+                    @Html.ActionLink("Edit", "Edit", new { id = Model.BillId }) |
+                    @Html.ActionLink("Details", "Details", new { id = Model.BillId }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = Model.BillId })
+                </div>
+            </div>
+        </div>
+</div>
