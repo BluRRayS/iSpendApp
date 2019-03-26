@@ -1,0 +1,2 @@
+﻿//Todo: Delete/Edit functions Transactions
+//Todo: Remove transactions and clear User_account table when removing bill.

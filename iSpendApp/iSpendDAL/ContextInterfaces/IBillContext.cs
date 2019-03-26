@@ -18,5 +18,9 @@ namespace iSpendDAL.ContextInterfaces
         IBill GetBillById(int billId);
 
         IEnumerable<ITransaction> GetBillTransactions(int billId);
+
+        decimal GetTotalBalance(int billId);
+        void UpdateBillBalance(int billId, decimal amount);
+
     }
 }

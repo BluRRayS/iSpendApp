@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using iSpendDAL.ContextInterfaces;
+﻿using iSpendDAL.ContextInterfaces;
 using iSpendInterfaces;
 
-namespace iSpendDAL
+namespace iSpendDAL.Account
 {
     public class AccountRepository
     {

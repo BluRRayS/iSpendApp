@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data.SqlClient;
-using iSpendInterfaces;
 using iSpendDAL.ContextInterfaces;
 using iSpendDAL.Dto;
+using iSpendInterfaces;
 
-namespace iSpendDAL
+namespace iSpendDAL.Account
 {
     public class AccountContext : IAccountContext
     {

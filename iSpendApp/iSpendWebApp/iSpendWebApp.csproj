@@ -15,8 +15,4 @@
     <ProjectReference Include="..\iSpendLogic\iSpendLogic.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Views\Transaction\" />
-  </ItemGroup>
-
 </Project>

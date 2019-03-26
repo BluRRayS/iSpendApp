@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using iSpendInterfaces;
 
-namespace iSpendDAL.Dto
+namespace iSpendUnitTests
 {
     internal class AccountDto:IAccount
     {

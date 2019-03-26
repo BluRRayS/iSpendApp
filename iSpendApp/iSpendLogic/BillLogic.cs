@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using iSpendDAL;
+using iSpendDAL.Bill;
 using iSpendDAL.ContextInterfaces;
 using iSpendInterfaces;
 
@@ -39,6 +40,11 @@ namespace iSpendLogic
         public void RemoveBill(int id)
         {
             Repository.RemoveBill(id);
+        }
+
+        public void RefreshBillBalance(int id)
+        {
+            Repository.RefreshBillBalance(id);
         }
     }
 }

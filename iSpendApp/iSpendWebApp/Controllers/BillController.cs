@@ -7,6 +7,7 @@ using iSpendDAL.ContextInterfaces;
 using iSpendInterfaces;
 using iSpendLogic;
 using iSpendWebApp.Models;
+using iSpendWebApp.Models.Bill;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -40,7 +41,7 @@ namespace iSpendWebApp.Controllers
             if (HttpContext.Session.GetString("UserSession") != null)
             {
 
-                return View("BillDetails");
+                return View("~/Views/Transaction/Transactions.cshtml");
             }
 
             return RedirectToAction("Login", "User");

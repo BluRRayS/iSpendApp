@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using iSpendDAL;
+using iSpendDAL.Account;
+using iSpendDAL.Bill;
 using iSpendDAL.ContextInterfaces;
+using iSpendDAL.Transaction;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -44,6 +47,7 @@ namespace iSpendWebApp
 
             services.AddSingleton<IAccountContext, AccountContext>();
             services.AddSingleton<IBillContext, BillContext>();
+            services.AddSingleton<ITransactionContext, TransactionContext>();
             services.AddTransient(_ => new DatabaseConnection(Configuration.GetConnectionString("DefaultConnection")));
         }
 

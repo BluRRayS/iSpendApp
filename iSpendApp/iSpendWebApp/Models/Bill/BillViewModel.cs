@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.Data.SqlTypes;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
 using iSpendInterfaces;
 
-namespace iSpendWebApp.Models
+namespace iSpendWebApp.Models.Bill
 {
     public class BillViewModel:IBill
     {

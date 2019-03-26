@@ -1,0 +1,63 @@
+﻿@model IEnumerable<iSpendWebApp.Models.Transaction.TransactionsViewModel>
+
+@{
+    ViewData["Title"] = "Transactions";
+}
+
+<h2>Transactions</h2>
+
+<p>
+    @Html.ActionLink("New Transaction","Create","Transaction",new{id = ViewBag.BillId })
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.TransactionId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TransactionName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TransactionAmount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Category)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IconId)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    @if (Model != null)
+    {
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TransactionId)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TransactionName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TransactionAmount)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Category)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.IconId)
+                    </td>
+                    <td>
+                        @Html.ActionLink("Edit", "Edit", new {/* id=item.PrimaryKey */}) |
+                        @Html.ActionLink("Details", "Details", new {/* id=item.PrimaryKey */}) |
+                        @Html.ActionLink("Delete", "Delete", new {/* id=item.PrimaryKey */})
+                    </td>
+                </tr>
+            }
+        </tbody>
+    }
+</table>
