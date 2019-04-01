@@ -8,6 +8,10 @@ namespace iSpendDAL.Dto
 {
     internal class TransactionDto: ITransaction
     {
+        public TransactionDto()
+        {
+            
+        }
         public TransactionDto(int id,string name,decimal amount, string category, int iconId, DateTime timeOfTransaction)
         {
             TransactionId = id;

@@ -59,14 +59,44 @@ namespace iSpendDAL.Transaction
             GetTotalBalance(billId);
         }
 
-        public void UpdateTransaction(int id,int billId ,ITransaction transaction)
+        public void UpdateTransaction(int id, ITransaction transaction)
         {
-            throw new NotImplementedException();
+            _connection.SqlConnection.Open();
+            var command = new SqlCommand("UPDATE dbo.[Transaction] SET Name =@Name,Amount=@Amount,Category=@Category,IconId=@Icon WHERE Id = @Id", _connection.SqlConnection);
+            command.Parameters.AddWithValue("@Id", id);
+            command.Parameters.AddWithValue("@Name", transaction.TransactionName);
+            command.Parameters.AddWithValue("@Amount", transaction.TransactionAmount);
+            command.Parameters.AddWithValue("@Category", transaction.Category);
+            command.Parameters.AddWithValue("@Icon", transaction.IconId);
+            command.ExecuteNonQuery();
+            _connection.SqlConnection.Close();
+            GetTotalBalance(transaction.BillId);
         }
 
-        public ITransaction GetTransactionById(int id)
+        public ITransaction GetTransactionById(int id, int billId)
         {
-            throw new System.NotImplementedException();
+            var transaction = new TransactionDto();
+           _connection.SqlConnection.Open();
+           var command = new SqlCommand("SELECT Name,Amount,Category,IconId,TimeOfTransaction FROM dbo.[Transaction] WHERE Id = @Id", _connection.SqlConnection);
+           command.Parameters.AddWithValue("@Id", id);
+           command.ExecuteNonQuery();
+           using (var reader = command.ExecuteReader())
+           {
+               if (reader.Read())
+               {
+                   transaction.BillId = billId;
+                   transaction.TransactionId = id;
+                   transaction.TransactionName = reader.GetString(0);
+                   transaction.TransactionAmount = reader.GetDecimal(1);
+                   transaction.Category = reader.GetString(2);
+                   transaction.IconId = reader.GetInt32(3);
+                   transaction.TimeOfTransaction = reader.GetDateTime(4);
+               }
+           }
+
+           _connection.SqlConnection.Close();
+           
+           return transaction;
         }
 
 

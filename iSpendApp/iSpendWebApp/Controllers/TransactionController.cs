@@ -5,6 +5,7 @@ using iSpendWebApp.Models.Transaction;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
+using System.Runtime.InteropServices.ComTypes;
 
 namespace iSpendWebApp.Controllers
 {
@@ -20,7 +21,6 @@ namespace iSpendWebApp.Controllers
             _billLogic = new BillLogic(billContext);
         }
 
-        //Todo: Check if user has access to bill
 
         // GET: Transaction
         public ActionResult Index(int id)
@@ -45,14 +45,6 @@ namespace iSpendWebApp.Controllers
             return View("~/Views/Transaction/Transactions.cshtml", model);
         }
 
-        // GET: Transaction/Details/5
-        public ActionResult Details(int id)
-        {
-            var username = HttpContext.Session.GetString("UserSession");
-            if (username == null) return RedirectToAction("Login", "User");
-
-            return View();
-        }
 
         // GET: Transaction/Create
         public ActionResult Create(int id)
@@ -83,29 +75,31 @@ namespace iSpendWebApp.Controllers
         }
 
         // GET: Transaction/Edit/5
-        public ActionResult Edit(int id)
+        public ActionResult Edit(int id,int billId)
         {
             var username = HttpContext.Session.GetString("UserSession");
             if (username == null) return RedirectToAction("Login", "User");
-            return View();
+            var context = _transactionLogic.GetTransactionById(id,billId);
+            var model = new TransactionsViewModel(context.TransactionId, context.BillId, context.TransactionName,context.TransactionAmount,context.Category,context.IconId,context.TimeOfTransaction);
+            return View("~/Views/Transaction/EditTransaction.cshtml",model);
         }
 
         // POST: Transaction/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(int id ,TransactionsViewModel model)
         {
             var username = HttpContext.Session.GetString("UserSession");
             if (username == null) return RedirectToAction("Login", "User");
             try
             {
-                // TODO: Add update logic here
+                _transactionLogic.UpdateTransaction(id,model);
 
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index","Transaction",model.BillId);
             }
             catch
             {
-                return View();
+                return View("~/Views/Transaction/EditTransaction.cshtml");
             }
         }
 

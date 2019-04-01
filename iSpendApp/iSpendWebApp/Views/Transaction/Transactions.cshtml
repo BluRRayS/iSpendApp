@@ -83,7 +83,7 @@
                         @Html.DisplayFor(modelItem => item.TimeOfTransaction)
                     </td>
                     <td>
-                        <input type="button" value="Edit" class="btn btn-warning" onclick="location.href = '@Url.Action("Edit", "Transaction" , new {id = item.TransactionId})'" />
+                        <input type="button" value="Edit" class="btn btn-warning" onclick="location.href = '@Url.Action("Edit", "Transaction" , new {id = item.TransactionId ,billId = ViewBag.BillId})'" />
                         <input type="button" value="Delete" class="btn btn-danger" onclick="location.href = '@Url.Action("Delete", "Transaction", new {id = item.TransactionId ,billId = ViewBag.BillId})'" />
                     </td>
                 </tr>
