@@ -8,11 +8,11 @@ using iSpendLogic.Models;
 
 namespace iSpendLogic
 {
-    public class AccountLogic
+    public class UserLogic
     {
         private AccountRepository Repository { get; }
 
-        public AccountLogic(IAccountContext context)
+        public UserLogic(IAccountContext context)
         {
             Repository = new AccountRepository(context);
         }
@@ -21,7 +21,7 @@ namespace iSpendLogic
         {
             var encryption = new Encrypt();
             password = encryption.Hash(password);
-            var newUser = new Account {Username = username, Password = password, Email = email};
+            var newUser = new User {Username = username, Password = password, Email = email};
             Repository.AddUser(newUser);
         }
 
@@ -37,13 +37,13 @@ namespace iSpendLogic
            return Repository.CheckIfUsernameIsTaken(username);
         }
 
-        public IAccount GetAccountByUsername(string username)
+        public IUser GetAccountByUsername(string username)
         {
             var account = Repository.FindByUsername(username);
             return account;
         }
 
-        public void UpdateUserDetails(IAccount account)
+        public void UpdateUserDetails(IUser account)
         {
             var encryption = new Encrypt();
             account.Password = encryption.Hash(account.Password);

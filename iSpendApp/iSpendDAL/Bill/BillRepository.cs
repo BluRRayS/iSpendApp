@@ -43,5 +43,10 @@ namespace iSpendDAL.Bill
         {
             _context.GetTotalBalance(id);
         }
+
+        public IEnumerable<IUser> GetBillUsers(int billId)
+        {
+            return _context.GetBillUsers(billId);
+        }
     }
 }

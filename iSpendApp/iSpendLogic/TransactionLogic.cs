@@ -25,5 +25,10 @@ namespace iSpendLogic
         {
             Repository.CreateTransaction(transaction);
         }
+
+        public void DeleteTransaction(int id, int billId)
+        {
+            Repository.DeleteTransaction(id, billId);
+        }
     }
 }

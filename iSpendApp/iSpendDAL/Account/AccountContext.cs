@@ -15,7 +15,7 @@ namespace iSpendDAL.Account
             _connection = connection;
         }
 
-        public void AddUser(IAccount account)
+        public void AddUser(IUser account)
         {
             _connection.SqlConnection.Open();
             var command = new SqlCommand("INSERT INTO [User](username,password,email,dateOfCreation) VALUES(@Username,@Password,@Email,@Time)",_connection.SqlConnection);
@@ -45,7 +45,7 @@ namespace iSpendDAL.Account
             return taken;
         }
 
-        public IAccount GetAccountByUsername(string username)
+        public IUser GetAccountByUsername(string username)
         {
             var Account = new AccountDto();
             _connection.SqlConnection.Open();
@@ -67,7 +67,7 @@ namespace iSpendDAL.Account
             return Account;
         }
 
-        public IAccount GetAccountById(int userId)
+        public IUser GetAccountById(int userId)
         {
             var account = new AccountDto();
             _connection.SqlConnection.Open();
@@ -108,7 +108,7 @@ namespace iSpendDAL.Account
         }
 
 
-        public void UpdateUserDetails(IAccount account)
+        public void UpdateUserDetails(IUser account)
         {
             _connection.SqlConnection.Open();
             var command = new SqlCommand("UPDATE [User] SET username= @Username, password=@Password, email=@Email  WHERE Id=@UserId ", _connection.SqlConnection);

@@ -17,14 +17,14 @@ namespace iSpendLogic
             Repository = new BillRepository(context);
         }
 
-        public void AddBill(IBill newBill , int userId)
+        public void AddBill(IBill newBill, int userId)
         {
             Repository.AddBill(newBill, userId);
         }
 
         public IEnumerable<IBill> GetUserBills(string username)
         {
-           return Repository.GetUserBills(username);
+            return Repository.GetUserBills(username);
         }
 
         public IBill GetBillById(int id)
@@ -32,9 +32,9 @@ namespace iSpendLogic
             return Repository.GetBillById(id);
         }
 
-        public void UpdateBill(int id,string name, int iconId)
+        public void UpdateBill(int id, string name, int iconId)
         {
-            Repository.UpdateBill(id,name, iconId);
+            Repository.UpdateBill(id, name, iconId);
         }
 
         public void RemoveBill(int id)
@@ -45,6 +45,11 @@ namespace iSpendLogic
         public void RefreshBillBalance(int id)
         {
             Repository.RefreshBillBalance(id);
+        }
+
+        public IEnumerable<IUser> GetBillUsers(int billId)
+        {
+            return Repository.GetBillUsers(billId);
         }
     }
 }

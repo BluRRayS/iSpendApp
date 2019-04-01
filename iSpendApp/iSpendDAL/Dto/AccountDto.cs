@@ -5,8 +5,19 @@ using iSpendInterfaces;
 
 namespace iSpendDAL.Dto
 {
-    internal class AccountDto:IAccount
+    internal class AccountDto:IUser
     {
+        public AccountDto()
+        {
+            
+        }
+
+        public AccountDto(int userId, string username)
+        {
+            UserId = userId;
+            Username = username;
+        }
+
         public int UserId { get; set; }
         public string Username { get; set; }
         public string Password { get; set; }

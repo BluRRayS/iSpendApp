@@ -3,7 +3,7 @@ using iSpendInterfaces;
 
 namespace iSpendUnitTests
 {
-    internal class AccountDto:IAccount
+    internal class AccountDto:IUser
     {
         public int UserId { get; set; }
         public string Username { get; set; }

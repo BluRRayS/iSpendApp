@@ -19,7 +19,7 @@ namespace iSpendDAL.Dto
         }
 
         public int TransactionId { get; set; }
-        public int AccountId { get; set; }
+        public int BillId { get; set; }
         public string TransactionName { get; set; }
         public decimal TransactionAmount { get; set; }
         public string Category { get; set; }

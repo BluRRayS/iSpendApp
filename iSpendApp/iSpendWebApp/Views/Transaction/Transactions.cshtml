@@ -1,14 +1,39 @@
-﻿@model IEnumerable<iSpendWebApp.Models.Transaction.TransactionsViewModel>
+﻿@using iSpendWebApp.Models.Transaction
+@model IEnumerable<iSpendWebApp.Models.Transaction.TransactionsViewModel>
 
 @{
     ViewData["Title"] = "Transactions";
 }
 
-<h2>Transactions</h2>
+<h2>Bill Name</h2>
 
-<p>
-    @Html.ActionLink("New Transaction","Create","Transaction",new{id = ViewBag.BillId })
-</p>
+<!-- Modal Create Transaction -->
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Create Transaction</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                @{
+                    Html.RenderPartial("CreateTransaction", new TransactionsViewModel(ViewBag.BillId));
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Button trigger modal -->
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
+        Create new Transaction
+    </button>
+    <input type="button" value="Edit Bill" class="btn btn-warning" onclick="location.href = '@Url.Action("Edit", "Bill", new {id = ViewBag.BillId})'" />
+    <input type="button" value="Delete Bill" class="btn btn-danger" onclick="location.href = '@Url.Action("Delete", "Bill", new {id = ViewBag.BillId})'" />
+</div>
 <table class="table">
     <thead>
         <tr>
@@ -26,6 +51,9 @@
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.IconId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TimeOfTransaction)
             </th>
             <th></th>
         </tr>
@@ -52,9 +80,11 @@
                         @Html.DisplayFor(modelItem => item.IconId)
                     </td>
                     <td>
-                        @Html.ActionLink("Edit", "Edit", new {/* id=item.PrimaryKey */}) |
-                        @Html.ActionLink("Details", "Details", new {/* id=item.PrimaryKey */}) |
-                        @Html.ActionLink("Delete", "Delete", new {/* id=item.PrimaryKey */})
+                        @Html.DisplayFor(modelItem => item.TimeOfTransaction)
+                    </td>
+                    <td>
+                        <input type="button" value="Edit" class="btn btn-warning" onclick="location.href = '@Url.Action("Edit", "Transaction" , new {id = item.TransactionId})'" />
+                        <input type="button" value="Delete" class="btn btn-danger" onclick="location.href = '@Url.Action("Delete", "Transaction", new {id = item.TransactionId ,billId = ViewBag.BillId})'" />
                     </td>
                 </tr>
             }

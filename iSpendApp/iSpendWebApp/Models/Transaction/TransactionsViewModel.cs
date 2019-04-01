@@ -7,15 +7,21 @@ namespace iSpendWebApp.Models.Transaction
 {
     public class TransactionsViewModel:ITransaction
     {
+
+        public TransactionsViewModel(int billId)
+        {
+            BillId = billId;
+        }
+
         public TransactionsViewModel()
         {
-                AccountId = new int();
+                BillId = new int();
         }
 
         public TransactionsViewModel(int id, int accountId, string name, decimal amount, string category, int iconId, DateTime time)
         {
             TransactionId = id;
-            AccountId = accountId;
+            BillId = accountId;
             TransactionName = name;
             TransactionAmount = amount;
             Category = category;
@@ -24,7 +30,7 @@ namespace iSpendWebApp.Models.Transaction
         }
 
         public int TransactionId { get; set; }
-        public int AccountId { get; set; }
+        public int BillId { get; set; }
         [Required]
         public string TransactionName { get; set; }
         [Required]

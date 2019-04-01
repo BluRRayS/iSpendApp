@@ -12,17 +12,17 @@ namespace iSpendDAL.Account
             _context = context;
         }
 
-        public void AddUser(IAccount newUser)
+        public void AddUser(IUser newUser)
         {
             _context.AddUser(newUser);
         }
 
-        public IAccount FindById(int id)
+        public IUser FindById(int id)
         {
             return _context.GetAccountById(id);
         }
 
-        public IAccount FindByUsername(string username)
+        public IUser FindByUsername(string username)
         {
             return _context.GetAccountByUsername(username);
         }
@@ -37,7 +37,7 @@ namespace iSpendDAL.Account
             return _context.CheckIfUserNameIsTaken(username);
         }
 
-        public void UpdateUserDetails(IAccount account)
+        public void UpdateUserDetails(IUser account)
         {
             _context.UpdateUserDetails(account);
         }

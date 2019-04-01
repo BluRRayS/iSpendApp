@@ -7,7 +7,7 @@ using iSpendInterfaces;
 
 namespace iSpendWebApp.Models.User
 {
-    public class EditUserViewModel : IAccount
+    public class EditUserViewModel : IUser
     {
         public int UserId { get; set; }
 

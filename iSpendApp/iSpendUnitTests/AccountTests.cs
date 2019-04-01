@@ -8,11 +8,11 @@ namespace iSpendUnitTests
 {
     public class AccountTests
     {
-        private AccountLogic _accountLogic;
+        private UserLogic _accountLogic;
 
         public AccountTests()
         {
-            _accountLogic = new AccountLogic(new AccountContextMock());
+            _accountLogic = new UserLogic(new AccountContextMock());
         }
 
         [Fact]

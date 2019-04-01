@@ -8,7 +8,7 @@ namespace iSpendUnitTests.MockContexts
 {
     internal class AccountContextMock:IAccountContext
     {
-        public void AddUser(IAccount account)
+        public void AddUser(IUser account)
         {
             throw new NotImplementedException();
         }
@@ -18,12 +18,12 @@ namespace iSpendUnitTests.MockContexts
             throw new NotImplementedException();
         }
 
-        public IAccount GetAccountByUsername(string username)
+        public IUser GetAccountByUsername(string username)
         {
             throw new NotImplementedException();
         }
 
-        public IAccount GetAccountById(int userId)
+        public IUser GetAccountById(int userId)
         {
             throw new NotImplementedException();
         }
@@ -33,7 +33,7 @@ namespace iSpendUnitTests.MockContexts
             throw new NotImplementedException();
         }
 
-        public void UpdateUserDetails(IAccount account)
+        public void UpdateUserDetails(IUser account)
         {
             throw new NotImplementedException();
         }

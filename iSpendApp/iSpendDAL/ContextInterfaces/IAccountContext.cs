@@ -7,12 +7,12 @@ namespace iSpendDAL.ContextInterfaces
 {
     public interface IAccountContext
     {
-        void AddUser(IAccount account);
+        void AddUser(IUser account);
         bool CheckIfUserNameIsTaken(string username);
-        IAccount GetAccountByUsername(string username);
-        IAccount GetAccountById(int userId);
+        IUser GetAccountByUsername(string username);
+        IUser GetAccountById(int userId);
         bool CheckCredentials(string username, string password);
-        void UpdateUserDetails(IAccount account);
+        void UpdateUserDetails(IUser account);
 
     } 
 }

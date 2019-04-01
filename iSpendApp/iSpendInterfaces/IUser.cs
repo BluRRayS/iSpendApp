@@ -2,7 +2,7 @@
 
 namespace iSpendInterfaces
 {
-    public interface IAccount
+    public interface IUser
     {
         int UserId { get; set; }
         string Username { get; set; }

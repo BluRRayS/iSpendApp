@@ -22,5 +22,10 @@ namespace iSpendDAL.Transaction
          {
              _context.CreateTransaction(transaction);
          }
+
+         public void DeleteTransaction(int id, int billId)
+         {
+             _context.DeleteTransaction(id, billId);
+         }
     }
 }

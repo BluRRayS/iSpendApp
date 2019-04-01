@@ -9,8 +9,8 @@ namespace iSpendDAL.ContextInterfaces
     {
         IEnumerable<ITransaction> GetBillTransactions(int id);
         void CreateTransaction(ITransaction transaction);
-        void DeleteTransaction(int id);
-        void UpdateTransaction(int id, ITransaction transaction);
+        void DeleteTransaction(int id, int billId);
+        void UpdateTransaction(int id, int billId, ITransaction transaction);
         ITransaction GetTransactionById(int id);
 
     }

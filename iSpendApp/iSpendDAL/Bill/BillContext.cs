@@ -17,8 +17,7 @@ namespace iSpendDAL.Bill
             _connection = connection;
         }
 
-        public void AddBill(IBill newBill,int userId)//Todo: Add transaction instead of adding balance directly
-        //ToDo: test SubQuery second command.
+        public void AddBill(IBill newBill,int userId)
         {
             _connection.SqlConnection.Open();
             var command = new SqlCommand("INSERT INTO dbo.Account (Name,Balance,DateOfCreation) VALUES(@Name,@Balance,@DateOfCreation)",_connection.SqlConnection);
@@ -126,6 +125,24 @@ namespace iSpendDAL.Bill
             command.Parameters.AddWithValue("@Amount", amount);
             command.ExecuteNonQuery();
             _connection.SqlConnection.Close();
+        }
+
+        public IEnumerable<IUser> GetBillUsers(int billId)
+        {
+            var users = new List<AccountDto>();
+            _connection.SqlConnection.Open();
+            var command = new SqlCommand("SELECT dbo.[User].Id, UserName FROM dbo.[User] INNER JOIN dbo.[User_Account] ON dbo.[User].Id = dbo.[User_Account].UserId WHERE dbo.User_Account.AccountId=@Id", _connection.SqlConnection);
+            command.Parameters.AddWithValue("@Id", billId);
+            command.ExecuteNonQuery();
+            using (var reader = command.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+                    users.Add(new AccountDto(reader.GetInt32(0),reader.GetString(1)));
+                }
+            }
+            _connection.SqlConnection.Close();
+            return users;
         }
 
         public void AddStartTransaction(decimal amount)

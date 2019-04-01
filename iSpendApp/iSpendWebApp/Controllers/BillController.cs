@@ -8,6 +8,7 @@ using iSpendInterfaces;
 using iSpendLogic;
 using iSpendWebApp.Models;
 using iSpendWebApp.Models.Bill;
+using iSpendWebApp.Models.User;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -81,9 +82,25 @@ namespace iSpendWebApp.Controllers
         // GET: Account/Edit/5
         public ActionResult Edit(int id)
         {
+            var userHasAccess = false;
+            if (HttpContext.Session.GetString("UserSession") == null) return RedirectToAction("Login", "User");
+            var usersContext = _billLogic.GetBillUsers(id).ToList();
+            foreach (var user in usersContext)
+            {
+                if (user.Username == HttpContext.Session.GetString("UserSession"))
+                {
+                    userHasAccess = true;
+                }
+            }
+
+            if (!userHasAccess)
+            {
+                return RedirectToAction("Index", "Bill");
+            }
+
             var context = _billLogic.GetBillById(id);
-            var model = new BillViewModel(context.BillId,context.BillName,context.BillBalance,context.Transactions,context.IconId,context.AccountIds);
-            return View("EditBill",model);
+            var model = new BillViewModel(context.BillId, context.BillName, context.BillBalance, context.Transactions, context.IconId, context.AccountIds);
+            return View("EditBill", model);
         }
 
         // POST: Account/Edit/5
@@ -93,8 +110,8 @@ namespace iSpendWebApp.Controllers
         {
             try
             {
-               
-                _billLogic.UpdateBill(id,model.BillName,model.IconId );
+
+                _billLogic.UpdateBill(id, model.BillName, model.IconId);
                 return RedirectToAction(nameof(Index));
             }
             catch
