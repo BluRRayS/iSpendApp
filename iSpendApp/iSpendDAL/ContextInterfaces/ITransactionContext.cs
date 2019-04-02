@@ -12,6 +12,7 @@ namespace iSpendDAL.ContextInterfaces
         void DeleteTransaction(int id, int billId);
         void UpdateTransaction(int id, ITransaction transaction);
         ITransaction GetTransactionById(int id,int billId);
+        IEnumerable<ICategory> GetCategories();
 
     }
 }

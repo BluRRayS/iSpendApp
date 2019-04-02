@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using iSpendInterfaces;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace iSpendWebApp.Models.Transaction
 {
     public class TransactionsViewModel:ITransaction
     {
-
         public TransactionsViewModel(int billId)
         {
             BillId = billId;
@@ -15,7 +16,7 @@ namespace iSpendWebApp.Models.Transaction
 
         public TransactionsViewModel()
         {
-                BillId = new int();
+            
         }
 
         public TransactionsViewModel(int id, int accountId, string name, decimal amount, string category, int iconId, DateTime time)
@@ -39,7 +40,5 @@ namespace iSpendWebApp.Models.Transaction
         public string Category { get; set; }
         public int IconId { get; set; }
         public DateTime TimeOfTransaction { get; set; }
-        public IEnumerable<string> Categories { get; set; }
-
     }
 }

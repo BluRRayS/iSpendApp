@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Runtime.InteropServices.ComTypes;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace iSpendWebApp.Controllers
 {
@@ -39,6 +40,11 @@ namespace iSpendWebApp.Controllers
             {
                 return RedirectToAction("Index", "Bill");
             }
+
+            var categoriesContext = _transactionLogic.GetCategories();
+            var categories = categoriesContext.Select(category => new SelectListItem(category.Name, category.Name)).ToList();
+            ViewBag.Categories = categories;
+
             ViewBag.BillId = id;
             var context = _transactionLogic.GetBillTransactions(id);
             var model = context.Select(trans => new TransactionsViewModel(trans.TransactionId, trans.BillId, trans.TransactionName, trans.TransactionAmount, trans.Category, trans.IconId, trans.TimeOfTransaction)).ToList();
@@ -51,8 +57,10 @@ namespace iSpendWebApp.Controllers
         {
             var username = HttpContext.Session.GetString("UserSession");
             if (username == null) return RedirectToAction("Login", "User");
-            var model = new TransactionsViewModel {BillId = id};
-            return View("~/Views/Transaction/CreateTransaction.cshtml",model);
+            var categoriesContext = _transactionLogic.GetCategories();
+            ViewBag.categories = categoriesContext.Select(category => new SelectListItem(category.Name, category.Name)).ToList();
+            var model = new TransactionsViewModel(id);
+            return View("~/Views/Transaction/CreateTransaction.cshtml", model);
         }
 
         // POST: Transaction/Create
@@ -66,7 +74,7 @@ namespace iSpendWebApp.Controllers
             {
                 _transactionLogic.CreateTransaction(model);
                 _billLogic.RefreshBillBalance(model.BillId);
-                return RedirectToAction(nameof(Index),new {id = model.BillId});
+                return RedirectToAction(nameof(Index), new { id = model.BillId });
             }
             catch
             {
@@ -75,27 +83,29 @@ namespace iSpendWebApp.Controllers
         }
 
         // GET: Transaction/Edit/5
-        public ActionResult Edit(int id,int billId)
+        public ActionResult Edit(int id, int billId)
         {
             var username = HttpContext.Session.GetString("UserSession");
             if (username == null) return RedirectToAction("Login", "User");
-            var context = _transactionLogic.GetTransactionById(id,billId);
-            var model = new TransactionsViewModel(context.TransactionId, context.BillId, context.TransactionName,context.TransactionAmount,context.Category,context.IconId,context.TimeOfTransaction);
-            return View("~/Views/Transaction/EditTransaction.cshtml",model);
+            var context = _transactionLogic.GetTransactionById(id, billId);
+            var categoriesContext = _transactionLogic.GetCategories();
+            var categories = categoriesContext.Select(category => category.Name).ToList();
+            var model = new TransactionsViewModel(context.TransactionId, context.BillId, context.TransactionName, context.TransactionAmount, context.Category, context.IconId, context.TimeOfTransaction);
+            return View("~/Views/Transaction/EditTransaction.cshtml", model);
         }
 
         // POST: Transaction/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id ,TransactionsViewModel model)
+        public ActionResult Edit(int id, TransactionsViewModel model)
         {
             var username = HttpContext.Session.GetString("UserSession");
             if (username == null) return RedirectToAction("Login", "User");
             try
             {
-                _transactionLogic.UpdateTransaction(id,model);
+                _transactionLogic.UpdateTransaction(id, model);
 
-                return RedirectToAction("Index","Transaction",model.BillId);
+                return RedirectToAction("Index", "Transaction", model.BillId);
             }
             catch
             {
@@ -109,7 +119,7 @@ namespace iSpendWebApp.Controllers
             var username = HttpContext.Session.GetString("UserSession");
             if (username == null) return RedirectToAction("Login", "User");
             _transactionLogic.DeleteTransaction(id, billId);
-            return RedirectToAction("Index","Bill");
+            return RedirectToAction("Index", "Bill");
         }
     }
 }

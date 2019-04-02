@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.SqlClient;
-using System.Runtime.InteropServices.ComTypes;
-using iSpendDAL.ContextInterfaces;
+﻿using iSpendDAL.ContextInterfaces;
 using iSpendDAL.Dto;
 using iSpendInterfaces;
+using System;
+using System.Collections.Generic;
+using System.Data.SqlClient;
 
 namespace iSpendDAL.Transaction
 {
@@ -99,6 +98,22 @@ namespace iSpendDAL.Transaction
            return transaction;
         }
 
+        public IEnumerable<ICategory> GetCategories()
+        {
+            var categories = new List<CategoryDto>();
+            _connection.SqlConnection.Open();
+            var command = new SqlCommand("SELECT Id,Name,IconId FROM dbo.[Categories]",_connection.SqlConnection);
+            command.ExecuteNonQuery();
+            using (var reader = command.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+                    categories.Add(new CategoryDto(reader.GetInt32(0), reader.GetString(1),reader.GetInt32(2)));
+                }
+            }
+            _connection.SqlConnection.Close();
+            return categories;
+        }
 
 
         private void GetTotalBalance(int billId)
@@ -110,10 +125,19 @@ namespace iSpendDAL.Transaction
             command.ExecuteNonQuery();
             using (var reader = command.ExecuteReader())
             {
-                if (reader.Read())
+                try
                 {
-                    sum = reader.GetDecimal(0);
+                    if (reader.Read())
+                    {
+                        sum = reader.GetDecimal(0);
+                    }
                 }
+                catch (Exception e)
+                {
+                    _connection.SqlConnection.Close();
+                    UpdateBillBalance(billId, sum);
+                }
+                
             }
             _connection.SqlConnection.Close();
             UpdateBillBalance(billId, sum);

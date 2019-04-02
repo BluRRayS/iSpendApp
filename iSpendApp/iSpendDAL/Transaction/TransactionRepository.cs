@@ -37,5 +37,10 @@ namespace iSpendDAL.Transaction
          {
              return _context.GetTransactionById(id,billId);
          }
+
+         public IEnumerable<ICategory> GetCategories()
+         {
+             return _context.GetCategories();
+         }
     }
 }

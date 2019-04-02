@@ -40,5 +40,10 @@ namespace iSpendLogic
         {
             return Repository.GetTransactionById(id,billId);
         }
+
+        public IEnumerable<ICategory> GetCategories()
+        {
+            return Repository.GetCategories();
+        }
     }
 }
