@@ -24,7 +24,7 @@ namespace iSpendWebApp.Controllers
 
 
         // GET: Transaction
-        public ActionResult Index(int id)
+        public ActionResult Index(int id,string billName,decimal balance)
         {
             var userHasAccess = false;
             if (HttpContext.Session.GetString("UserSession") == null) return RedirectToAction("Login", "User");
@@ -46,6 +46,9 @@ namespace iSpendWebApp.Controllers
             ViewBag.Categories = categories;
 
             ViewBag.BillId = id;
+            ViewBag.BillName = billName;
+            ViewBag.Balance = balance;
+
             var context = _transactionLogic.GetBillTransactions(id);
             var model = context.Select(trans => new TransactionsViewModel(trans.TransactionId, trans.BillId, trans.TransactionName, trans.TransactionAmount, trans.Category, trans.IconId, trans.TimeOfTransaction)).ToList();
             return View("~/Views/Transaction/Transactions.cshtml", model);

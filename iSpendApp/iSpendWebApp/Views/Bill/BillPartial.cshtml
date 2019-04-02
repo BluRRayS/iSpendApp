@@ -1,14 +1,11 @@
 ﻿@model iSpendWebApp.Models.Bill.BillViewModel
 
 <div align="Center">
-        <div class=" panel panel-default" style="background-color: #E0E1E0; margin: 8px; font-weight: bold; border-color: black">
-            <div class="panel-heading" style="background-color: #1faa00">@Html.DisplayFor(model => model.IconId)</div>
-            <div class="panel-body">
-                @Html.DisplayFor(model => model.BillName)<br />
-                @Html.DisplayFor(model => model.BillBalance)<br />
-                <div>
-                    @Html.ActionLink("Details","Index","Transaction",new{ id = Model.BillId})
-                </div>
-            </div>
+    <div class=" panel panel-default" style="background-color: mediumseagreen ; margin: 8px; font-weight: bold; color:white" onclick="location.href = @Url.Action("Index","Transaction",new {id = Model.BillId, billName = Model.BillName, balance = Model.BillBalance})">
+        <div class="panel-body">
+            <h3 class="text-center">@Html.DisplayFor(model => model.IconId)</h3>         
+            @Html.DisplayFor(model => model.BillName)<br/>
+            @Html.DisplayFor(model => model.BillBalance)<br/>
         </div>
+    </div>
 </div>

@@ -1,11 +1,14 @@
 ﻿@using iSpendWebApp.Models.Transaction
+@using Microsoft.CodeAnalysis.CSharp.Syntax
 @model IEnumerable<iSpendWebApp.Models.Transaction.TransactionsViewModel>
 
 @{
     ViewData["Title"] = "Transactions";
 }
 
-<h2>Bill Name</h2>
+<h2 class="text-center" align="center">@ViewBag.BillName</h2>
+<h2 class="text-center" align="center">€@Model.Sum(model => model.TransactionAmount)</h2>
+<hr />
 
 <!-- Modal Create Transaction -->
 <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
@@ -70,9 +73,20 @@
                     <td>
                         @Html.DisplayFor(modelItem => item.TransactionName)
                     </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.TransactionAmount)
-                    </td>
+                    @if (item.TransactionAmount >= 0)
+                    {
+                        <td style="color:limegreen">
+                            @Html.DisplayFor(modelItem => item.TransactionAmount)
+                        </td>
+
+                    }
+
+                    @if (item.TransactionAmount < 0)
+                    {
+                        <td style="color:red">
+                            @Html.DisplayFor(modelItem => item.TransactionAmount)
+                        </td>
+                    }
                     <td>
                         @Html.DisplayFor(modelItem => item.Category)
                     </td>
