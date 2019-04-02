@@ -65,7 +65,7 @@ namespace iSpendDAL.Bill
                 _userBills = new List<IBill>();
                 while (reader.Read())
                 {
-                    _userBills.Add(new BillDto(reader.GetInt32(0), reader.GetString(1),Convert.ToDouble(reader.GetDecimal(2)),reader.GetDateTime(3)));
+                    _userBills.Add(new BillDto(reader.GetInt32(0), reader.GetString(1),Convert.ToDouble(reader.GetDecimal(2)),reader.GetDateTime(3),reader.GetInt32(4)));
                 }
             }
             _connection.SqlConnection.Close();

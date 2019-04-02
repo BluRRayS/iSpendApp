@@ -1,11 +1,15 @@
 ﻿@model iSpendWebApp.Models.Bill.BillViewModel
+@{
+    var imagePath = Url.Content("~/Icons/Bill/"+Model.IconId+".png");
+}
 
 <div align="Center">
-    <div class=" panel panel-default" style="background-color: mediumseagreen ; margin: 8px; font-weight: bold; color:white" onclick="location.href = @Url.Action("Index","Transaction",new {id = Model.BillId, billName = Model.BillName, balance = Model.BillBalance})">
+    <div class=" panel panel-default" style="background-color: mediumseagreen ; margin: 8px; font-weight: bold; color:white">
         <div class="panel-body">
-            <h3 class="text-center">@Html.DisplayFor(model => model.IconId)</h3>         
-            @Html.DisplayFor(model => model.BillName)<br/>
-            @Html.DisplayFor(model => model.BillBalance)<br/>
+            <img src="@imagePath" /><br/>
+            @Html.DisplayFor(model => model.BillName)<br />
+            @Html.DisplayFor(model => model.BillBalance)<br />
+            @Html.ActionLink("Details","Index","Transaction",new {id = Model.BillId, billName = Model.BillName, balance = Model.BillBalance})<br/>
         </div>
     </div>
 </div>

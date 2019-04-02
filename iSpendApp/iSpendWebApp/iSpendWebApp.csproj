@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
+    <Authors>Joep Verhoeven</Authors>
   </PropertyGroup>
 
   <ItemGroup>
@@ -13,6 +14,12 @@
   <ItemGroup>
     <ProjectReference Include="..\iSpendInterfaces\iSpendInterfaces.csproj" />
     <ProjectReference Include="..\iSpendLogic\iSpendLogic.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Views\Savings\" />
+    <Folder Include="wwwroot\Icons\Category\" />
+    <Folder Include="wwwroot\Icons\Savings\" />
   </ItemGroup>
 
 </Project>

@@ -8,12 +8,13 @@ namespace iSpendDAL.Dto
 {
     internal class BillDto:IBill
     {
-        public BillDto(int billId, string billName, double balance,DateTimeOffset time)
+        public BillDto(int billId, string billName, double balance,DateTimeOffset time,int iconId)
         {
             BillId = billId;
             BillName = billName;
             BillBalance = balance;
             DateOfCreation = time;
+            IconId = iconId;
         }
 
         public BillDto()
