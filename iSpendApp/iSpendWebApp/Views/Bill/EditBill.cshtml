@@ -2,6 +2,8 @@
 
 @{
     ViewData["Title"] = "EditBill";
+    var imagePath = "";
+    var count = 0;
 }
 
 <h2>EditBill</h2>
@@ -14,13 +16,30 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="BillName" class="control-label"></label>
-                <input asp-for="BillName" class="form-control" value="@Model.BillName"/>
+                <input asp-for="BillName" class="form-control" value="@Model.BillName" />
                 <span asp-validation-for="BillName" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="IconId" class="control-label"></label>
-                <input asp-for="IconId" class="form-control" value="@Model.IconId" />
-                <span asp-validation-for="IconId" class="text-danger"></span>
+            <div class="row">
+                <div class="col-xs-3">
+                    <p>Preview:</p>
+                </div>
+                <div class="col-xs-3">
+                    <div id="ImgDisplay" class="panel-default"></div>
+                </div>
+                <div class="form-group">
+                    <div class="col-xs-6">
+                        <label asp-for="IconId" class="control-label"></label>
+                        <select asp-for="IconId" class="form-control" id="IdMenu">
+                            @foreach (var icon in Model.Icons)
+                            {
+                                imagePath = Url.Content("~/Icons/Bill/" + icon+".png");
+                                <option value="@count" title="@imagePath">@icon</option>
+                                count++;
+                            }
+                        </select>
+                    </div>
+                    <span asp-validation-for="IconId" class="text-danger"></span>
+                </div>
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-warning" />
@@ -36,3 +55,10 @@
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
+
+<script>
+    $("#IdMenu").on('change', function () {
+        $('#ImgDisplay').empty();
+        $('#ImgDisplay').append('<img src="' + $(this).find('option:selected').attr('title') + '" />');
+    });
+</script>

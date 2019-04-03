@@ -2,6 +2,8 @@
 
 @{
     ViewData["Title"] = "EditTransaction";
+    var imagePath = "";
+    var count = 0;
 }
 
 <h2>Edit Transaction</h2>
@@ -11,9 +13,7 @@
         <form asp-action="Edit" asp-controller="Transaction">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             @Html.HiddenFor(model => model.BillId)
-            @Html.DisplayFor(model => model.BillId)
             @Html.HiddenFor(model => model.TransactionId)
-
 
             <div class="form-group">
                 <label asp-for="TransactionName" class="control-label"></label>
@@ -30,10 +30,27 @@
                 <input asp-for="Category" class="form-control" />
                 <span asp-validation-for="Category" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="IconId" class="control-label"></label>
-                <input asp-for="IconId" class="form-control" />
-                <span asp-validation-for="IconId" class="text-danger"></span>
+            <div class="row">
+                <div class="col-xs-3">
+                    <p>Preview:</p>
+                </div>
+                <div class="col-xs-3">
+                    <div id="ImgDisplay" class="panel-default"></div>
+                </div>
+                <div class="form-group">
+                    <div class="col-xs-6">
+                        <label asp-for="IconId" class="control-label"></label>
+                        <select asp-for="IconId" class="form-control" id="IdMenu">
+                            @foreach (var icon in Model.Icons)
+                            {
+                                imagePath = Url.Content("~/Icons/Category/" + icon+ ".png");
+                                <option value="@count" title="@imagePath">@icon</option>
+                                count++;
+                            }
+                        </select>
+                    </div>
+                    <span asp-validation-for="IconId" class="text-danger"></span>
+                </div>
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-success" />
@@ -49,3 +66,10 @@
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
+
+<script>
+    $("#IdMenu").on('change', function () {
+        $('#ImgDisplay').empty();
+        $('#ImgDisplay').append('<img src="' + $(this).find('option:selected').attr('title') + '" />');
+    });
+</script>

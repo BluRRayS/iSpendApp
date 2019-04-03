@@ -1,15 +1,17 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using iSpendInterfaces;
 
 namespace iSpendWebApp.Models.Bill
 {
     public class BillViewModel:IBill
     {
-        public BillViewModel(int totalIcons)
+        public BillViewModel(IEnumerable<string>icons)
         {
-            TotalIcons = totalIcons;
+            var iconNames = icons.Select(iconName => iconName.Remove(iconName.Length - 4)).ToList();
+            Icons = iconNames;
         }
 
         public BillViewModel()
@@ -17,7 +19,7 @@ namespace iSpendWebApp.Models.Bill
             
         }
 
-        public BillViewModel(int billId, string billName, double billBalance, IEnumerable<ITransaction> transactions, int iconId, IEnumerable<int> accountIds)
+        public BillViewModel(int billId, string billName, double billBalance, IEnumerable<ITransaction> transactions, int iconId, IEnumerable<int> accountIds, IEnumerable<string> icons)
         {
             BillId = billId;
             BillName = billName;
@@ -25,6 +27,8 @@ namespace iSpendWebApp.Models.Bill
             Transactions = transactions;
             IconId = iconId;
             AccountIds = accountIds;
+            var iconNames = icons.Select(iconName => iconName.Remove(iconName.Length - 4)).ToList();
+            Icons = iconNames;
         }
 
         public int BillId { get; set; }
@@ -41,6 +45,6 @@ namespace iSpendWebApp.Models.Bill
         public int IconId { get; set; }
         public IEnumerable<int> AccountIds { get; set; }
         public int UserId { get; set; }
-        public int TotalIcons { get; set; }
+        public List<string> Icons { get; set; }
     }
 }

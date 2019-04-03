@@ -1,14 +1,15 @@
 ﻿@using System.Linq
 @model iSpendWebApp.Models.Transaction.TransactionsViewModel
 @{
-    var imagePath = Url.Content("~/Icons/Bill/" + Model.IconId + ".png");
+    var imagePath = "";
+    var count = 0;
 }
 
 <div class="row">
     <div class="col-sm-12">
         <form asp-action="Create" asp-controller="Transaction" class="center-block">
             @Html.HiddenFor(model => model.BillId)
-            @Html.HiddenFor(modelItem => modelItem.TotalIcons)
+            @Html.HiddenFor(modelItem => modelItem.Icons)
             <div class="form-group">
                 <label asp-for="TransactionName" class="control-label"></label>
                 <input asp-for="TransactionName" class="form-control" />
@@ -36,10 +37,11 @@
                     <div class="col-xs-6">
                         <label asp-for="IconId" class="control-label"></label>
                         <select asp-for="IconId" class="form-control" id="IdMenu">
-                            @for (var file = 0; file < Model.TotalIcons; file++)
+                            @foreach (var icon in Model.Icons)
                             {
-                                imagePath = Url.Content("~/Icons/Category/" + file + ".png");
-                                <option value="@imagePath" data-icon="@imagePath">@file</option>
+                                imagePath = Url.Content("~/Icons/Category/" + icon+ ".png");
+                                <option value="@count" title="@imagePath">@icon</option>
+                                count++;
                             }
                         </select>
                     </div>
@@ -61,6 +63,6 @@
 <script>
     $("#IdMenu").on('change', function () {
         $('#ImgDisplay').empty();
-        $('#ImgDisplay').append('<img src="' + $(this).val() + '" />');
+        $('#ImgDisplay').append('<img src="' + $(this).find('option:selected').attr('title') + '" />');
     });
 </script>

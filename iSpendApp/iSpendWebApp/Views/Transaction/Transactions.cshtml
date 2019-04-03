@@ -4,6 +4,7 @@
 
 @{
     ViewData["Title"] = "Transactions";
+    
 }
 
 <h2 class="text-center" align="center">@ViewBag.BillName</h2>
@@ -65,7 +66,10 @@
             {
                 <tr>
                     <td>
-                        @{  var imagePath = Url.Content("~/Icons/Category/" + item.IconId + ".png");}
+                        @{
+                            var imageName = ViewBag.FileProvider[item.IconId];
+                            var imagePath = Url.Content("~/Icons/Category/" + imageName);
+                        }
                         <img src="@imagePath" alt="Icons/Category/0.png" />
                     </td>
                     <td>

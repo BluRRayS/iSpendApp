@@ -34,9 +34,9 @@ namespace iSpendWebApp.Controllers
         {
             var username = HttpContext.Session.GetString("UserSession");
             if (username == null) return RedirectToAction("Login", "User");
-
+            ViewBag.FileProvider = _fileProvider.GetDirectoryContents("wwwroot/Icons/Bill").ToList().Select(icon => icon.Name).ToList();
             var context = _billContext.GetBillsByUsername(HttpContext.Session.GetString("UserSession"));
-            var bills = context.Select(bill => new BillViewModel(bill.BillId, bill.BillName, bill.BillBalance, bill.Transactions, bill.IconId, bill.AccountIds)).ToList();
+            var bills = context.Select(bill => new BillViewModel(bill.BillId, bill.BillName, bill.BillBalance, bill.Transactions, bill.IconId, bill.AccountIds, _fileProvider.GetDirectoryContents("wwwroot/Icons/Bill").ToList().Select(icon => icon.Name).ToList())).ToList();
             var savings = new List<SavingsViewModel>();
             var model = new LandingPageViewModel(bills,savings);
             return View("~/Views/Shared/Overview.cshtml", model);
@@ -59,7 +59,7 @@ namespace iSpendWebApp.Controllers
         public ActionResult Create()
         {
             if (HttpContext.Session.GetString("UserSession") == null) return RedirectToAction("Login", "User");
-            var model = new BillViewModel(_fileProvider.GetDirectoryContents("wwwroot/Icons/Category").Count());
+            var model = new BillViewModel(_fileProvider.GetDirectoryContents("wwwroot/Icons/Bill").ToList().Select(icon => icon.Name).ToList());
             return View("CreateBill",model);
 
         }
@@ -104,7 +104,7 @@ namespace iSpendWebApp.Controllers
             }
 
             var context = _billLogic.GetBillById(id);
-            var model = new BillViewModel(context.BillId, context.BillName, context.BillBalance, context.Transactions, context.IconId, context.AccountIds);
+            var model = new BillViewModel(context.BillId, context.BillName, context.BillBalance, context.Transactions, context.IconId, context.AccountIds, _fileProvider.GetDirectoryContents("wwwroot/Icons/Bill").ToList().Select(icon => icon.Name).ToList());
             return View("EditBill", model);
         }
 
@@ -150,10 +150,5 @@ namespace iSpendWebApp.Controllers
             }
         }
 
-        [HttpGet("/Bill/GetImage")]
-        public JsonResult GetImage(string imageName)
-        {
-            return Json(imageName);           
-        }
     }
 }

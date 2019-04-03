@@ -55,10 +55,11 @@ namespace iSpendWebApp.Controllers
             ViewBag.BillId = id;
             ViewBag.BillName = billName;
             ViewBag.Balance = balance;
-            ViewBag.FileProvider = _fileProvider.GetDirectoryContents("wwwroot/Icons/Category").Count();
+            ViewBag.FileProvider = _fileProvider.GetDirectoryContents("wwwroot/Icons/Category").ToList().Select(icon => icon.Name).ToList();
+
 
             var context = _transactionLogic.GetBillTransactions(id);
-            var model = context.Select(trans => new TransactionsViewModel(trans.TransactionId, trans.BillId, trans.TransactionName, trans.TransactionAmount, trans.Category, trans.IconId, trans.TimeOfTransaction)).ToList();
+            var model = context.Select(trans => new TransactionsViewModel(trans.TransactionId, trans.BillId, trans.TransactionName, trans.TransactionAmount, trans.Category, trans.IconId, trans.TimeOfTransaction, _fileProvider.GetDirectoryContents("wwwroot/Icons/Bill").ToList().Select(icon => icon.Name).ToList())).ToList();
             return View("~/Views/Transaction/Transactions.cshtml", model);
         }
 
@@ -70,9 +71,9 @@ namespace iSpendWebApp.Controllers
             if (username == null) return RedirectToAction("Login", "User");
             var categoriesContext = _transactionLogic.GetCategories();
             ViewBag.categories = categoriesContext.Select(category => new SelectListItem(category.Name, category.Name)).ToList();
-            ViewBag.FileProvider = _fileProvider.GetDirectoryContents("wwwroot/Icons/Category").Count();
+            ViewBag.FileProvider = _fileProvider.GetDirectoryContents("wwwroot/Icons/Category").ToList().Select(icon => icon.Name).ToList();
             var model = new TransactionsViewModel(id,ViewBag.FileProvider);
-            return View("~/Views/Transaction/CreateTransaction.cshtml", model);
+            return View("~/Views/Transaction/CreateTransaction.cshtml",model);
         }
 
         // POST: Transaction/Create
@@ -102,7 +103,7 @@ namespace iSpendWebApp.Controllers
             var context = _transactionLogic.GetTransactionById(id, billId);
             var categoriesContext = _transactionLogic.GetCategories();
             var categories = categoriesContext.Select(category => category.Name).ToList();
-            var model = new TransactionsViewModel(context.TransactionId, context.BillId, context.TransactionName, context.TransactionAmount, context.Category, context.IconId, context.TimeOfTransaction);
+            var model = new TransactionsViewModel(context.TransactionId, context.BillId, context.TransactionName, context.TransactionAmount, context.Category, context.IconId, context.TimeOfTransaction, _fileProvider.GetDirectoryContents("wwwroot/Icons/Category").ToList().Select(icon => icon.Name).ToList());
             return View("~/Views/Transaction/EditTransaction.cshtml", model);
         }
 
