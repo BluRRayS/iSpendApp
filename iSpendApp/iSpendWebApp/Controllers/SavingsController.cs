@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using iSpendWebApp.Models.Savings;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,25 +13,26 @@ namespace iSpendWebApp.Controllers
         // GET: Savings
         public ActionResult Index()
         {
-            return View();
+           return RedirectToAction("Index", "Bill");
         }
 
         // GET: Savings/Details/5
         public ActionResult Details(int id)
         {
-            return View();
+            var model = new SavingsViewModel();
+            return View("~/Views/Savings/SavingDetails.cshtml",model);
         }
 
         // GET: Savings/Create
         public ActionResult Create()
         {
-            return View();
+            return View("~/Views/Savings/CreateSaving.cshtml");
         }
 
         // POST: Savings/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create(SavingsViewModel model)
         {
             try
             {
@@ -40,7 +42,7 @@ namespace iSpendWebApp.Controllers
             }
             catch
             {
-                return View();
+                return RedirectToAction("Create");
             }
         }
 

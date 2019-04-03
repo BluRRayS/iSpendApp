@@ -1,0 +1,64 @@
+﻿@model LandingPageViewModel
+
+@{
+    ViewData["Title"] = "BillOverview";
+}
+
+<h2>My Bills</h2>
+<hr />
+<div class="container">
+    <row>
+        @if (Model.Bills != null)
+        {
+            foreach (var item in Model.Bills)
+            {
+                <div class="col-sm-4">
+                    @{
+                        Html.RenderPartial("~/Views/Bill/BillPartial.cshtml", item);
+                    }
+                </div>
+
+            }
+        }
+        <div class="col-sm-4">
+            <div align="Center">
+                <div class=" panel panel-default" style="background-color:mediumseagreen ; margin: 8px; font-weight: bold; color: white">
+                    <div class="panel-body">
+                        <div>
+                            <input type="button" class="btn btn-default" value="+" onclick="location.href = '@Url.Action("Create", "Bill")'" style="margin-top: 12%;margin-bottom: 13%; background-color: gray;  color: white; font-weight: bold" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </row>
+</div>
+<hr />
+<div class="container">
+    <h2>My Saving Plans</h2>
+    <row>
+        @if (Model.Savings != null)
+        {
+            foreach (var item in Model.Savings)
+            {
+                <div class="col-sm-4">
+                    @{
+                        <p>partial view here</p>
+                    }
+                </div>
+
+            }
+        }
+        <div class="col-sm-4">
+            <div align="Center">
+                <div class=" panel panel-default" style="background-color:mediumslateblue ; margin: 8px;">
+                    <div class="panel-body">
+                        <div>
+                            <input type="button" class="btn btn-default" value="+" onclick="location.href = '@Url.Action("Create", "Savings")'" style="margin-top: 12%;margin-bottom: 13%; background-color: gray; color: white; font-weight: bold" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </row>
+</div>

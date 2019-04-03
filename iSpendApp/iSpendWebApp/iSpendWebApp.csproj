@@ -16,10 +16,4 @@
     <ProjectReference Include="..\iSpendLogic\iSpendLogic.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Views\Savings\" />
-    <Folder Include="wwwroot\Icons\Category\" />
-    <Folder Include="wwwroot\Icons\Savings\" />
-  </ItemGroup>
-
 </Project>

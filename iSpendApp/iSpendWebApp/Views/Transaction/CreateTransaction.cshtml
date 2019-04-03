@@ -1,18 +1,22 @@
 ﻿@using System.Linq
 @model iSpendWebApp.Models.Transaction.TransactionsViewModel
+@{
+    var imagePath = Url.Content("~/Icons/Bill/" + Model.IconId + ".png");
+}
 
 <div class="row">
     <div class="col-sm-12">
         <form asp-action="Create" asp-controller="Transaction" class="center-block">
             @Html.HiddenFor(model => model.BillId)
+            @Html.HiddenFor(modelItem => modelItem.TotalIcons)
             <div class="form-group">
                 <label asp-for="TransactionName" class="control-label"></label>
-                <input asp-for="TransactionName" class="form-control"/>
+                <input asp-for="TransactionName" class="form-control" />
                 <span asp-validation-for="TransactionName" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="TransactionAmount" class="control-label"></label>
-                <input asp-for="TransactionAmount" class="form-control"/>
+                <input asp-for="TransactionAmount" class="form-control" />
                 <span asp-validation-for="TransactionAmount" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -20,14 +24,33 @@
                 <Select asp-for="Category" asp-items="ViewBag.Categories" class="form-control"></Select>
                 <span asp-validation-for="Category" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="IconId" class="control-label"></label>
-                <input asp-for="IconId" class="form-control"/>
-                <span asp-validation-for="IconId" class="text-danger"></span>
+
+            <div class="row">
+                <div class="col-xs-3">
+                    <p>Preview:</p>
+                </div>
+                <div class="col-xs-3">
+                    <div id="ImgDisplay" class="panel-default"></div>
+                </div>
+                <div class="form-group">
+                    <div class="col-xs-6">
+                        <label asp-for="IconId" class="control-label"></label>
+                        <select asp-for="IconId" class="form-control" id="IdMenu">
+                            @for (var file = 0; file < Model.TotalIcons; file++)
+                            {
+                                imagePath = Url.Content("~/Icons/Category/" + file + ".png");
+                                <option value="@imagePath" data-icon="@imagePath">@file</option>
+                            }
+                        </select>
+                    </div>
+                    <span asp-validation-for="IconId" class="text-danger"></span>
+                </div>
             </div>
+
             <div class="form-group left">
-                <input type="submit" value="Create" class="btn btn-success"/>
+                <input type="submit" value="Create" class="btn btn-success" />
             </div>
+
         </form>
     </div>
 </div>
@@ -35,3 +58,9 @@
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
+<script>
+    $("#IdMenu").on('change', function () {
+        $('#ImgDisplay').empty();
+        $('#ImgDisplay').append('<img src="' + $(this).val() + '" />');
+    });
+</script>

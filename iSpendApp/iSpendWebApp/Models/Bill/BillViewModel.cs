@@ -7,6 +7,11 @@ namespace iSpendWebApp.Models.Bill
 {
     public class BillViewModel:IBill
     {
+        public BillViewModel(int totalIcons)
+        {
+            TotalIcons = totalIcons;
+        }
+
         public BillViewModel()
         {
             
@@ -36,5 +41,6 @@ namespace iSpendWebApp.Models.Bill
         public int IconId { get; set; }
         public IEnumerable<int> AccountIds { get; set; }
         public int UserId { get; set; }
+        public int TotalIcons { get; set; }
     }
 }

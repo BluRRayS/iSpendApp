@@ -1,2 +1,1 @@
-﻿//Todo: Delete/Edit functions Transactions
-//Todo: Remove transactions and clear User_account table when removing bill.
+﻿icon display when creating bill and transaction and saving plan. (Maybe use DB)

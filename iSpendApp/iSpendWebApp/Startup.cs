@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -17,6 +18,7 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 
 namespace iSpendWebApp
 {
@@ -47,6 +49,9 @@ namespace iSpendWebApp
             });
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
+            IFileProvider physicalProvider = new PhysicalFileProvider(Directory.GetCurrentDirectory());
+            services.AddSingleton<IFileProvider>(physicalProvider);
 
             services.AddSingleton<IAccountContext, AccountContext>();
             services.AddSingleton<IBillContext, BillContext>();

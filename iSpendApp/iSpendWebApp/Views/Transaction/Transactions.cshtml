@@ -15,14 +15,14 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 class="modal-title text-center">Create Transaction</h3>
+                <h3 class="modal-title text-center">Add deposit/withdrawal</h3>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
                 @{
-                    Html.RenderPartial("CreateTransaction", new TransactionsViewModel(ViewBag.BillId));
+                    Html.RenderPartial("CreateTransaction", new TransactionsViewModel(ViewBag.BillId,ViewBag.FileProvider));
                 }
             </div>
         </div>
@@ -39,27 +39,24 @@
 </div>
 <table class="table">
     <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.TransactionId)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TransactionName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TransactionAmount)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Category)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IconId)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TimeOfTransaction)
-            </th>
-            <th></th>
-        </tr>
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.IconId)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TransactionName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TransactionAmount)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Category)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TimeOfTransaction)
+        </th>
+        <th></th>
+    </tr>
     </thead>
     @if (Model != null)
     {
@@ -68,14 +65,15 @@
             {
                 <tr>
                     <td>
-                        @Html.DisplayFor(modelItem => item.TransactionId)
+                        @{  var imagePath = Url.Content("~/Icons/Category/" + item.IconId + ".png");}
+                        <img src="@imagePath" alt="Icons/Category/0.png" />
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.TransactionName)
                     </td>
                     @if (item.TransactionAmount >= 0)
                     {
-                        <td style="color:limegreen">
+                        <td style="color: limegreen">
                             @Html.DisplayFor(modelItem => item.TransactionAmount)
                         </td>
 
@@ -83,7 +81,7 @@
 
                     @if (item.TransactionAmount < 0)
                     {
-                        <td style="color:red">
+                        <td style="color: red">
                             @Html.DisplayFor(modelItem => item.TransactionAmount)
                         </td>
                     }
@@ -91,14 +89,11 @@
                         @Html.DisplayFor(modelItem => item.Category)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.IconId)
-                    </td>
-                    <td>
                         @Html.DisplayFor(modelItem => item.TimeOfTransaction)
                     </td>
                     <td>
-                        <input type="button" value="Edit" class="btn btn-warning" onclick="location.href = '@Url.Action("Edit", "Transaction" , new {id = item.TransactionId ,billId = ViewBag.BillId})'" />
-                        <input type="button" value="Delete" class="btn btn-danger" onclick="location.href = '@Url.Action("Delete", "Transaction", new {id = item.TransactionId ,billId = ViewBag.BillId})'" />
+                        <input type="button" value="Edit" class="btn btn-warning" onclick="location.href = '@Url.Action("Edit", "Transaction", new {id = item.TransactionId, billId = ViewBag.BillId})'"/>
+                        <input type="button" value="Delete" class="btn btn-danger" onclick="location.href = '@Url.Action("Delete", "Transaction", new {id = item.TransactionId, billId = ViewBag.BillId})'"/>
                     </td>
                 </tr>
             }

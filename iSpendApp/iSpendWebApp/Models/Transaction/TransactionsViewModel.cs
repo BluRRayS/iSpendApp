@@ -9,9 +9,10 @@ namespace iSpendWebApp.Models.Transaction
 {
     public class TransactionsViewModel:ITransaction
     {
-        public TransactionsViewModel(int billId)
+        public TransactionsViewModel(int billId,int icons)
         {
             BillId = billId;
+            TotalIcons = icons;
         }
 
         public TransactionsViewModel()
@@ -40,5 +41,6 @@ namespace iSpendWebApp.Models.Transaction
         public string Category { get; set; }
         public int IconId { get; set; }
         public DateTime TimeOfTransaction { get; set; }
+        public int TotalIcons { get; set; }
     }
 }

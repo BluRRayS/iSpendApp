@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Runtime.InteropServices.ComTypes;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Rewrite.Internal;
+using Microsoft.Extensions.FileProviders;
+using Microsoft.Extensions.Logging.Console.Internal;
 
 namespace iSpendWebApp.Controllers
 {
@@ -15,11 +18,15 @@ namespace iSpendWebApp.Controllers
         private readonly TransactionLogic _transactionLogic;
         private readonly UserLogic _accountLogic;
         private readonly BillLogic _billLogic;
-        public TransactionController(ITransactionContext transactionContext, IAccountContext accountContext, IBillContext billContext)
+        private readonly IFileProvider _fileProvider;
+
+        public TransactionController(ITransactionContext transactionContext, IAccountContext accountContext, IBillContext billContext, IFileProvider fileProvider)
         {
             _transactionLogic = new TransactionLogic(transactionContext);
             _accountLogic = new UserLogic(accountContext);
             _billLogic = new BillLogic(billContext);
+            _fileProvider = fileProvider;
+            
         }
 
 
@@ -48,6 +55,7 @@ namespace iSpendWebApp.Controllers
             ViewBag.BillId = id;
             ViewBag.BillName = billName;
             ViewBag.Balance = balance;
+            ViewBag.FileProvider = _fileProvider.GetDirectoryContents("wwwroot/Icons/Category").Count();
 
             var context = _transactionLogic.GetBillTransactions(id);
             var model = context.Select(trans => new TransactionsViewModel(trans.TransactionId, trans.BillId, trans.TransactionName, trans.TransactionAmount, trans.Category, trans.IconId, trans.TimeOfTransaction)).ToList();
@@ -62,7 +70,8 @@ namespace iSpendWebApp.Controllers
             if (username == null) return RedirectToAction("Login", "User");
             var categoriesContext = _transactionLogic.GetCategories();
             ViewBag.categories = categoriesContext.Select(category => new SelectListItem(category.Name, category.Name)).ToList();
-            var model = new TransactionsViewModel(id);
+            ViewBag.FileProvider = _fileProvider.GetDirectoryContents("wwwroot/Icons/Category").Count();
+            var model = new TransactionsViewModel(id,ViewBag.FileProvider);
             return View("~/Views/Transaction/CreateTransaction.cshtml", model);
         }
 

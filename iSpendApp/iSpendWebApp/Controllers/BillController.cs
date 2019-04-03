@@ -8,9 +8,11 @@ using iSpendInterfaces;
 using iSpendLogic;
 using iSpendWebApp.Models;
 using iSpendWebApp.Models.Bill;
+using iSpendWebApp.Models.Savings;
 using iSpendWebApp.Models.User;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.FileProviders;
 
 namespace iSpendWebApp.Controllers
 {
@@ -18,10 +20,13 @@ namespace iSpendWebApp.Controllers
     {
         private readonly IBillContext _billContext;
         private readonly BillLogic _billLogic;
-        public BillController(IBillContext billContext)
+        private readonly IFileProvider _fileProvider;
+
+        public BillController(IBillContext billContext, IFileProvider fileProvider)
         {
             _billContext = billContext;
             _billLogic = new BillLogic(_billContext);
+            _fileProvider = fileProvider;
         }
 
         // GET: Bill
@@ -31,8 +36,10 @@ namespace iSpendWebApp.Controllers
             if (username == null) return RedirectToAction("Login", "User");
 
             var context = _billContext.GetBillsByUsername(HttpContext.Session.GetString("UserSession"));
-            var models = context.Select(bill => new BillViewModel(bill.BillId, bill.BillName, bill.BillBalance, bill.Transactions, bill.IconId, bill.AccountIds)).ToList();
-            return View("BillOverview", models);
+            var bills = context.Select(bill => new BillViewModel(bill.BillId, bill.BillName, bill.BillBalance, bill.Transactions, bill.IconId, bill.AccountIds)).ToList();
+            var savings = new List<SavingsViewModel>();
+            var model = new LandingPageViewModel(bills,savings);
+            return View("~/Views/Shared/Overview.cshtml", model);
 
         }
 
@@ -51,12 +58,10 @@ namespace iSpendWebApp.Controllers
         // GET: Account/Create
         public ActionResult Create()
         {
-            if (HttpContext.Session.GetString("UserSession") != null)
-            {
-                return View("CreateBill");
-            }
+            if (HttpContext.Session.GetString("UserSession") == null) return RedirectToAction("Login", "User");
+            var model = new BillViewModel(_fileProvider.GetDirectoryContents("wwwroot/Icons/Category").Count());
+            return View("CreateBill",model);
 
-            return RedirectToAction("Login", "User");
         }
 
         // POST: Account/Create
@@ -116,7 +121,7 @@ namespace iSpendWebApp.Controllers
             }
             catch
             {
-                return View("BillOverview");
+                return View("Overview");
             }
         }
 
@@ -141,8 +146,14 @@ namespace iSpendWebApp.Controllers
             }
             catch
             {
-                return View("BillOverview");
+                return View("Overview");
             }
+        }
+
+        [HttpGet("/Bill/GetImage")]
+        public JsonResult GetImage(string imageName)
+        {
+            return Json(imageName);           
         }
     }
 }

@@ -1,0 +1,17 @@
+﻿@model iSpendWebApp.Models.Savings.SavingsViewModel
+
+@{
+//var imagePath = Url.Content("~/Icons/Bill/"+Model.IconId+".png");
+}
+
+<div align="Center">
+    <div class=" panel panel-default" style="background-color: mediumseagreen ; margin: 8px; font-weight: bold; color:white">
+        <div class="panel-body">
+            <img src=""  alt="~Icons/Savings/0.png"/><br/>
+            @Html.DisplayFor(model => model.SavingName)<br />
+            @Html.DisplayFor(model => model.SavingCurrentAmount) of @Html.DisplayFor(model => model.SavingsGoalAmount)<br />
+            @Html.ActionLink("Details","Details","Savings",new {id = Model.SavingId})<br/>
+        </div>
+    </div>
+</div>
+
