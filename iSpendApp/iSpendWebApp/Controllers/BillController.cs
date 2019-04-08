@@ -20,13 +20,15 @@ namespace iSpendWebApp.Controllers
     {
         private readonly IBillContext _billContext;
         private readonly BillLogic _billLogic;
+        private readonly SavingLogic _savingLogic;
         private readonly IFileProvider _fileProvider;
 
-        public BillController(IBillContext billContext, IFileProvider fileProvider)
+        public BillController(IBillContext billContext,ISavingsContext savingsContext, IFileProvider fileProvider)
         {
             _billContext = billContext;
             _billLogic = new BillLogic(_billContext);
             _fileProvider = fileProvider;
+            _savingLogic = new SavingLogic(savingsContext);
         }
 
         // GET: Bill
@@ -34,13 +36,17 @@ namespace iSpendWebApp.Controllers
         {
             var username = HttpContext.Session.GetString("UserSession");
             if (username == null) return RedirectToAction("Login", "User");
+
             ViewBag.FileProvider = _fileProvider.GetDirectoryContents("wwwroot/Icons/Bill").ToList().Select(icon => icon.Name).ToList();
-            var context = _billContext.GetBillsByUsername(HttpContext.Session.GetString("UserSession"));
-            var bills = context.Select(bill => new BillViewModel(bill.BillId, bill.BillName, bill.BillBalance, bill.Transactions, bill.IconId, bill.AccountIds, _fileProvider.GetDirectoryContents("wwwroot/Icons/Bill").ToList().Select(icon => icon.Name).ToList())).ToList();
-            var savings = new List<SavingsViewModel>();
+
+            var billContext = _billContext.GetBillsByUsername(HttpContext.Session.GetString("UserSession"));
+            var bills = billContext.Select(bill => new BillViewModel(bill.BillId, bill.BillName, bill.BillBalance, bill.Transactions, bill.IconId, bill.AccountIds, _fileProvider.GetDirectoryContents("wwwroot/Icons/Bill").ToList().Select(icon => icon.Name).ToList())).ToList();
+
+            var savingContext = _savingLogic.GetUserSavings((int)HttpContext.Session.GetInt32("UserId"));
+            var savings = savingContext.Select(saving => new SavingsViewModel(saving.UserId,saving.SavingId,saving.SavingName,saving.SavingCurrentAmount,saving.SavingsGoalAmount,saving.State,saving.IconId,saving.GoalDate));
+
             var model = new LandingPageViewModel(bills,savings);
             return View("~/Views/Shared/Overview.cshtml", model);
-
         }
 
         // GET: Account/Details/5

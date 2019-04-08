@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Text;
 using iSpendInterfaces;
 using iSpendInterfaces.Helpers;
 
-namespace iSpendWebApp.Models.Savings
+namespace iSpendDAL.Dto
 {
-    public class SavingsViewModel:ISaving
+    internal class SavingsDto :ISaving
     {
-        public SavingsViewModel(int userId, int savingId, string savingName, decimal savingCurrentAmount, decimal savingsGoalAmount, SavingState state, int iconId, DateTime goalDate)
+        public SavingsDto(int userId, int savingId, string savingName, decimal savingCurrentAmount, decimal savingsGoalAmount, SavingState state, int iconId, DateTime goalDate)
         {
             UserId = userId;
             SavingId = savingId;

@@ -57,7 +57,7 @@ namespace iSpendDAL.Bill
         {
             _userBills.Clear();
             _connection.SqlConnection.Open();
-            var command = new SqlCommand("SELECT * FROM [Account] INNER JOIN dbo.User_Account ON dbo.Account.Id = dbo.User_Account.AccountId  AND dbo.User_Account.UserId = (SELECT Id FROM dbo.[User] WHERE UserName = @Username)", _connection.SqlConnection);
+            var command = new SqlCommand("SELECT * FROM [Account]  INNER JOIN dbo.User_Account ON dbo.Account.Id = dbo.User_Account.AccountId  AND dbo.User_Account.UserId = (SELECT Id FROM dbo.[User] WHERE UserName = @Username)", _connection.SqlConnection);
             command.Parameters.AddWithValue("@Username", username);
             command.ExecuteNonQuery();
             using (var reader = command.ExecuteReader())

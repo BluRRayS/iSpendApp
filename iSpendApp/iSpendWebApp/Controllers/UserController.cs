@@ -34,6 +34,7 @@ namespace iSpendWebApp.Controllers
         public ActionResult Logout()
         {
             HttpContext.Session.Remove("UserSession");
+            HttpContext.Session.Remove("UserId");
             return RedirectToAction("Index", "Home");
         }
 

@@ -1,17 +1,30 @@
 ﻿@model iSpendWebApp.Models.Savings.SavingsViewModel
 
 @{
-//var imagePath = Url.Content("~/Icons/Bill/"+Model.IconId+".png");
+    //var imagePath = Url.Content("~/Icons/Bill/"+Model.IconId+".png");
+    var percentage = Math.Round((Model.SavingCurrentAmount / Model.SavingsGoalAmount) * 100);
 }
 
 <div align="Center">
-    <div class=" panel panel-default" style="background-color: mediumseagreen ; margin: 8px; font-weight: bold; color:white">
+    <div class=" panel panel-default" style="background-color:mediumslateblue ; margin: 8px; font-weight: bold; color:white">
         <div class="panel-body">
-            <img src=""  alt="~Icons/Savings/0.png"/><br/>
+            <img src="~/Icons/Savings/Goal.png" alt="~Icons/Savings/Goal.png" /><br />
             @Html.DisplayFor(model => model.SavingName)<br />
-            @Html.DisplayFor(model => model.SavingCurrentAmount) of @Html.DisplayFor(model => model.SavingsGoalAmount)<br />
-            @Html.ActionLink("Details","Details","Savings",new {id = Model.SavingId})<br/>
+            State: @Html.DisplayFor(model => model.State) <br />
+
+            €@Html.DisplayFor(model => model.SavingCurrentAmount) of €@Html.DisplayFor(model => model.SavingsGoalAmount)<br />
+            <div class="ldBar label-center" style="width:80%;height:10%;margin:auto" id="progress" data-preset="line" data-value="@percentage" data-stroke="data:ldbar/res,gradient(0,1,#D2FF52,#91E842)"></div>
+            @Html.ActionLink("Details", "Details", "Savings", new { id = Model.SavingId })<br />
         </div>
     </div>
 </div>
+
+<link rel="stylesheet" type="text/css" href="~/css/site.css" />
+<script type="text/javascript" src="~/js/loading-bar.js"></script>
+
+<script>
+
+</script>
+
+
 
