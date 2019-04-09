@@ -28,6 +28,7 @@ namespace iSpendDAL.Dto
         public IEnumerable<ITransaction> Transactions { get; set; }
         public int IconId { get; set; }
         public IEnumerable<int> AccountIds { get; set; }
+        public IEnumerable<IReservation> Reservations { get; set; }
         public DateTimeOffset DateOfCreation { get; set; }
 
     }

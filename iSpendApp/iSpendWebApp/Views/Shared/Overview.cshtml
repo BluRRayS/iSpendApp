@@ -12,7 +12,7 @@
         {
             foreach (var item in Model.Bills)
             {
-                <div class="col-sm-4">
+                <div class="col-sm-4" onclick="location.href = '@Url.Action("Index","Transaction", new {id = item.BillId,billName = item.BillName,balance = item.BillBalance})'">
                     @{
                         Html.RenderPartial("~/Views/Bill/BillPartial.cshtml", item);
                     }
@@ -41,7 +41,7 @@
         {
             foreach (var item in Model.Savings)
             {
-                <div class="col-sm-4">
+                <div class="col-sm-4" onclick="location.href = '@Url.Action("Details","Savings",new{id = item.SavingId})'">
                     @{
                        <partial name="~/Views/Savings/SavingPartial.cshtml" for="@item"/>
                     }

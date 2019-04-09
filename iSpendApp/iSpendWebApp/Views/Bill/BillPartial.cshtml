@@ -1,17 +1,30 @@
-﻿@model iSpendWebApp.Models.Bill.BillViewModel
+﻿@using iSpendInterfaces
+@model iSpendWebApp.Models.Bill.BillViewModel
 @{
     List<string> imageNames = ViewBag.FileProvider;
     var imageName = imageNames[Model.IconId];
     var imagePath = Url.Content("~/Icons/Bill/" + imageName);
+    decimal reservation = 0;
+
+    if (Model.Reservations != null)
+    {
+        reservation = Model.Reservations.Sum(res => res.Amount);
+    }
+    var reserved = Model.BillBalance - Convert.ToDouble(reservation);
 }
 
 <div align="Center">
-    <div class=" panel panel-default" style="background-color: mediumseagreen ; margin: 8px; font-weight: bold; color:white">
+    <div class=" panel panel-default" style="background-color: mediumseagreen; margin: 8px; font-weight: bold; color: white">
         <div class="panel-body">
-            <img src="@imagePath"/><br />
+            <img src="@imagePath" /><br />
+
             @Html.DisplayFor(model => model.BillName)<br />
             @Html.DisplayFor(model => model.BillBalance)<br />
-            @Html.ActionLink("Details", "Index", "Transaction", new { id = Model.BillId, billName = Model.BillName, balance = Model.BillBalance })<br />
+            @if (reservation > 0)
+            {
+                <i>€@reserved</i><br />
+                <i>€@reservation is reserved</i><br />
+            }
         </div>
     </div>
 </div>

@@ -40,7 +40,7 @@ namespace iSpendWebApp.Controllers
             ViewBag.FileProvider = _fileProvider.GetDirectoryContents("wwwroot/Icons/Bill").ToList().Select(icon => icon.Name).ToList();
 
             var billContext = _billContext.GetBillsByUsername(HttpContext.Session.GetString("UserSession"));
-            var bills = billContext.Select(bill => new BillViewModel(bill.BillId, bill.BillName, bill.BillBalance, bill.Transactions, bill.IconId, bill.AccountIds, _fileProvider.GetDirectoryContents("wwwroot/Icons/Bill").ToList().Select(icon => icon.Name).ToList())).ToList();
+            var bills =(billContext.Select(bill => new BillViewModel(bill.BillId, bill.BillName, bill.BillBalance, bill.Transactions, bill.IconId, bill.AccountIds, _fileProvider.GetDirectoryContents("wwwroot/Icons/Bill").ToList().Select(icon => icon.Name).ToList(), _billLogic.GetAccountReservations(bill.BillId))));
 
             var savingContext = _savingLogic.GetUserSavings((int)HttpContext.Session.GetInt32("UserId"));
             var savings = savingContext.Select(saving => new SavingsViewModel(saving.UserId,saving.SavingId,saving.SavingName,saving.SavingCurrentAmount,saving.SavingsGoalAmount,saving.State,saving.IconId,saving.GoalDate));
@@ -110,7 +110,7 @@ namespace iSpendWebApp.Controllers
             }
 
             var context = _billLogic.GetBillById(id);
-            var model = new BillViewModel(context.BillId, context.BillName, context.BillBalance, context.Transactions, context.IconId, context.AccountIds, _fileProvider.GetDirectoryContents("wwwroot/Icons/Bill").ToList().Select(icon => icon.Name).ToList());
+            var model = new BillViewModel(context.BillId, context.BillName, context.BillBalance, context.Transactions, context.IconId, context.AccountIds, _fileProvider.GetDirectoryContents("wwwroot/Icons/Bill").ToList().Select(icon => icon.Name).ToList(),new List<IReservation>());
             return View("EditBill", model);
         }
 
@@ -121,7 +121,6 @@ namespace iSpendWebApp.Controllers
         {
             try
             {
-
                 _billLogic.UpdateBill(id, model.BillName, model.IconId);
                 return RedirectToAction(nameof(Index));
             }

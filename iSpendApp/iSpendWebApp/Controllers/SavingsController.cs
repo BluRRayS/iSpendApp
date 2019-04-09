@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using iSpendDAL.ContextInterfaces;
 using iSpendLogic;
+using iSpendWebApp.Models;
 using iSpendWebApp.Models.Savings;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -36,7 +37,8 @@ namespace iSpendWebApp.Controllers
         public ActionResult Details(int id)
         {
             if(HttpContext.Session.GetString("UserSession") == null) return RedirectToAction("Login", "User");
-            var model = new CreateSavingsViewModel();
+            var context = _savingLogic.GetSavingById(id);
+            var model = new SavingsViewModel(context.UserId,id,context.SavingName,context.SavingCurrentAmount,context.SavingsGoalAmount,context.State,context.IconId,context.GoalDate);
             return View("~/Views/Savings/SavingDetails.cshtml",model);
         }
 
@@ -55,16 +57,16 @@ namespace iSpendWebApp.Controllers
         public ActionResult Create(CreateSavingsViewModel model)
         {
             if (HttpContext.Session.GetString("UserSession") == null) return RedirectToAction("Login", "User");
-            try
-            {
+            //try
+            //{
                 model.UserId = (int)HttpContext.Session.GetInt32("UserId");
-                _savingLogic.CreateSaving(model);
+                _savingLogic.CreateSaving(model,model.WithdrawFromBillId);
                 return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return RedirectToAction("Create");
-            }
+            //}
+            //catch
+            //{
+                //return RedirectToAction("Create");
+            //}
         }
 
         // GET: Savings/Edit/5
@@ -91,29 +93,41 @@ namespace iSpendWebApp.Controllers
             }
         }
 
-        // GET: Savings/Delete/5
-        public ActionResult Delete(int id)
-        {
-            if (HttpContext.Session.GetString("UserSession") == null) return RedirectToAction("Login", "User");
-            return View();
-        }
+
 
         // POST: Savings/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult Delete(SavingsViewModel model)
         {
             if (HttpContext.Session.GetString("UserSession") == null) return RedirectToAction("Login", "User");
             try
             {
-                // TODO: Add delete logic here
-
-                return RedirectToAction(nameof(Index));
+                _savingLogic.DeleteSaving(model.SavingId);
+                return RedirectToAction(nameof(Index), "Bill");
             }
             catch
             {
-                return View();
+                return RedirectToAction("Index", "Bill");
             }
+        }
+        // POST: Savings/AddReservation/5
+        [HttpPost]
+        public ActionResult AddReservation(ReservationViewModel model)
+        {
+            if (HttpContext.Session.GetString("UserSession") == null) return RedirectToAction("Login", "User");
+            try
+            {
+                _savingLogic.AddReservation(model);
+                _savingLogic.RefreshSavingsAmount(model.SavingsId);
+                return RedirectToAction("Index", "Bill");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return RedirectToAction("Index", "Bill");
+            }
+            
         }
     }
 }

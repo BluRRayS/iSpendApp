@@ -19,7 +19,7 @@ namespace iSpendWebApp.Models.Bill
             
         }
 
-        public BillViewModel(int billId, string billName, double billBalance, IEnumerable<ITransaction> transactions, int iconId, IEnumerable<int> accountIds, IEnumerable<string> icons)
+        public BillViewModel(int billId, string billName, double billBalance, IEnumerable<ITransaction> transactions, int iconId, IEnumerable<int> accountIds, IEnumerable<string> icons, IEnumerable<IReservation> reservations)
         {
             BillId = billId;
             BillName = billName;
@@ -29,6 +29,7 @@ namespace iSpendWebApp.Models.Bill
             AccountIds = accountIds;
             var iconNames = icons.Select(iconName => iconName.Remove(iconName.Length - 4)).ToList();
             Icons = iconNames;
+            Reservations = reservations;
         }
 
         public int BillId { get; set; }
@@ -44,6 +45,7 @@ namespace iSpendWebApp.Models.Bill
         public IEnumerable<ITransaction> Transactions { get; set; }
         public int IconId { get; set; }
         public IEnumerable<int> AccountIds { get; set; }
+        public IEnumerable<IReservation> Reservations { get; set; }
         public int UserId { get; set; }
         public List<string> Icons { get; set; }
     }

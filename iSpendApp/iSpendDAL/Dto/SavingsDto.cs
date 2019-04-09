@@ -8,6 +8,11 @@ namespace iSpendDAL.Dto
 {
     internal class SavingsDto :ISaving
     {
+        public SavingsDto()
+        {
+            
+        }
+
         public SavingsDto(int userId, int savingId, string savingName, decimal savingCurrentAmount, decimal savingsGoalAmount, SavingState state, int iconId, DateTime goalDate)
         {
             UserId = userId;

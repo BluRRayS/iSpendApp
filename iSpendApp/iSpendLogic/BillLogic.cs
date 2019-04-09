@@ -24,12 +24,20 @@ namespace iSpendLogic
 
         public IEnumerable<IBill> GetUserBills(string username)
         {
-            return Repository.GetUserBills(username);
+            var accounts = new List<IBill>();
+            foreach (var account in Repository.GetUserBills(username))
+            {
+                account.Reservations = Repository.GetReservations(account.BillId);
+                accounts.Add(account);
+            }
+            return accounts;
         }
 
         public IBill GetBillById(int id)
         {
-            return Repository.GetBillById(id);
+            var account = Repository.GetBillById(id);
+            account.Reservations = Repository.GetReservations(id);
+            return account;
         }
 
         public void UpdateBill(int id, string name, int iconId)
@@ -50,6 +58,11 @@ namespace iSpendLogic
         public IEnumerable<IUser> GetBillUsers(int billId)
         {
             return Repository.GetBillUsers(billId);
+        }
+
+        public IEnumerable<IReservation> GetAccountReservations(int accountId)
+        {
+            return Repository.GetReservations(accountId);
         }
     }
 }

@@ -14,7 +14,6 @@
 
             €@Html.DisplayFor(model => model.SavingCurrentAmount) of €@Html.DisplayFor(model => model.SavingsGoalAmount)<br />
             <div class="ldBar label-center" style="width:80%;height:10%;margin:auto" id="progress" data-preset="line" data-value="@percentage" data-stroke="data:ldbar/res,gradient(0,1,#D2FF52,#91E842)"></div>
-            @Html.ActionLink("Details", "Details", "Savings", new { id = Model.SavingId })<br />
         </div>
     </div>
 </div>

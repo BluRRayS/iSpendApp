@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Runtime.InteropServices.ComTypes;
+using iSpendInterfaces;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Rewrite.Internal;
 using Microsoft.Extensions.FileProviders;
@@ -18,13 +19,15 @@ namespace iSpendWebApp.Controllers
         private readonly TransactionLogic _transactionLogic;
         private readonly UserLogic _accountLogic;
         private readonly BillLogic _billLogic;
+        private readonly SavingLogic _savingLogic;
         private readonly IFileProvider _fileProvider;
 
-        public TransactionController(ITransactionContext transactionContext, IAccountContext accountContext, IBillContext billContext, IFileProvider fileProvider)
+        public TransactionController(ITransactionContext transactionContext, IAccountContext accountContext, IBillContext billContext,ISavingsContext savingsContext ,IFileProvider fileProvider)
         {
             _transactionLogic = new TransactionLogic(transactionContext);
             _accountLogic = new UserLogic(accountContext);
             _billLogic = new BillLogic(billContext);
+            _savingLogic = new SavingLogic(savingsContext);
             _fileProvider = fileProvider;
             
         }
@@ -56,7 +59,7 @@ namespace iSpendWebApp.Controllers
             ViewBag.BillName = billName;
             ViewBag.Balance = balance;
             ViewBag.FileProvider = _fileProvider.GetDirectoryContents("wwwroot/Icons/Category").ToList().Select(icon => icon.Name).ToList();
-
+            ViewBag.Savings = _savingLogic.GetUserSavings((int)HttpContext.Session.GetInt32("UserId"));
 
             var context = _transactionLogic.GetBillTransactions(id);
             var model = context.Select(trans => new TransactionsViewModel(trans.TransactionId, trans.BillId, trans.TransactionName, trans.TransactionAmount, trans.Category, trans.IconId, trans.TimeOfTransaction, _fileProvider.GetDirectoryContents("wwwroot/Icons/Bill").ToList().Select(icon => icon.Name).ToList())).ToList();

@@ -48,5 +48,10 @@ namespace iSpendDAL.Bill
         {
             return _context.GetBillUsers(billId);
         }
+
+        public IEnumerable<IReservation> GetReservations(int accountId)
+        {
+            return _context.GetReservations(accountId);
+        }
     }
 }

@@ -20,8 +20,12 @@ namespace iSpendDAL.ContextInterfaces
         IEnumerable<ITransaction> GetBillTransactions(int billId);
 
         decimal GetTotalBalance(int billId);
+
+        void AddReservation(IReservation reservation);
+
         void UpdateBillBalance(int billId, decimal amount);
 
         IEnumerable<IUser> GetBillUsers(int billId);
+        IEnumerable<IReservation> GetReservations(int accountId);
     }
 }

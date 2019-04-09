@@ -40,12 +40,38 @@ namespace iSpendDAL.Savings
 
         public void DeleteSaving(int id)
         {
-            throw new NotImplementedException();
+            var command1 = new SqlCommand("DELETE FROM dbo.Savings WHERE SavingsId = @Id", _connection.SqlConnection);
+            command1.Parameters.AddWithValue("@Id", id);
+            var command2 = new SqlCommand("DELETE FROM dbo.Reservations WHERE SavingsId = @Id", _connection.SqlConnection);
+            command2.Parameters.AddWithValue("@Id", id);
+            _connection.SqlConnection.Open();
+            command2.ExecuteNonQuery();
+            command1.ExecuteNonQuery();          
+            _connection.SqlConnection.Close();
         }
 
         public ISaving GetSavingById(int id)
         {
-            throw new NotImplementedException();
+            var saving = new SavingsDto {SavingId = id};
+            var command = new SqlCommand("SELECT SavingsId,UserId,SavingsName,CurrentAmount,GoalAmount,IconId,[State],GoalDate FROM dbo.Savings WHERE SavingsId = @Id",_connection.SqlConnection);
+           command.Parameters.AddWithValue("@Id", id);
+           _connection.SqlConnection.Open();
+           command.ExecuteNonQuery();
+           using (var reader = command.ExecuteReader())
+           {
+               if(reader.Read())
+               {
+                   saving.UserId = reader.GetInt32(1);
+                   saving.SavingName = reader.GetString(2);
+                   saving.SavingCurrentAmount = reader.GetDecimal(3);
+                   saving.SavingsGoalAmount = reader.GetDecimal(4);
+                   saving.IconId = reader.GetInt32(5);
+                   saving.State = (SavingState) reader.GetInt32(6);
+                   saving.GoalDate = reader.GetDateTime(7);
+               }
+           }
+           _connection.SqlConnection.Close();
+           return saving;
         }
 
         public IEnumerable<ISaving> GetUserSavings(int id)
@@ -64,6 +90,49 @@ namespace iSpendDAL.Savings
             }
             _connection.SqlConnection.Close();
             return savings;
+        }
+
+        public void AddReservation(IReservation reservation)
+        {
+            var command = new SqlCommand("insert into dbo.Reservations  (AccountId,SavingsId,Amount,[Date]) VALUES (@AccountId,@SavingsId,@Amount,@Date)", _connection.SqlConnection);
+            _connection.SqlConnection.Open();
+            command.Parameters.AddWithValue("@AccountId", reservation.AccountId);
+            command.Parameters.AddWithValue("@SavingsId",reservation.SavingsId);
+            command.Parameters.AddWithValue("@Amount", reservation.Amount);
+            command.Parameters.AddWithValue("@Date", reservation.Date);
+            command.ExecuteNonQuery();
+            _connection.SqlConnection.Close();
+        }
+
+        public void RefreshSavingBalance(int id)
+        {
+            var command = new SqlCommand("UPDATE dbo.Savings SET CurrentAmount = (SELECT SUM(Amount) FROM dbo.Reservations WHERE SavingsId = @Id)", _connection.SqlConnection);
+            command.Parameters.AddWithValue("@Id", id);
+            _connection.SqlConnection.Open();
+            command.ExecuteNonQuery();
+            _connection.SqlConnection.Close();
+        }
+
+        public IEnumerable<IReservation> GetReservations(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public int GetNewSavingId()
+        {
+           var command = new SqlCommand("SELECT MAX(SavingsId) FROM dbo.Savings",_connection.SqlConnection);
+           var savingId = 0;
+           _connection.SqlConnection.Open();
+           command.ExecuteNonQuery();
+           using (var reader = command.ExecuteReader())
+           {
+               if (reader.Read())
+               {
+                   savingId = reader.GetInt32(0);
+               }
+            }         
+           _connection.SqlConnection.Close();
+           return savingId;
         }
     }
 }

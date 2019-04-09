@@ -9,6 +9,11 @@ namespace iSpendWebApp.Models.Savings
 {
     public class SavingsViewModel:ISaving
     {
+        public SavingsViewModel()
+        {
+            
+        }
+
         public SavingsViewModel(int userId, int savingId, string savingName, decimal savingCurrentAmount, decimal savingsGoalAmount, SavingState state, int iconId, DateTime goalDate)
         {
             UserId = userId;

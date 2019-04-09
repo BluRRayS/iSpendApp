@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 using iSpendDAL.ContextInterfaces;
 using iSpendInterfaces;
@@ -37,6 +38,26 @@ namespace iSpendDAL.Savings
         public IEnumerable<ISaving> GetUserSavings(int userId)
         {
             return _context.GetUserSavings(userId);
+        }
+
+        public void AddReservation(IReservation reservation)
+        {
+            _context.AddReservation(reservation);
+        }
+
+        public IEnumerable<IReservation> GetSavingsReservations(int id)
+        {
+            return _context.GetReservations(id);
+        }
+
+        public void RefreshSavingsAmount(int id)
+        {
+            _context.RefreshSavingBalance(id);
+        }
+
+        public int GetNewSavingId()
+        {
+            return _context.GetNewSavingId();
         }
     }
 }

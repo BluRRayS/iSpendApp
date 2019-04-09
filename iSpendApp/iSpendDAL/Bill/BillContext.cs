@@ -117,6 +117,29 @@ namespace iSpendDAL.Bill
             return sum;
         }
 
+        public void AddReservation(IReservation reservation)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IEnumerable<IReservation> GetReservations(int accountId)
+        {
+            var reservations = new List<IReservation>();
+            var command = new SqlCommand("SELECT ReservationId,AccountId,SavingsId,Amount,[Date] FROM dbo.Reservations WHERE AccountId= @Id", _connection.SqlConnection);
+            command.Parameters.AddWithValue("@Id", accountId);
+            _connection.SqlConnection.Open();
+            command.ExecuteNonQuery();
+            using (var reader = command.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+                    reservations.Add(new ReservationDto(reader.GetInt32(0),reader.GetInt32(1),reader.GetInt32(2),reader.GetDecimal(3),reader.GetDateTime(4)));
+                }
+            }
+            _connection.SqlConnection.Close();
+            return reservations;
+        }
+
         public void UpdateBillBalance(int billId, decimal amount)
         {
             _connection.SqlConnection.Open();
