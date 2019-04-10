@@ -7,6 +7,7 @@ using iSpendDAL.ContextInterfaces;
 using iSpendInterfaces;
 using iSpendLogic;
 using iSpendLogic.Models;
+using iSpendWebApp.Controllers.ActionFilters;
 using iSpendWebApp.Models;
 using iSpendWebApp.Models.User;
 using Microsoft.AspNetCore.Http;
@@ -45,10 +46,10 @@ namespace iSpendWebApp.Controllers
         {
             var accountLogic = new UserLogic(_accountContext);
 
-            if (accountLogic.Login(username,password))
+            if (accountLogic.Login(username, password))
             {
-                HttpContext.Session.SetString("UserSession",username);
-                HttpContext.Session.SetInt32("UserId",accountLogic.GetAccountByUsername(username).UserId);
+                HttpContext.Session.SetString("UserSession", username);
+                HttpContext.Session.SetInt32("UserId", accountLogic.GetAccountByUsername(username).UserId);
                 RedirectToAction("Index", "Home");
                 return RedirectToAction("Index", "Home");
             }
@@ -57,18 +58,14 @@ namespace iSpendWebApp.Controllers
 
 
         // GET: User/Details/5
+        [ServiceFilter(typeof(AuthorizationActionFilter))]
         public ActionResult Details(int id)
         {
-            if (HttpContext.Session.GetString("UserSession") != null)
-            {
-                var model = new UserViewModel();
-                var accountLogic = new UserLogic(_accountContext);
-                model.Username = accountLogic.GetAccountByUsername(HttpContext.Session.GetString("UserSession")).Username;
-                model.Email = accountLogic.GetAccountByUsername(HttpContext.Session.GetString("UserSession")).Email;
-                return View("UserDetails",model);
-            }
-
-            return RedirectToAction("Login");
+            var model = new UserViewModel();
+            var accountLogic = new UserLogic(_accountContext);
+            model.Username = accountLogic.GetAccountByUsername(HttpContext.Session.GetString("UserSession")).Username;
+            model.Email = accountLogic.GetAccountByUsername(HttpContext.Session.GetString("UserSession")).Email;
+            return View("UserDetails", model);
         }
 
         // GET: User/Create
@@ -85,9 +82,9 @@ namespace iSpendWebApp.Controllers
             try
             {
                 var accountLogic = new UserLogic(_accountContext);
-                if (ModelState.IsValid && accountLogic.IsUsernameTaken(model.Username)==false)
+                if (ModelState.IsValid && accountLogic.IsUsernameTaken(model.Username) == false)
                 {
-                    accountLogic.AddUser(model.Username, model.Password, model.Email);                   
+                    accountLogic.AddUser(model.Username, model.Password, model.Email);
                     return RedirectToAction(nameof(Login));
                 }
                 else
@@ -95,7 +92,7 @@ namespace iSpendWebApp.Controllers
                     ViewBag.Message = "That username is already taken please use another.";
                     return View("Register");
                 }
-                
+
             }
             catch
             {
@@ -105,25 +102,23 @@ namespace iSpendWebApp.Controllers
         }
 
         // GET: User/Edit/5
+        [ServiceFilter(typeof(AuthorizationActionFilter))]
         public ActionResult Edit()
         {
-            if (HttpContext.Session.GetString("UserSession")!=null)
-            {
-                var model = new EditUserViewModel();
-                var accountLogic = new UserLogic(_accountContext);
-                model.Username = accountLogic.GetAccountByUsername(HttpContext.Session.GetString("UserSession")).Username;
-                model.Email = accountLogic.GetAccountByUsername(HttpContext.Session.GetString("UserSession")).Email;
-                return View("EditUser",model);
-            }
 
-            return RedirectToAction("Login");
+            var model = new EditUserViewModel();
+            var accountLogic = new UserLogic(_accountContext);
+            model.Username = accountLogic.GetAccountByUsername(HttpContext.Session.GetString("UserSession")).Username;
+            model.Email = accountLogic.GetAccountByUsername(HttpContext.Session.GetString("UserSession")).Email;
+            return View("EditUser", model);
 
         }
 
         // POST: User/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(EditUserViewModel  model)
+        [ServiceFilter(typeof(AuthorizationActionFilter))]
+        public ActionResult Edit(EditUserViewModel model)
         {
             try
             {

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using iSpendDAL.ContextInterfaces;
 using iSpendLogic;
+using iSpendWebApp.Controllers.ActionFilters;
 using iSpendWebApp.Models;
 using iSpendWebApp.Models.Savings;
 using Microsoft.AspNetCore.Http;
@@ -27,25 +28,25 @@ namespace iSpendWebApp.Controllers
 
 
         // GET: Savings
+        [ServiceFilter(typeof(AuthorizationActionFilter))]
         public ActionResult Index()
         {
-            if(HttpContext.Session.GetString("UserSession") == null) return RedirectToAction("Login", "User");
             return RedirectToAction("Index", "Bill");
         }
 
         // GET: Savings/Details/5
+        [ServiceFilter(typeof(AuthorizationActionFilter))]
         public ActionResult Details(int id)
         {
-            if(HttpContext.Session.GetString("UserSession") == null) return RedirectToAction("Login", "User");
             var context = _savingLogic.GetSavingById(id);
             var model = new SavingsViewModel(context.UserId,id,context.SavingName,context.SavingCurrentAmount,context.SavingsGoalAmount,context.State,context.IconId,context.GoalDate);
             return View("~/Views/Savings/SavingDetails.cshtml",model);
         }
 
         // GET: Savings/Create
+        [ServiceFilter(typeof(AuthorizationActionFilter))]
         public ActionResult Create()
         {
-            if(HttpContext.Session.GetString("UserSession") == null) return RedirectToAction("Login", "User");
             ViewBag.Bills = _billLogic.GetUserBills(HttpContext.Session.GetString("UserSession")) ;
             ViewBag.FileProvider = _fileProvider.GetDirectoryContents("wwwroot/Icons/Savings").ToList().Select(icon => icon.Name).ToList();
             return View("~/Views/Savings/CreateSaving.cshtml");
@@ -54,22 +55,23 @@ namespace iSpendWebApp.Controllers
         // POST: Savings/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [ServiceFilter(typeof(AuthorizationActionFilter))]
         public ActionResult Create(CreateSavingsViewModel model)
         {
-            if (HttpContext.Session.GetString("UserSession") == null) return RedirectToAction("Login", "User");
-            //try
-            //{
+            try
+            {
                 model.UserId = (int)HttpContext.Session.GetInt32("UserId");
-                _savingLogic.CreateSaving(model,model.WithdrawFromBillId);
+                _savingLogic.CreateSaving(model, model.WithdrawFromBillId);
                 return RedirectToAction(nameof(Index));
-            //}
-            //catch
-            //{
-                //return RedirectToAction("Create");
-            //}
+            }
+            catch
+            {
+                return RedirectToAction("Create");
+            }
         }
 
         // GET: Savings/Edit/5
+        [ServiceFilter(typeof(AuthorizationActionFilter))]
         public ActionResult Edit(int id)
         {
             return View();
@@ -78,9 +80,9 @@ namespace iSpendWebApp.Controllers
         // POST: Savings/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [ServiceFilter(typeof(AuthorizationActionFilter))]
         public ActionResult Edit(int id, IFormCollection collection)
         {
-            if(HttpContext.Session.GetString("UserSession") == null) return RedirectToAction("Login", "User");
             try
             {
                 // TODO: Add update logic here
@@ -98,9 +100,9 @@ namespace iSpendWebApp.Controllers
         // POST: Savings/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [ServiceFilter(typeof(AuthorizationActionFilter))]
         public ActionResult Delete(SavingsViewModel model)
         {
-            if (HttpContext.Session.GetString("UserSession") == null) return RedirectToAction("Login", "User");
             try
             {
                 _savingLogic.DeleteSaving(model.SavingId);
@@ -113,9 +115,10 @@ namespace iSpendWebApp.Controllers
         }
         // POST: Savings/AddReservation/5
         [HttpPost]
+        [ValidateAntiForgeryToken]
+        [ServiceFilter(typeof(AuthorizationActionFilter))]
         public ActionResult AddReservation(ReservationViewModel model)
         {
-            if (HttpContext.Session.GetString("UserSession") == null) return RedirectToAction("Login", "User");
             try
             {
                 _savingLogic.AddReservation(model);

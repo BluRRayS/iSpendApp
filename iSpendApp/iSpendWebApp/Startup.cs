@@ -11,6 +11,7 @@ using iSpendDAL.Bill;
 using iSpendDAL.ContextInterfaces;
 using iSpendDAL.Savings;
 using iSpendDAL.Transaction;
+using iSpendWebApp.Controllers.ActionFilters;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -58,6 +59,7 @@ namespace iSpendWebApp
             services.AddSingleton<ITransactionContext, TransactionContext>();
             services.AddSingleton<ISavingsContext, SavingsContext>();
             services.AddTransient(_ => new DatabaseConnection(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddScoped<AuthorizationActionFilter>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using iSpendDAL.ContextInterfaces;
 using iSpendInterfaces;
 using iSpendLogic;
+using iSpendWebApp.Controllers.ActionFilters;
 using iSpendWebApp.Models;
 using iSpendWebApp.Models.Bill;
 using iSpendWebApp.Models.Savings;
@@ -23,7 +24,7 @@ namespace iSpendWebApp.Controllers
         private readonly SavingLogic _savingLogic;
         private readonly IFileProvider _fileProvider;
 
-        public BillController(IBillContext billContext,ISavingsContext savingsContext, IFileProvider fileProvider)
+        public BillController(IBillContext billContext, ISavingsContext savingsContext, IFileProvider fileProvider)
         {
             _billContext = billContext;
             _billLogic = new BillLogic(_billContext);
@@ -32,50 +33,44 @@ namespace iSpendWebApp.Controllers
         }
 
         // GET: Bill
+        [ServiceFilter(typeof(AuthorizationActionFilter))]
         public ActionResult Index()
         {
-            var username = HttpContext.Session.GetString("UserSession");
-            if (username == null) return RedirectToAction("Login", "User");
-
             ViewBag.FileProvider = _fileProvider.GetDirectoryContents("wwwroot/Icons/Bill").ToList().Select(icon => icon.Name).ToList();
 
             var billContext = _billContext.GetBillsByUsername(HttpContext.Session.GetString("UserSession"));
-            var bills =(billContext.Select(bill => new BillViewModel(bill.BillId, bill.BillName, bill.BillBalance, bill.Transactions, bill.IconId, bill.AccountIds, _fileProvider.GetDirectoryContents("wwwroot/Icons/Bill").ToList().Select(icon => icon.Name).ToList(), _billLogic.GetAccountReservations(bill.BillId))));
+            var bills = (billContext.Select(bill => new BillViewModel(bill.BillId, bill.BillName, bill.BillBalance, bill.Transactions, bill.IconId, bill.AccountIds, _fileProvider.GetDirectoryContents("wwwroot/Icons/Bill").ToList().Select(icon => icon.Name).ToList(), _billLogic.GetAccountReservations(bill.BillId))));
 
             var savingContext = _savingLogic.GetUserSavings((int)HttpContext.Session.GetInt32("UserId"));
-            var savings = savingContext.Select(saving => new SavingsViewModel(saving.UserId,saving.SavingId,saving.SavingName,saving.SavingCurrentAmount,saving.SavingsGoalAmount,saving.State,saving.IconId,saving.GoalDate));
+            var savings = savingContext.Select(saving => new SavingsViewModel(saving.UserId, saving.SavingId, saving.SavingName, saving.SavingCurrentAmount, saving.SavingsGoalAmount, saving.State, saving.IconId, saving.GoalDate));
 
-            var model = new LandingPageViewModel(bills,savings);
+            var model = new LandingPageViewModel(bills, savings);
             return View("~/Views/Shared/Overview.cshtml", model);
         }
 
         // GET: Account/Details/5
+        [ServiceFilter(typeof(AuthorizationActionFilter))]
         public ActionResult Details()
         {
-            if (HttpContext.Session.GetString("UserSession") != null)
-            {
+            return View("~/Views/Transaction/Transactions.cshtml");
 
-                return View("~/Views/Transaction/Transactions.cshtml");
-            }
-
-            return RedirectToAction("Login", "User");
         }
 
         // GET: Account/Create
+        [ServiceFilter(typeof(AuthorizationActionFilter))]
         public ActionResult Create()
         {
-            if (HttpContext.Session.GetString("UserSession") == null) return RedirectToAction("Login", "User");
             var model = new BillViewModel(_fileProvider.GetDirectoryContents("wwwroot/Icons/Bill").ToList().Select(icon => icon.Name).ToList());
-            return View("CreateBill",model);
+            return View("CreateBill", model);
 
         }
 
         // POST: Account/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [ServiceFilter(typeof(AuthorizationActionFilter))]
         public ActionResult Create(BillViewModel model)
         {
-            if (HttpContext.Session.GetString("UserSession") == null) return RedirectToAction("Login", "User");
             try
             {
                 if (ModelState.IsValid)
@@ -91,10 +86,10 @@ namespace iSpendWebApp.Controllers
         }
 
         // GET: Account/Edit/5
+        [ServiceFilter(typeof(AuthorizationActionFilter))]
         public ActionResult Edit(int id)
         {
             var userHasAccess = false;
-            if (HttpContext.Session.GetString("UserSession") == null) return RedirectToAction("Login", "User");
             var usersContext = _billLogic.GetBillUsers(id).ToList();
             foreach (var user in usersContext)
             {
@@ -108,15 +103,15 @@ namespace iSpendWebApp.Controllers
             {
                 return RedirectToAction("Index", "Bill");
             }
-
             var context = _billLogic.GetBillById(id);
-            var model = new BillViewModel(context.BillId, context.BillName, context.BillBalance, context.Transactions, context.IconId, context.AccountIds, _fileProvider.GetDirectoryContents("wwwroot/Icons/Bill").ToList().Select(icon => icon.Name).ToList(),new List<IReservation>());
+            var model = new BillViewModel(context.BillId, context.BillName, context.BillBalance, context.Transactions, context.IconId, context.AccountIds, _fileProvider.GetDirectoryContents("wwwroot/Icons/Bill").ToList().Select(icon => icon.Name).ToList(), new List<IReservation>());
             return View("EditBill", model);
         }
 
         // POST: Account/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [ServiceFilter(typeof(AuthorizationActionFilter))]
         public ActionResult Edit(int id, BillViewModel model)
         {
             try
@@ -131,9 +126,9 @@ namespace iSpendWebApp.Controllers
         }
 
         // GET: Account/Delete/5
+        [ServiceFilter(typeof(AuthorizationActionFilter))]
         public ActionResult Delete(int id)
         {
-            if (HttpContext.Session.GetString("UserSession") == null) return RedirectToAction("Login", "User");
             return View("DeleteBill");
         }
 
@@ -141,6 +136,7 @@ namespace iSpendWebApp.Controllers
         // POST: Account/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [ServiceFilter(typeof(AuthorizationActionFilter))]
         public ActionResult Delete(int id, IFormCollection collection)
         {
             try

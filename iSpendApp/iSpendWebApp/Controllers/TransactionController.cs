@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Runtime.InteropServices.ComTypes;
 using iSpendInterfaces;
+using iSpendWebApp.Controllers.ActionFilters;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Rewrite.Internal;
 using Microsoft.Extensions.FileProviders;
@@ -34,10 +35,10 @@ namespace iSpendWebApp.Controllers
 
 
         // GET: Transaction
+        [ServiceFilter(typeof(AuthorizationActionFilter))]
         public ActionResult Index(int id,string billName,decimal balance)
         {
             var userHasAccess = false;
-            if (HttpContext.Session.GetString("UserSession") == null) return RedirectToAction("Login", "User");
             var usersContext = _billLogic.GetBillUsers(id).ToList();
             foreach (var user in usersContext)
             {
@@ -68,10 +69,9 @@ namespace iSpendWebApp.Controllers
 
 
         // GET: Transaction/Create
+        [ServiceFilter(typeof(AuthorizationActionFilter))]
         public ActionResult Create(int id)
         {
-            var username = HttpContext.Session.GetString("UserSession");
-            if (username == null) return RedirectToAction("Login", "User");
             var categoriesContext = _transactionLogic.GetCategories();
             ViewBag.categories = categoriesContext.Select(category => new SelectListItem(category.Name, category.Name)).ToList();
             ViewBag.FileProvider = _fileProvider.GetDirectoryContents("wwwroot/Icons/Category").ToList().Select(icon => icon.Name).ToList();
@@ -82,10 +82,9 @@ namespace iSpendWebApp.Controllers
         // POST: Transaction/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [ServiceFilter(typeof(AuthorizationActionFilter))]
         public ActionResult Create(TransactionsViewModel model)
         {
-            var username = HttpContext.Session.GetString("UserSession");
-            if (username == null) return RedirectToAction("Login", "User");
             try
             {
                 _transactionLogic.CreateTransaction(model);
@@ -99,10 +98,9 @@ namespace iSpendWebApp.Controllers
         }
 
         // GET: Transaction/Edit/5
+        [ServiceFilter(typeof(AuthorizationActionFilter))]
         public ActionResult Edit(int id, int billId)
         {
-            var username = HttpContext.Session.GetString("UserSession");
-            if (username == null) return RedirectToAction("Login", "User");
             var context = _transactionLogic.GetTransactionById(id, billId);
             var categoriesContext = _transactionLogic.GetCategories();
             var categories = categoriesContext.Select(category => category.Name).ToList();
@@ -113,10 +111,9 @@ namespace iSpendWebApp.Controllers
         // POST: Transaction/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [ServiceFilter(typeof(AuthorizationActionFilter))]
         public ActionResult Edit(int id, TransactionsViewModel model)
         {
-            var username = HttpContext.Session.GetString("UserSession");
-            if (username == null) return RedirectToAction("Login", "User");
             try
             {
                 _transactionLogic.UpdateTransaction(id, model);
@@ -130,10 +127,9 @@ namespace iSpendWebApp.Controllers
         }
 
         // GET: Transaction/Delete/5
+        [ServiceFilter(typeof(AuthorizationActionFilter))]
         public ActionResult Delete(int id, int billId)
         {
-            var username = HttpContext.Session.GetString("UserSession");
-            if (username == null) return RedirectToAction("Login", "User");
             _transactionLogic.DeleteTransaction(id, billId);
             return RedirectToAction("Index", "Bill");
         }
