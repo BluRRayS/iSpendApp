@@ -36,16 +36,24 @@ namespace iSpendWebApp.Controllers
         [ServiceFilter(typeof(AuthorizationActionFilter))]
         public ActionResult Index()
         {
-            ViewBag.FileProvider = _fileProvider.GetDirectoryContents("wwwroot/Icons/Bill").ToList().Select(icon => icon.Name).ToList();
+            try
+            {
+                ViewBag.FileProvider = _fileProvider.GetDirectoryContents("wwwroot/Icons/Bill").ToList().Select(icon => icon.Name).ToList();
 
-            var billContext = _billContext.GetBillsByUsername(HttpContext.Session.GetString("UserSession"));
-            var bills = (billContext.Select(bill => new BillViewModel(bill.BillId, bill.BillName, bill.BillBalance, bill.Transactions, bill.IconId, bill.AccountIds, _fileProvider.GetDirectoryContents("wwwroot/Icons/Bill").ToList().Select(icon => icon.Name).ToList(), _billLogic.GetAccountReservations(bill.BillId))));
+                var billContext = _billContext.GetBillsByUsername(HttpContext.Session.GetString("UserSession"));
+                var bills = (billContext.Select(bill => new BillViewModel(bill.BillId, bill.BillName, bill.BillBalance, bill.Transactions, bill.IconId, bill.AccountIds, _fileProvider.GetDirectoryContents("wwwroot/Icons/Bill").ToList().Select(icon => icon.Name).ToList(), _billLogic.GetAccountReservations(bill.BillId))));
 
-            var savingContext = _savingLogic.GetUserSavings((int)HttpContext.Session.GetInt32("UserId"));
-            var savings = savingContext.Select(saving => new SavingsViewModel(saving.UserId, saving.SavingId, saving.SavingName, saving.SavingCurrentAmount, saving.SavingsGoalAmount, saving.State, saving.IconId, saving.GoalDate));
+                var savingContext = _savingLogic.GetUserSavings((int)HttpContext.Session.GetInt32("UserId"));
+                var savings = savingContext.Select(saving => new SavingsViewModel(saving.UserId, saving.SavingId, saving.SavingName, saving.SavingCurrentAmount, saving.SavingsGoalAmount, saving.State, saving.IconId, saving.GoalDate));
 
-            var model = new LandingPageViewModel(bills, savings);
-            return View("~/Views/Shared/Overview.cshtml", model);
+                var model = new LandingPageViewModel(bills, savings);
+                return View("~/Views/Shared/Overview.cshtml", model);
+            }
+            catch (Exception e)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            
         }
 
         // GET: Account/Details/5

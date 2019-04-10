@@ -7,25 +7,31 @@
 <h2>My Bills</h2>
 <hr />
 <div class="container">
+    @if (Model.Bills.Count == 0)
+    {
+        <div id="AlertBill" class="info alert-info alert-dismissible fade in">
+            <a href="#AlertBill" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <strong>Quickly Get Started:</strong> To create your first account press the '+' icon!
+        </div>
+    }
     <row>
+
         @if (Model.Bills != null)
         {
             foreach (var item in Model.Bills)
             {
-                <div class="col-sm-4" onclick="location.href = '@Url.Action("Index","Transaction", new {id = item.BillId,billName = item.BillName,balance = item.BillBalance})'">
-                    @{
-                        Html.RenderPartial("~/Views/Bill/BillPartial.cshtml", item);
-                    }
+                <div class="col-sm-4" onclick="location.href = '@Url.Action("Index", "Transaction", new {id = item.BillId, billName = item.BillName, balance = item.BillBalance})'">
+                    <partial name="~/Views/Bill/BillPartial.cshtml" model="@item"/>
                 </div>
 
             }
         }
         <div class="col-sm-4">
             <div align="Center">
-                <div class=" panel panel-default" style="background-color:mediumseagreen ; margin: 8px; font-weight: bold; color: white">
+                <div class=" panel panel-default" style="background-color: mediumseagreen; margin: 8px; font-weight: bold; color: white">
                     <div class="panel-body">
                         <div>
-                            <input type="button" class="btn btn-default" value="+" onclick="location.href = '@Url.Action("Create", "Bill")'" style="margin-top: 12%;margin-bottom: 13%; background-color: gray;  color: white; font-weight: bold" />
+                            <input type="button" class="btn btn-default" value="+" onclick="location.href = '@Url.Action("Create", "Bill")'" style="margin-top: 12%; margin-bottom: 13%; background-color: gray; color: white; font-weight: bold"/>
                         </div>
                     </div>
                 </div>
@@ -36,14 +42,22 @@
 <hr />
 <div class="container">
     <h2>My Saving Plans</h2>
+    @if (Model.Savings.Count == 0)
+    {
+        <div id="AlertSaving" class="info alert-info alert-dismissible fade in">
+            <a href="#AlertSaving" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <strong>Save money smarter:</strong> A saving plan is a smart and easy way to be more responsible with your money.
+        </div>
+    }
     <row>
+        
         @if (Model.Savings != null)
         {
             foreach (var item in Model.Savings)
             {
-                <div class="col-sm-4" onclick="location.href = '@Url.Action("Details","Savings",new{id = item.SavingId})'">
+                <div class="col-sm-4" onclick="location.href = '@Url.Action("Details", "Savings", new {id = item.SavingId})'">
                     @{
-                       <partial name="~/Views/Savings/SavingPartial.cshtml" for="@item"/>
+                        <partial name="~/Views/Savings/SavingPartial.cshtml" for="@item" />
                     }
                 </div>
 
@@ -51,10 +65,10 @@
         }
         <div class="col-sm-4">
             <div align="Center">
-                <div class=" panel panel-default" style="background-color:mediumslateblue ; margin: 8px;">
+                <div class=" panel panel-default" style="background-color: mediumslateblue; margin: 8px;">
                     <div class="panel-body">
                         <div>
-                            <input type="button" class="btn btn-default" value="+" onclick="location.href = '@Url.Action("Create", "Savings")'" style="margin-top: 12%;margin-bottom: 13%; background-color: gray; color: white; font-weight: bold" />
+                            <input type="button" class="btn btn-default" value="+" onclick="location.href = '@Url.Action("Create", "Savings")'" style="margin-top: 12%; margin-bottom: 13%; background-color: gray; color: white; font-weight: bold" />
                         </div>
                     </div>
                 </div>

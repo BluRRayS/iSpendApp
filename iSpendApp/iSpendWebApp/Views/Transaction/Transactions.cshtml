@@ -24,25 +24,25 @@
                 </button>
             </div>
             <div class="modal-body">
-                @{
-                    Html.RenderPartial("CreateTransaction", new TransactionsViewModel(ViewBag.BillId, ViewBag.FileProvider));
-                }
+                <partial name="~/Views/Transaction/CreateTransaction.cshtml" model="@new TransactionsViewModel(ViewBag.BillId, ViewBag.FileProvider)"/>
             </div>
         </div>
     </div>
 </div>
 
 <div class="row">
-    <!-- Button trigger modal CreateTransaction -->
-    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#exampleModalCenter">
-        Create new Transaction
-    </button>
-    <input type="button" value="Edit Bill" class="btn btn-warning" onclick="location.href = '@Url.Action("Edit", "Bill", new {id = ViewBag.BillId})'" />
-    <input type="button" value="Delete Bill" class="btn btn-danger" onclick="location.href = '@Url.Action("Delete", "Bill", new {id = ViewBag.BillId})'" />
-    <!-- Button trigger modal AddReservation -->
-    <button type="button" class="btn btn-default" data-toggle="modal" data-target="#AddReservationModal">
-        Reserve Money
-    </button>
+    <div class="btn-group">
+        <!-- Button trigger modal CreateTransaction -->
+        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#exampleModalCenter">
+            Create new Transaction
+        </button>
+        <input type="button" value="Edit Bill" class="btn btn-warning" onclick="location.href = '@Url.Action("Edit", "Bill", new {id = ViewBag.BillId})'" />
+        <input type="button" value="Delete Bill" class="btn btn-danger" onclick="location.href = '@Url.Action("Delete", "Bill", new {id = ViewBag.BillId})'" />
+        <!-- Button trigger modal AddReservation -->
+        <button type="button" class="btn btn-default" data-toggle="modal" data-target="#AddReservationModal">
+            Reserve Money
+        </button>
+    </div>
 </div>
 
 @*Model AddReservation*@

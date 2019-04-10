@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using iSpendDAL.ContextInterfaces;
 using iSpendDAL.Transaction;
@@ -18,7 +19,8 @@ namespace iSpendLogic
 
         public IEnumerable<ITransaction> GetBillTransactions(int id)
         {
-           return Repository.GetBillTransactions(id);
+            var transactions = Repository.GetBillTransactions(id);
+            return transactions.OrderByDescending(trans => trans.TimeOfTransaction);
         }
 
         public void CreateTransaction(ITransaction transaction)
