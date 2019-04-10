@@ -18,7 +18,7 @@ For LESS version install Bootstrap.v3.Datetimepicker</description>
           IMPORANT! The Nuget packages will be depreciated in an upcoming release. Moving forward, Asp.Net/Nuget will NOT be delivering content packages like this one and you will need to use bower. See https://github.com/Eonasdan/bootstrap-datetimepicker/issues/1128 for more</releaseNotes>
         <tags>bootstrap date time picker datetimepicker datepicker jquery</tags>
         <dependencies>
-            <dependency id="bootstrap" version="3.3.0" />
+            <dependency id="bootstrap" version="3.3.4" />
             <dependency id="Moment.js" version="2.9.0" />
         </dependencies>
     </metadata>
