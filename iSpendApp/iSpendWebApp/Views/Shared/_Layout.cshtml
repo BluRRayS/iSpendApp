@@ -9,8 +9,17 @@
     <environment include="Development">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
         <link rel="stylesheet" href="~/css/site.css" />
+
+        <!-- DataTables -->
+        <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" />
+        <!-- ToDo:include css file in project and update to my own style -->
+
+
+
         <link href="https://fonts.googleapis.com/css?family=Assistant" rel="stylesheet">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.14.2/dist/bootstrap-table.min.css">
+        <script src="https://unpkg.com/bootstrap-table@1.14.2/dist/bootstrap-table.min.js"></script>
     </environment>
     <environment exclude="Development">
         <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/css/bootstrap.min.css"
@@ -71,9 +80,16 @@
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+        
+        <!-- Bootstrap DatePicker-->
         <script type="text/javascript" src="~/lib/moment.js/2.9.0/Content/Scripts/moment.js"></script>
         <script type="text/javascript" src="~/lib/moment.js/2.9.0/Content/Scripts/moment-with-locales.min.js"></script>
         <script type="text/javascript" src="~/lib/bootstrap.v3.datetimepicker.css/4.17.45/content/Scripts/bootstrap-datetimepicker.js"></script>
+        
+        <!-- Datatables -->
+        <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+        
+       
         <script src="~/js/site.js" asp-append-version="true"></script>
     </environment>
     <environment exclude="Development">
@@ -95,3 +111,4 @@
     @RenderSection("Scripts", required: false)
 </body>
 </html>
+
