@@ -1,4 +1,5 @@
-﻿@model iSpendWebApp.Models.Savings.SavingsViewModel
+﻿@using iSpendInterfaces.Helpers
+@model iSpendWebApp.Models.Savings.SavingsViewModel
 
 @{
     //var imagePath = Url.Content("~/Icons/Bill/"+Model.IconId+".png");
@@ -11,19 +12,22 @@
             <img src="~/Icons/Savings/Goal.png" alt="~Icons/Savings/Goal.png" /><br />
             @Html.DisplayFor(model => model.SavingName)<br />
             State: @Html.DisplayFor(model => model.State) <br />
-
-            €@Html.DisplayFor(model => model.SavingCurrentAmount) of €@Html.DisplayFor(model => model.SavingsGoalAmount)<br />
+            
+            @if (Model.State == SavingState.Completed)
+            {
+                <input type="button" class="btn btn-success" value="Complete" onclick="location.href = @Url.Action("CompleteSaving","Savings",new {id = Model.SavingId})" />
+            }
+            else
+            {
+            <p>€ @Html.DisplayFor(model => model.SavingCurrentAmount) of € @Html.DisplayFor(model => model.SavingsGoalAmount)</p><br />
             <div class="ldBar label-center" style="width:80%;height:10%;margin:auto" id="progress" data-preset="line" data-value="@percentage" data-stroke="data:ldbar/res,gradient(0,1,#D2FF52,#91E842)"></div>
+            }
         </div>
     </div>
 </div>
 
 <link rel="stylesheet" type="text/css" href="~/css/site.css" />
 <script type="text/javascript" src="~/js/loading-bar.js"></script>
-
-<script>
-
-</script>
 
 
 

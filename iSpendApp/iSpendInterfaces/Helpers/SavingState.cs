@@ -7,6 +7,7 @@ namespace iSpendInterfaces.Helpers
     public enum SavingState
     {
         Ongoing,
-        Completed
+        Completed,
+        Paid
     }
 }

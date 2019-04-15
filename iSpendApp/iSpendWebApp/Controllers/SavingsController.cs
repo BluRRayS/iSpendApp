@@ -132,5 +132,13 @@ namespace iSpendWebApp.Controllers
             }
             
         }
+
+        [ServiceFilter(typeof(AuthorizationActionFilter))]
+        public ActionResult CompleteSaving(int id)
+        {
+            _savingLogic.CompleteSaving(id);
+            return RedirectToAction("Index","Bill");
+        }
     }
+
 }

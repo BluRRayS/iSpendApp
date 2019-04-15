@@ -60,7 +60,7 @@ namespace iSpendWebApp.Controllers
             ViewBag.BillName = billName;
             ViewBag.Balance = balance;
             ViewBag.FileProvider = _fileProvider.GetDirectoryContents("wwwroot/Icons/Category").ToList().Select(icon => icon.Name).ToList();
-            ViewBag.Savings = _savingLogic.GetUserSavings((int)HttpContext.Session.GetInt32("UserId"));
+            ViewBag.Savings = _savingLogic.GetOngoingUserSavings((int)HttpContext.Session.GetInt32("UserId"));
 
             var context = _transactionLogic.GetBillTransactions(id);
             var model = context.Select(trans => new TransactionsViewModel(trans.TransactionId, trans.BillId, trans.TransactionName, trans.TransactionAmount, trans.Category, trans.IconId, trans.TimeOfTransaction, _fileProvider.GetDirectoryContents("wwwroot/Icons/Bill").ToList().Select(icon => icon.Name).ToList())).ToList();

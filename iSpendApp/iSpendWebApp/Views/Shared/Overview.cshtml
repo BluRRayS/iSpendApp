@@ -1,4 +1,5 @@
-﻿@model LandingPageViewModel
+﻿@using iSpendInterfaces.Helpers
+@model LandingPageViewModel
 
 @{
     ViewData["Title"] = "BillOverview";
@@ -21,7 +22,7 @@
             foreach (var item in Model.Bills)
             {
                 <div class="col-sm-4" onclick="location.href = '@Url.Action("Index", "Transaction", new {id = item.BillId, billName = item.BillName, balance = item.BillBalance})'">
-                    <partial name="~/Views/Bill/BillPartial.cshtml" model="@item"/>
+                    <partial name="~/Views/Bill/BillPartial.cshtml" model="@item" />
                 </div>
 
             }
@@ -31,7 +32,7 @@
                 <div class=" panel panel-default" style="background-color: mediumseagreen; margin: 8px; font-weight: bold; color: white">
                     <div class="panel-body">
                         <div>
-                            <input type="button" class="btn btn-default" value="+" onclick="location.href = '@Url.Action("Create", "Bill")'" style="margin-top: 12%; margin-bottom: 13%; background-color: gray; color: white; font-weight: bold"/>
+                            <input type="button" class="btn btn-default" value="+" onclick="location.href = '@Url.Action("Create", "Bill")'" style="margin-top: 12%; margin-bottom: 13%; background-color: gray; color: white; font-weight: bold" />
                         </div>
                     </div>
                 </div>
@@ -50,16 +51,28 @@
         </div>
     }
     <row>
-        
+
         @if (Model.Savings != null)
         {
             foreach (var item in Model.Savings)
             {
-                <div class="col-sm-4" onclick="location.href = '@Url.Action("Details", "Savings", new {id = item.SavingId})'">
-                    @{
-                        <partial name="~/Views/Savings/SavingPartial.cshtml" for="@item" />
-                    }
-                </div>
+                if (item.State == SavingState.Ongoing)
+                {
+                    <div class="col-sm-4" onclick="location.href = '@Url.Action("Details", "Savings", new {id = item.SavingId})'">
+                        @{
+                            <partial name="~/Views/Savings/SavingPartial.cshtml" for="@item" />
+                        }
+                    </div>
+                }
+                else if(item.State == SavingState.Completed)
+                {
+                    <div class="col-sm-4" onclick="location.href = '@Url.Action("CompleteSaving", "Savings", new {id = item.SavingId})'">
+                        @{
+                            <partial name="~/Views/Savings/SavingPartial.cshtml" for="@item" />
+                        }
+                    </div>
+                }
+
 
             }
         }

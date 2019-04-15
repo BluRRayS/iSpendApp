@@ -59,5 +59,10 @@ namespace iSpendDAL.Savings
         {
             return _context.GetNewSavingId();
         }
+
+        public void CompleteSaving(ISaving saving)
+        {
+            _context.CompleteSaving(saving);
+        }
     }
 }

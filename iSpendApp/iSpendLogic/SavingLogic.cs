@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using iSpendDAL.ContextInterfaces;
 using iSpendDAL.Savings;
 using iSpendInterfaces;
+using iSpendInterfaces.Helpers;
 using iSpendLogic.Models;
 
 namespace iSpendLogic
@@ -25,7 +27,7 @@ namespace iSpendLogic
 
         public void UpdateSaving(ISaving saving)
         {
-            throw new NotImplementedException();
+            Repository.UpdateSaving(saving);
         }
 
         public void DeleteSaving(int id)
@@ -38,14 +40,28 @@ namespace iSpendLogic
             return Repository.GetSavingById(id);
         }
 
-        public IEnumerable<ISaving> GetUserSavings(int id)
+        public IEnumerable<ISaving> GetOngoingUserSavings(int id)
+        {
+            return Repository.GetUserSavings(id).Where(saving => saving.State != SavingState.Paid);
+        }
+
+        public IEnumerable<ISaving> GetAllUserSavings(int id)
         {
             return Repository.GetUserSavings(id);
         }
 
         public void AddReservation(IReservation reservation)
         {
+            var saving = Repository.GetSavingById(reservation.SavingsId);
+            if (reservation.Amount + saving.SavingCurrentAmount > saving.SavingsGoalAmount) throw  new Exception("Reservation precedes goal");
+            else if (reservation.Amount + saving.SavingCurrentAmount == saving.SavingsGoalAmount)
+            {
+                saving.State = SavingState.Completed;
+                saving.SavingCurrentAmount += reservation.Amount;
+                Repository.UpdateSaving(saving);
+            }
             Repository.AddReservation(reservation);
+        
         }
 
         public void RefreshSavingsAmount(int id)
@@ -53,5 +69,13 @@ namespace iSpendLogic
             Repository.RefreshSavingsAmount(id);
         }
 
+        public void CompleteSaving(int id)
+        {
+            var saving = Repository.GetSavingById(id);
+            saving.State = SavingState.Paid;
+            Repository.CompleteSaving(saving);
+            Repository.UpdateSaving(saving);
+            
+        }
     }
 }
