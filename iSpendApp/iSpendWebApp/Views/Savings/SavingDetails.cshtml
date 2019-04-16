@@ -5,6 +5,7 @@
 @{
     ViewData["Title"] = "SavingDetails";
 }
+
 @*Modal RemoveSaving*@
 <div class="modal fade" id="DeleteSavingModal" tabindex="-1" role="dialog" aria-labelledby="AddReservationModalTitle" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -22,10 +23,48 @@
     </div>
 </div>
 
-<h2>SavingDetails</h2>
+@*Model AddReservation*@
+<div class="modal fade" id="AddReservationModal" tabindex="-1" role="dialog" aria-labelledby="AddReservationModalTitle" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title text-center">Reserve Money</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <partial name="~/Views/Savings/CreateReservationPartialSaving.cshtml" model="@new ReservationViewModel()" />
+            </div>
+        </div>
+    </div>
+</div>
 
-<div class="row">
+@*Model AddReservation*@
+<div class="modal fade" id="EditSavingModal" tabindex="-1" role="dialog" aria-labelledby="AddReservationModalTitle" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title text-center">Edit Saving</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <partial name="~/Views/Savings/EditSavingPartial.cshtml" model="@new SavingsViewModel(){SavingId = @Model.SavingId, UserId = @Model.UserId, SavingName = @Model.SavingName, SavingCurrentAmount = @Model.SavingCurrentAmount, SavingsGoalAmount = @Model.SavingsGoalAmount, GoalDate = @Model.GoalDate, IconId = @Model.IconId}" />
+            </div>
+        </div>
+    </div>
+</div>
+
+<h2>Saving Details</h2>
+
+<div class="row btn-group">
     <!-- Button trigger modal AddReservation -->
+    <button type="button" class="btn btn-default" data-toggle="modal" data-target="#AddReservationModal">Reserve Money</button>
+    <!-- Button trigger modal EditSaving -->
+    <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#EditSavingModal">Edit Saving</button>
+    <!-- Button trigger modal DeleteSaving -->
     <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#DeleteSavingModal">
         Delete Saving
     </button>
@@ -73,7 +112,5 @@
     </dl>
 </div>
 <div>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.SavingId }) |
-    @Html.ActionLink("Delete", "Delete", new { id = Model.SavingId }) |
     <a asp-action="Index">Back to List</a>
 </div>

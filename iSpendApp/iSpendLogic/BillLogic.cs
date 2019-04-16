@@ -64,5 +64,10 @@ namespace iSpendLogic
         {
             return Repository.GetReservations(accountId);
         }
+
+        public IEnumerable<IBill> GetBillsByUsername(string username)
+        {
+            return Repository.GetUserBills(username);
+        }
     }
 }

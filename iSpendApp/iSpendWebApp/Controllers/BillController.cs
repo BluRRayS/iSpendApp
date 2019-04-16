@@ -19,15 +19,13 @@ namespace iSpendWebApp.Controllers
 {
     public class BillController : Controller
     {
-        private readonly IBillContext _billContext;
         private readonly BillLogic _billLogic;
         private readonly SavingLogic _savingLogic;
         private readonly IFileProvider _fileProvider;
 
         public BillController(IBillContext billContext, ISavingsContext savingsContext, IFileProvider fileProvider)
         {
-            _billContext = billContext;
-            _billLogic = new BillLogic(_billContext);
+            _billLogic = new BillLogic(billContext);
             _fileProvider = fileProvider;
             _savingLogic = new SavingLogic(savingsContext);
         }
@@ -40,7 +38,7 @@ namespace iSpendWebApp.Controllers
             {
                 ViewBag.FileProvider = _fileProvider.GetDirectoryContents("wwwroot/Icons/Bill").ToList().Select(icon => icon.Name).ToList();
 
-                var billContext = _billContext.GetBillsByUsername(HttpContext.Session.GetString("UserSession"));
+                var billContext = _billLogic.GetBillsByUsername(HttpContext.Session.GetString("UserSession"));
                 var bills = (billContext.Select(bill => new BillViewModel(bill.BillId, bill.BillName, bill.BillBalance, bill.Transactions, bill.IconId, bill.AccountIds, _fileProvider.GetDirectoryContents("wwwroot/Icons/Bill").ToList().Select(icon => icon.Name).ToList(), _billLogic.GetAccountReservations(bill.BillId))));
 
                 var savingContext = _savingLogic.GetOngoingUserSavings((int)HttpContext.Session.GetInt32("UserId"));
@@ -51,6 +49,7 @@ namespace iSpendWebApp.Controllers
             }
             catch (Exception e)
             {
+                Console.WriteLine(e);
                 return RedirectToAction("Index", "Home");
             }
             

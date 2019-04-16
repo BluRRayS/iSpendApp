@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using iSpendInterfaces;
@@ -26,13 +27,19 @@ namespace iSpendWebApp.Models.Savings
             GoalDate = goalDate;
         }
 
+
         public int UserId { get; set; }
         public int SavingId { get; set; }
+        [Required]
         public string SavingName { get; set; }
+        [Required]
         public decimal SavingCurrentAmount { get; set; }
+        [Required]
         public decimal SavingsGoalAmount { get; set; }
         public SavingState State { get; set; }
+        [Required]
         public int IconId { get; set; }
+        [Required]
         public DateTime GoalDate { get; set; }
     }
 }

@@ -116,7 +116,7 @@
                         @Html.DisplayFor(modelItem => item.Category)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.TimeOfTransaction)
+                        @item.TimeOfTransaction.ToShortDateString()
                     </td>
                     <td>
                         <input type="button" value="Edit" class="btn btn-warning" onclick="location.href = '@Url.Action("Edit", "Transaction", new {id = item.TransactionId, billId = ViewBag.BillId})'" />

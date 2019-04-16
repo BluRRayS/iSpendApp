@@ -40,6 +40,7 @@ namespace iSpendWebApp.Controllers
         {
             var context = _savingLogic.GetSavingById(id);
             var model = new SavingsViewModel(context.UserId,id,context.SavingName,context.SavingCurrentAmount,context.SavingsGoalAmount,context.State,context.IconId,context.GoalDate);
+            ViewBag.FileProvider = _fileProvider.GetDirectoryContents("wwwroot/Icons/Savings").ToList().Select(icon => icon.Name).ToList();
             return View("~/Views/Savings/SavingDetails.cshtml",model);
         }
 
@@ -81,17 +82,17 @@ namespace iSpendWebApp.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [ServiceFilter(typeof(AuthorizationActionFilter))]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(SavingsViewModel model)
         {
             try
             {
-                // TODO: Add update logic here
+                _savingLogic.UpdateSaving(model);
 
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Details), "Savings", new {id = model.SavingId});
             }
             catch
             {
-                return View();
+                return RedirectToAction(nameof(Details), "Savings", new { id = model.SavingId });
             }
         }
 

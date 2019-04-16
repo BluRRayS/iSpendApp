@@ -27,6 +27,7 @@ namespace iSpendLogic
 
         public void UpdateSaving(ISaving saving)
         {
+            if (saving.SavingCurrentAmount > saving.SavingsGoalAmount) throw new ArgumentOutOfRangeException();
             Repository.UpdateSaving(saving);
         }
 
