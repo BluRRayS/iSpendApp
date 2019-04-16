@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.SqlClient;
 using iSpendDAL.ContextInterfaces;
 using iSpendDAL.Dto;
@@ -6,8 +7,9 @@ using iSpendInterfaces;
 
 namespace iSpendDAL.Account
 {
-    public class AccountContext : IAccountContext
+    public class AccountContext:IAccountContext
     {
+        private List<IAccount> _userBills = new List<IAccount>();
         private readonly DatabaseConnection _connection;
 
         public AccountContext(DatabaseConnection connection)
@@ -15,109 +17,169 @@ namespace iSpendDAL.Account
             _connection = connection;
         }
 
-        public void AddUser(IUser account)
+        public void AddAccount(IAccount newAccount,int userId)
         {
             _connection.SqlConnection.Open();
-            var command = new SqlCommand("INSERT INTO [User](username,password,email,dateOfCreation) VALUES(@Username,@Password,@Email,@Time)",_connection.SqlConnection);
-            command.Parameters.AddWithValue("@Username",account.Username);
-            command.Parameters.AddWithValue("@Password",account.Password);
-            command.Parameters.AddWithValue("@Email",account.Email);
-            command.Parameters.AddWithValue("@Time",DateTimeOffset.Now);
+            var command = new SqlCommand("INSERT INTO dbo.Account (Name,Balance,DateOfCreation) VALUES(@Name,@Balance,@DateOfCreation)",_connection.SqlConnection);
+            command.Parameters.AddWithValue("@Name",newAccount.AccountName);
+            command.Parameters.AddWithValue("@Balance", newAccount.AccountBalance);
+            command.Parameters.AddWithValue("@DateOfCreation",DateTime.Now);
+            command.ExecuteNonQuery();
+            command.Parameters.Clear();
+            command = new SqlCommand("INSERT INTO dbo.User_Account (UserId,AccountId) VALUES(@UserId,(SELECT Max(Id) From Account)) ", _connection.SqlConnection);
+            command.Parameters.AddWithValue("@UserId",userId);
+            command.ExecuteNonQuery();
+            _connection.SqlConnection.Close();
+            AddStartTransaction(Convert.ToDecimal(newAccount.AccountBalance));
+        }
+
+        public void RemoveAccount(int AccountId)
+        {
+            _connection.SqlConnection.Open();
+            var command = new SqlCommand("DELETE FROM dbo.Account WHERE Id = @Id  DELETE FROM dbo.User_Account WHERE AccountId = @Id ", _connection.SqlConnection);
+            command.Parameters.AddWithValue("@Id", AccountId);
             command.ExecuteNonQuery();
             _connection.SqlConnection.Close();
         }
 
-        public bool CheckIfUserNameIsTaken(string username)
+        public void UpdateAccount(int id, string name, int iconId)
         {
-            var taken =false;
+           _connection.SqlConnection.Open();
+           var command = new SqlCommand("UPDATE dbo.Account SET dbo.Account.Name = @Name , dbo.Account.IconId = @IconId WHERE Id = @Id", _connection.SqlConnection);
+           command.Parameters.AddWithValue("@Name",name);
+           command.Parameters.AddWithValue("@IconId",iconId);
+           command.Parameters.AddWithValue("@Id",id);
+           command.ExecuteNonQuery();
+            _connection.SqlConnection.Close();
+        }
+
+        public IEnumerable<IAccount> GetAccountsByUsername(string username)
+        {
+            _userBills.Clear();
             _connection.SqlConnection.Open();
-            var command = new SqlCommand("SELECT username FROM [User] WHERE username=@Username", _connection.SqlConnection);
+            var command = new SqlCommand("SELECT * FROM [Account]  INNER JOIN dbo.User_Account ON dbo.Account.Id = dbo.User_Account.AccountId  AND dbo.User_Account.UserId = (SELECT Id FROM dbo.[User] WHERE UserName = @Username)", _connection.SqlConnection);
             command.Parameters.AddWithValue("@Username", username);
             command.ExecuteNonQuery();
             using (var reader = command.ExecuteReader())
             {
-                if (reader.Read() == true)
+                _userBills = new List<IAccount>();
+                while (reader.Read())
                 {
-                    taken = true;
+                    _userBills.Add(new AccountDto(reader.GetInt32(0), reader.GetString(1),Convert.ToDouble(reader.GetDecimal(2)),reader.GetDateTime(3),reader.GetInt32(4)));
                 }
             }
             _connection.SqlConnection.Close();
-            return taken;
+            return _userBills;
         }
 
-        public IUser GetAccountByUsername(string username)
-        {
-            var Account = new AccountDto();
-            _connection.SqlConnection.Open();
-            var command = new SqlCommand("SELECT Id,username,password,email,dateOfCreation  FROM [User] WHERE username=@Username", _connection.SqlConnection);
-            command.Parameters.AddWithValue("@Username",username);
-            command.ExecuteNonQuery();
-            using (var reader = command.ExecuteReader())
-            {
-                    if (reader.Read() == true)
-                    {
-                        Account.UserId = reader.GetInt32(0);
-                        Account.Username = reader.GetString(1);
-                        Account.Password = reader.GetString(2);
-                        Account.Email = reader.GetString(3);
-                        Account.DateOfCreation = reader.GetDateTime(4);
-                    }
-            }
-            _connection.SqlConnection.Close();
-            return Account;
-        }
-
-        public IUser GetAccountById(int userId)
+        public IAccount GetAccountById(int billId)
         {
             var account = new AccountDto();
             _connection.SqlConnection.Open();
-            var command = new SqlCommand("SELECT Id,username,password,email,dateOfCreation  FROM dbo.User WHERE Id=" + userId + "", _connection.SqlConnection);
+            var command = new SqlCommand("SELECT * FROM dbo.Account WHERE Id = @BillId",_connection.SqlConnection);
+            command.Parameters.AddWithValue("@BillId", billId);
             command.ExecuteNonQuery();
             using (var reader = command.ExecuteReader())
-            {
-                if (reader.Read() == true)
+            {                
+                if (reader.Read())
                 {
-                    account.UserId = reader.GetInt32(0);
-                    account.Username = reader.GetString(1);
-                    account.Password = reader.GetString(2);
-                    account.Email = reader.GetString(3);
-                    account.DateOfCreation = reader.GetDateTime(4);
+                    account.AccountId= reader.GetInt32(0);
+                    account.AccountName= reader.GetString(1);
+                    account.AccountBalance = Convert.ToDouble( reader.GetDecimal(2));
+                    account.IconId = reader.GetInt32(4);
                 }
             }
             _connection.SqlConnection.Close();
             return account;
         }
 
-        public bool CheckCredentials(string username, string password)
+        public IEnumerable<ITransaction> GetAccountTransactions(int billId)
         {
-            var correct = false;
+            throw new NotImplementedException();
+        }
+
+        public decimal GetTotalBalance(int billId)
+        {
+            decimal sum = 0;
             _connection.SqlConnection.Open();
-            var command = new SqlCommand("SELECT username,password FROM [User] WHERE username=@Username AND password=@Password",_connection.SqlConnection);
-            command.Parameters.AddWithValue("@Username", username);
-            command.Parameters.AddWithValue("@Password",password);
+            var command = new SqlCommand("SELECT SUM(Cast(Amount as decimal(18,2))) FROM dbo.[Transaction] WHERE AccountId = @Id", _connection.SqlConnection);
+            command.Parameters.AddWithValue("@Id", billId);
             command.ExecuteNonQuery();
             using (var reader = command.ExecuteReader())
             {
-                if (reader.Read() == true)
+                if (reader.Read())
                 {
-                    correct = true;
+                    sum = reader.GetDecimal(0);
                 }
             }
             _connection.SqlConnection.Close();
-            return correct;
+            UpdateAccountBalance(billId,sum);
+            return sum;
         }
 
+        public void AddReservation(IReservation reservation)
+        {
+            throw new NotImplementedException();
+        }
 
-        public void UpdateUserDetails(IUser account)
+        public IEnumerable<IReservation> GetReservations(int accountId)
+        {
+            var reservations = new List<IReservation>();
+            var command = new SqlCommand("SELECT ReservationId,AccountId,SavingsId,Amount,[Date] FROM dbo.Reservations WHERE AccountId= @Id", _connection.SqlConnection);
+            command.Parameters.AddWithValue("@Id", accountId);
+            _connection.SqlConnection.Open();
+            command.ExecuteNonQuery();
+            using (var reader = command.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+                    reservations.Add(new ReservationDto(reader.GetInt32(0),reader.GetInt32(1),reader.GetInt32(2),reader.GetDecimal(3),reader.GetDateTime(4)));
+                }
+            }
+            _connection.SqlConnection.Close();
+            return reservations;
+        }
+
+        public void UpdateAccountBalance(int billId, decimal amount)
         {
             _connection.SqlConnection.Open();
-            var command = new SqlCommand("UPDATE [User] SET username= @Username, password=@Password, email=@Email  WHERE Id=@UserId ", _connection.SqlConnection);
-            command.Parameters.AddWithValue("@UserId", account.UserId);
-            command.Parameters.AddWithValue("@Username", account.Username);
-            command.Parameters.AddWithValue("@Password", account.Password);
-            command.Parameters.AddWithValue("@Email", account.Email);
+            var command = new SqlCommand("UPDATE dbo.Account SET Balance = @Amount WHERE Id = @Id", _connection.SqlConnection);
+            command.Parameters.AddWithValue("@Id", billId);
+            command.Parameters.AddWithValue("@Amount", amount);
+            command.ExecuteNonQuery();
+            _connection.SqlConnection.Close();
+        }
+
+        public IEnumerable<IUser> GetAccountUsers(int billId)
+        {
+            var users = new List<UserDto>();
+            _connection.SqlConnection.Open();
+            var command = new SqlCommand("SELECT dbo.[User].Id, UserName FROM dbo.[User] INNER JOIN dbo.[User_Account] ON dbo.[User].Id = dbo.[User_Account].UserId WHERE dbo.User_Account.AccountId=@Id", _connection.SqlConnection);
+            command.Parameters.AddWithValue("@Id", billId);
+            command.ExecuteNonQuery();
+            using (var reader = command.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+                    users.Add(new UserDto(reader.GetInt32(0),reader.GetString(1)));
+                }
+            }
+            _connection.SqlConnection.Close();
+            return users;
+        }
+
+        public void AddStartTransaction(decimal amount)
+        {
+            _connection.SqlConnection.Open();
+            var command = new SqlCommand("INSERT INTO dbo.[Transaction] (Name,Amount,TimeOfTransaction,AccountId,Category,IconId) VALUES(@Name,@Amount,@Time,(SELECT MAX(Id) FROM dbo.[Account]),@Category,@IconId)", _connection.SqlConnection);
+            command.Parameters.AddWithValue("@Name", "Starting Funds");
+            command.Parameters.AddWithValue("@Amount", amount);
+            command.Parameters.AddWithValue("@Time", DateTime.Now);
+            command.Parameters.AddWithValue("@Category", "Start");
+            command.Parameters.AddWithValue("@IconId", 0);
             command.ExecuteNonQuery();
             _connection.SqlConnection.Close();
         }
     }
+
 }

@@ -8,7 +8,7 @@
 <h2>My Bills</h2>
 <hr />
 <div class="container">
-    @if (Model.Bills.Count == 0)
+    @if (Model.Accounts.Count == 0)
     {
         <div id="AlertBill" class="info alert-info alert-dismissible fade in">
             <a href="#AlertBill" class="close" data-dismiss="alert" aria-label="close">&times;</a>
@@ -17,12 +17,12 @@
     }
     <row>
 
-        @if (Model.Bills != null)
+        @if (Model.Accounts != null)
         {
-            foreach (var item in Model.Bills)
+            foreach (var item in Model.Accounts)
             {
-                <div class="col-sm-4" onclick="location.href = '@Url.Action("Index", "Transaction", new {id = item.BillId, billName = item.BillName, balance = item.BillBalance})'">
-                    <partial name="~/Views/Bill/BillPartial.cshtml" model="@item" />
+                <div class="col-sm-4" onclick="location.href = '@Url.Action("Index", "Transaction", new {id = item.AccountId, billName = item.AccountName, balance = item.AccountBalance})'">
+                    <partial name="~/Views/Account/BillPartial.cshtml" model="@item" />
                 </div>
 
             }
@@ -32,7 +32,7 @@
                 <div class=" panel panel-default" style="background-color: mediumseagreen; margin: 8px; font-weight: bold; color: white">
                     <div class="panel-body">
                         <div>
-                            <input type="button" class="btn btn-default" value="+" onclick="location.href = '@Url.Action("Create", "Bill")'" style="margin-top: 12%; margin-bottom: 13%; background-color: gray; color: white; font-weight: bold" />
+                            <input type="button" class="btn btn-default" value="+" onclick="location.href = '@Url.Action("Create", "Account")'" style="margin-top: 12%; margin-bottom: 13%; background-color: gray; color: white; font-weight: bold" />
                         </div>
                     </div>
                 </div>

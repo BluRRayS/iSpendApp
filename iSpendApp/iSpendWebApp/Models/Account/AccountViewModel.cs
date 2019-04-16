@@ -4,47 +4,47 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using iSpendInterfaces;
 
-namespace iSpendWebApp.Models.Bill
+namespace iSpendWebApp.Models.Account
 {
-    public class BillViewModel:IBill
+    public class AccountViewModel:IAccount
     {
-        public BillViewModel(IEnumerable<string>icons)
+        public AccountViewModel(IEnumerable<string>icons)
         {
             var iconNames = icons.Select(iconName => iconName.Remove(iconName.Length - 4)).ToList();
             Icons = iconNames;
         }
 
-        public BillViewModel()
+        public AccountViewModel()
         {
             
         }
 
-        public BillViewModel(int billId, string billName, double billBalance, IEnumerable<ITransaction> transactions, int iconId, IEnumerable<int> accountIds, IEnumerable<string> icons, IEnumerable<IReservation> reservations)
+        public AccountViewModel(int billId, string billName, double billBalance, IEnumerable<ITransaction> transactions, int iconId, IEnumerable<int> accountIds, IEnumerable<string> icons, IEnumerable<IReservation> reservations)
         {
-            BillId = billId;
-            BillName = billName;
-            BillBalance = billBalance;
+            AccountId = billId;
+            AccountName = billName;
+            AccountBalance = billBalance;
             Transactions = transactions;
             IconId = iconId;
-            AccountIds = accountIds;
+            UserIds = accountIds;
             var iconNames = icons.Select(iconName => iconName.Remove(iconName.Length - 4)).ToList();
             Icons = iconNames;
             Reservations = reservations;
         }
 
-        public int BillId { get; set; }
+        public int AccountId { get; set; }
         [DisplayName("Name")]
         [Required]
-        public string BillName { get; set; }
+        public string AccountName { get; set; }
 
         [DisplayName("Balance")]
         [Required]
         [DataType(DataType.Currency)]
-        public double BillBalance { get; set; }
+        public double AccountBalance { get; set; }
 
         public IEnumerable<ITransaction> Transactions { get; set; }
         public int IconId { get; set; }
-        public IEnumerable<int> AccountIds { get; set; }
+        public IEnumerable<int> UserIds { get; set; }
         public IEnumerable<IReservation> Reservations { get; set; }
         public int UserId { get; set; }
         public List<string> Icons { get; set; }

@@ -6,11 +6,10 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using iSpendDAL;
-using iSpendDAL.Account;
-using iSpendDAL.Bill;
 using iSpendDAL.ContextInterfaces;
 using iSpendDAL.Savings;
 using iSpendDAL.Transaction;
+using iSpendDAL.User;
 using iSpendWebApp.Controllers.ActionFilters;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -20,6 +19,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
+using AccountContext = iSpendDAL.Account.AccountContext;
 
 namespace iSpendWebApp
 {
@@ -54,8 +54,8 @@ namespace iSpendWebApp
             IFileProvider physicalProvider = new PhysicalFileProvider(Directory.GetCurrentDirectory());
             services.AddSingleton<IFileProvider>(physicalProvider);
 
+            services.AddSingleton<IUserContext, UserContext>();
             services.AddSingleton<IAccountContext, AccountContext>();
-            services.AddSingleton<IBillContext, BillContext>();
             services.AddSingleton<ITransactionContext, TransactionContext>();
             services.AddSingleton<ISavingsContext, SavingsContext>();
             services.AddTransient(_ => new DatabaseConnection(Configuration.GetConnectionString("DefaultConnection")));

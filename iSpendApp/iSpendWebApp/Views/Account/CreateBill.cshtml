@@ -1,24 +1,33 @@
-﻿@model iSpendWebApp.Models.Bill.BillViewModel
+﻿@using Microsoft.AspNetCore.Http
+@model iSpendWebApp.Models.Account.AccountViewModel
 
 @{
-    ViewData["Title"] = "EditBill";
+    ViewData["Title"] = "CreateBill";
     var imagePath = "";
     var count = 0;
 }
 
-<h2>EditBill</h2>
+
+<h2>CreateBill</h2>
 
 <h4>BillViewModel</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Edit" asp-controller="Bill">
+        @Html.HiddenFor(model =>model.IconId)
+        <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="BillName" class="control-label"></label>
-                <input asp-for="BillName" class="form-control" value="@Model.BillName" />
-                <span asp-validation-for="BillName" class="text-danger"></span>
+                <label asp-for="AccountName" class="control-label"></label>
+                <input asp-for="AccountName" class="form-control"/>
+                <span asp-validation-for="AccountName" class="text-danger"></span>
             </div>
+            <div class="form-group">
+                <label asp-for="AccountBalance" class="control-label"></label>
+                <input asp-for="AccountBalance" class="form-control"/>
+                <span asp-validation-for="AccountBalance" class="text-danger"></span>
+            </div>
+
             <div class="row">
                 <div class="col-xs-3">
                     <p>Preview:</p>
@@ -32,7 +41,7 @@
                         <select asp-for="IconId" class="form-control" id="IdMenu">
                             @foreach (var icon in Model.Icons)
                             {
-                                imagePath = Url.Content("~/Icons/Bill/" + icon+".png");
+                                imagePath = Url.Content("~/Icons/Bill/" + icon + ".png");
                                 <option value="@count" title="@imagePath">@icon</option>
                                 count++;
                             }
@@ -41,15 +50,16 @@
                     <span asp-validation-for="IconId" class="text-danger"></span>
                 </div>
             </div>
+
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-warning" />
+                <input type="submit" value="Create" class="btn btn-default"/>
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index" asp-controller="Bill">Back to List</a>
+    <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {

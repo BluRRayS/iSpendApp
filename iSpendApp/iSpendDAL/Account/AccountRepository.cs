@@ -1,4 +1,5 @@
-﻿using iSpendDAL.ContextInterfaces;
+﻿using System.Collections.Generic;
+using iSpendDAL.ContextInterfaces;
 using iSpendInterfaces;
 
 namespace iSpendDAL.Account
@@ -12,34 +13,44 @@ namespace iSpendDAL.Account
             _context = context;
         }
 
-        public void AddUser(IUser newUser)
+        public void AddAccount(IAccount newBill, int userId)
         {
-            _context.AddUser(newUser);
+            _context.AddAccount(newBill, userId);
         }
 
-        public IUser FindById(int id)
+        public IEnumerable<IAccount> GetUserBills(string username)
+        {
+           return _context.GetAccountsByUsername(username);
+        }
+
+        public IAccount GetBillById(int id)
         {
             return _context.GetAccountById(id);
         }
 
-        public IUser FindByUsername(string username)
+        public void UpdateAccount(int id,string name, int iconId)
         {
-            return _context.GetAccountByUsername(username);
+            _context.UpdateAccount(id,name,iconId);
         }
 
-        public bool CheckCredentials(string username, string password)
+        public void RemoveBill(int id)
         {
-            return _context.CheckCredentials(username, password);
+            _context.RemoveAccount(id);
         }
 
-        public bool CheckIfUsernameIsTaken(string username)
+        public void RefreshBillBalance(int id)
         {
-            return _context.CheckIfUserNameIsTaken(username);
+            _context.GetTotalBalance(id);
         }
 
-        public void UpdateUserDetails(IUser account)
+        public IEnumerable<IUser> GetBillUsers(int billId)
         {
-            _context.UpdateUserDetails(account);
+            return _context.GetAccountUsers(billId);
+        }
+
+        public IEnumerable<IReservation> GetReservations(int accountId)
+        {
+            return _context.GetReservations(accountId);
         }
     }
 }

@@ -17,11 +17,11 @@ namespace iSpendWebApp.Controllers
 {
     public class UserController : Controller
     {
-        private readonly IAccountContext _accountContext;
+        private readonly IUserContext _userContext;
 
-        public UserController(IAccountContext accountContext)
+        public UserController(IUserContext userContext)
         {
-            _accountContext = accountContext;
+            _userContext = userContext;
         }
 
 
@@ -44,7 +44,7 @@ namespace iSpendWebApp.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Login(string username, string password)
         {
-            var accountLogic = new UserLogic(_accountContext);
+            var accountLogic = new UserLogic(_userContext);
 
             if (accountLogic.Login(username, password))
             {
@@ -62,7 +62,7 @@ namespace iSpendWebApp.Controllers
         public ActionResult Details(int id)
         {
             var model = new UserViewModel();
-            var accountLogic = new UserLogic(_accountContext);
+            var accountLogic = new UserLogic(_userContext);
             model.Username = accountLogic.GetAccountByUsername(HttpContext.Session.GetString("UserSession")).Username;
             model.Email = accountLogic.GetAccountByUsername(HttpContext.Session.GetString("UserSession")).Email;
             return View("UserDetails", model);
@@ -81,7 +81,7 @@ namespace iSpendWebApp.Controllers
         {
             try
             {
-                var accountLogic = new UserLogic(_accountContext);
+                var accountLogic = new UserLogic(_userContext);
                 if (ModelState.IsValid && accountLogic.IsUsernameTaken(model.Username) == false)
                 {
                     accountLogic.AddUser(model.Username, model.Password, model.Email);
@@ -107,7 +107,7 @@ namespace iSpendWebApp.Controllers
         {
 
             var model = new EditUserViewModel();
-            var accountLogic = new UserLogic(_accountContext);
+            var accountLogic = new UserLogic(_userContext);
             model.Username = accountLogic.GetAccountByUsername(HttpContext.Session.GetString("UserSession")).Username;
             model.Email = accountLogic.GetAccountByUsername(HttpContext.Session.GetString("UserSession")).Email;
             return View("EditUser", model);
@@ -122,7 +122,7 @@ namespace iSpendWebApp.Controllers
         {
             try
             {
-                var accountLogic = new UserLogic(_accountContext);
+                var accountLogic = new UserLogic(_userContext);
                 if (ModelState.IsValid && accountLogic.IsUsernameTaken(model.Username) == false)
                 {
                     model.UserId = accountLogic.GetAccountByUsername(HttpContext.Session.GetString("UserSession"))

@@ -17,13 +17,13 @@ namespace iSpendWebApp.Controllers
     {
         private readonly IFileProvider _fileProvider;
         private readonly SavingLogic _savingLogic;
-        private readonly BillLogic _billLogic;
+        private readonly AccountLogic _billLogic;
 
-        public SavingsController(ISavingsContext context, IBillContext billContext, IFileProvider fileProvider)
+        public SavingsController(ISavingsContext context, IAccountContext billContext, IFileProvider fileProvider)
         {
             _savingLogic = new SavingLogic(context);
             _fileProvider = fileProvider;
-            _billLogic = new BillLogic(billContext);
+            _billLogic = new AccountLogic(billContext);
         }
 
 
@@ -48,7 +48,7 @@ namespace iSpendWebApp.Controllers
         [ServiceFilter(typeof(AuthorizationActionFilter))]
         public ActionResult Create()
         {
-            ViewBag.Bills = _billLogic.GetUserBills(HttpContext.Session.GetString("UserSession")) ;
+            ViewBag.Bills = _billLogic.GetUserAccounts(HttpContext.Session.GetString("UserSession")) ;
             ViewBag.FileProvider = _fileProvider.GetDirectoryContents("wwwroot/Icons/Savings").ToList().Select(icon => icon.Name).ToList();
             return View("~/Views/Savings/CreateSaving.cshtml");
         }

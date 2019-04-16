@@ -18,19 +18,19 @@ namespace iSpendWebApp.Controllers
     public class TransactionController : Controller
     {
         private readonly TransactionLogic _transactionLogic;
-        private readonly UserLogic _accountLogic;
-        private readonly BillLogic _billLogic;
+        private readonly UserLogic _userLogic;
+        private readonly AccountLogic _accountLogic;
         private readonly SavingLogic _savingLogic;
         private readonly IFileProvider _fileProvider;
 
-        public TransactionController(ITransactionContext transactionContext, IAccountContext accountContext, IBillContext billContext,ISavingsContext savingsContext ,IFileProvider fileProvider)
+        public TransactionController(ITransactionContext transactionContext, IUserContext userContext, IAccountContext accountContext,ISavingsContext savingsContext ,IFileProvider fileProvider)
         {
             _transactionLogic = new TransactionLogic(transactionContext);
-            _accountLogic = new UserLogic(accountContext);
-            _billLogic = new BillLogic(billContext);
+            _userLogic = new UserLogic(userContext);
+            _accountLogic = new AccountLogic(accountContext);
             _savingLogic = new SavingLogic(savingsContext);
             _fileProvider = fileProvider;
-            
+         
         }
 
 
@@ -39,7 +39,7 @@ namespace iSpendWebApp.Controllers
         public ActionResult Index(int id,string billName,decimal balance)
         {
             var userHasAccess = false;
-            var usersContext = _billLogic.GetBillUsers(id).ToList();
+            var usersContext = _accountLogic.GetAccountUsers(id).ToList();
             foreach (var user in usersContext)
             {
                 if (user.Username == HttpContext.Session.GetString("UserSession"))
@@ -88,7 +88,7 @@ namespace iSpendWebApp.Controllers
             try
             {
                 _transactionLogic.CreateTransaction(model);
-                _billLogic.RefreshBillBalance(model.BillId);
+                _accountLogic.RefreshAccountBalance(model.BillId);
                 return RedirectToAction(nameof(Index), new { id = model.BillId });
             }
             catch

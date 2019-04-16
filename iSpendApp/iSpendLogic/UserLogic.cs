@@ -1,7 +1,7 @@
 ﻿using System;
 using iSpendDAL;
-using iSpendDAL.Account;
 using iSpendDAL.ContextInterfaces;
+using iSpendDAL.User;
 using iSpendInterfaces;
 using iSpendLogic.Helpers;
 using iSpendLogic.Models;
@@ -10,11 +10,11 @@ namespace iSpendLogic
 {
     public class UserLogic
     {
-        private AccountRepository Repository { get; }
+        private UserRepository Repository { get; }
 
-        public UserLogic(IAccountContext context)
+        public UserLogic(IUserContext context)
         {
-            Repository = new AccountRepository(context);
+            Repository = new UserRepository(context);
         }
 
         public void AddUser(string username, string password, string email)

@@ -1,4 +1,4 @@
-﻿@model iSpendWebApp.Models.Bill.BillViewModel
+﻿@model iSpendWebApp.Models.Account.AccountViewModel
 
 @{
     ViewData["Title"] = "DeleteBill";
@@ -12,22 +12,22 @@
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.BillId)
+            @Html.DisplayNameFor(model => model.AccountName)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.BillId)
+            @Html.DisplayFor(model => model.AccountBalance)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.BillName)
+            @Html.DisplayNameFor(model => model.AccountName)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.BillName)
+            @Html.DisplayFor(model => model.AccountName)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.BillBalance)
+            @Html.DisplayNameFor(model => model.AccountBalance)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.BillBalance)
+            @Html.DisplayFor(model => model.AccountBalance)
         </dd>
         <dt>
             @Html.DisplayNameFor(model => model.IconId)
@@ -43,7 +43,7 @@
         </dd>
     </dl>
     
-    <form asp-action="Delete" asp-controller="Bill">
+    <form asp-action="Delete" asp-controller="Account">
         <input type="submit" value="Delete" class="btn btn-danger" /> |
         <a asp-action="Index">Back to List</a>
     </form>

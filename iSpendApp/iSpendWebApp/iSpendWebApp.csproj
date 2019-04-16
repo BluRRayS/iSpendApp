@@ -6,6 +6,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="wwwroot\Icons\Savings\SharedAccount.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="datatables.net.bootstrap" Version="1.10.15.1" />
     <PackageReference Include="datatables.net.core" Version="1.10.15.1" />
     <PackageReference Include="IronPdf" Version="5.2.0.1" />

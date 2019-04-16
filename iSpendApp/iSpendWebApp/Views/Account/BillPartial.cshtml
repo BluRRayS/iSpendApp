@@ -1,5 +1,5 @@
 ﻿@using iSpendInterfaces
-@model iSpendWebApp.Models.Bill.BillViewModel
+@model iSpendWebApp.Models.Account.AccountViewModel
 @{
     List<string> imageNames = ViewBag.FileProvider;
     var imageName = imageNames[Model.IconId];
@@ -10,7 +10,7 @@
     {
         reservation = Model.Reservations.Sum(res => res.Amount);
     }
-    var reserved = Model.BillBalance - Convert.ToDouble(reservation);
+    var reserved = Model.AccountBalance - Convert.ToDouble(reservation);
 }
 
 <div align="Center">
@@ -18,12 +18,17 @@
         <div class="panel-body">
             <img src="@imagePath" /><br />
 
-            @Html.DisplayFor(model => model.BillName)<br />
-            @Html.DisplayFor(model => model.BillBalance)<br />
+            @Html.DisplayFor(model => model.AccountName)<br />
+            @Html.DisplayFor(model => model.AccountBalance)<br />
             @if (reservation > 0)
             {
                 <i>€@reserved</i><br />
                 <i>€@reservation is reserved</i><br />
+            }
+            else
+            {
+                <br/>
+                <br/>
             }
         </div>
     </div>

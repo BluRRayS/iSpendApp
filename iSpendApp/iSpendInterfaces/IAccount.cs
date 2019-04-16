@@ -5,14 +5,14 @@ using System.Text;
 
 namespace iSpendInterfaces
 {
-    public interface IBill
+    public interface IAccount
     {
-        int BillId { get; set; }
-        string BillName { get; set; }
-        double BillBalance { get; set; }
+        int AccountId { get; set; }
+        string AccountName { get; set; }
+        double AccountBalance { get; set; }
         IEnumerable<ITransaction> Transactions { get; set; }
         int IconId { get; set; }
-        IEnumerable<int> AccountIds { get; set; }
+        IEnumerable<int> UserIds { get; set; }
         IEnumerable<IReservation> Reservations { get; set; }
     }
 }

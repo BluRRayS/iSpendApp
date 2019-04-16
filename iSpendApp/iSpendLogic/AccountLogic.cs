@@ -2,60 +2,60 @@
 using System.Collections.Generic;
 using System.Text;
 using iSpendDAL;
-using iSpendDAL.Bill;
+using iSpendDAL.Account;
 using iSpendDAL.ContextInterfaces;
 using iSpendInterfaces;
 
 namespace iSpendLogic
 {
-    public class BillLogic
+    public class AccountLogic
     {
-        private BillRepository Repository { get; }
+        private AccountRepository Repository { get; }
 
-        public BillLogic(IBillContext context)
+        public AccountLogic(IAccountContext context)
         {
-            Repository = new BillRepository(context);
+            Repository = new AccountRepository(context);
         }
 
-        public void AddBill(IBill newBill, int userId)
+        public void AddAccount(IAccount newAccount, int userId)
         {
-            Repository.AddBill(newBill, userId);
+            Repository.AddAccount(newAccount, userId);
         }
 
-        public IEnumerable<IBill> GetUserBills(string username)
+        public IEnumerable<IAccount> GetUserAccounts(string username)
         {
-            var accounts = new List<IBill>();
+            var accounts = new List<IAccount>();
             foreach (var account in Repository.GetUserBills(username))
             {
-                account.Reservations = Repository.GetReservations(account.BillId);
+                account.Reservations = Repository.GetReservations(account.AccountId);
                 accounts.Add(account);
             }
             return accounts;
         }
 
-        public IBill GetBillById(int id)
+        public IAccount GetAccountById(int id)
         {
             var account = Repository.GetBillById(id);
             account.Reservations = Repository.GetReservations(id);
             return account;
         }
 
-        public void UpdateBill(int id, string name, int iconId)
+        public void UpdateAccount(int id, string name, int iconId)
         {
-            Repository.UpdateBill(id, name, iconId);
+            Repository.UpdateAccount(id, name, iconId);
         }
 
-        public void RemoveBill(int id)
+        public void RemoveAccount(int id)
         {
             Repository.RemoveBill(id);
         }
 
-        public void RefreshBillBalance(int id)
+        public void RefreshAccountBalance(int id)
         {
             Repository.RefreshBillBalance(id);
         }
 
-        public IEnumerable<IUser> GetBillUsers(int billId)
+        public IEnumerable<IUser> GetAccountUsers(int billId)
         {
             return Repository.GetBillUsers(billId);
         }
@@ -65,7 +65,7 @@ namespace iSpendLogic
             return Repository.GetReservations(accountId);
         }
 
-        public IEnumerable<IBill> GetBillsByUsername(string username)
+        public IEnumerable<IAccount> GetAccountsByUsername(string username)
         {
             return Repository.GetUserBills(username);
         }
