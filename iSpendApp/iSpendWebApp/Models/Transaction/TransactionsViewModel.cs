@@ -11,7 +11,7 @@ namespace iSpendWebApp.Models.Transaction
     {
         public TransactionsViewModel(int billId,IEnumerable<string>icons)
         {
-            BillId = billId;
+            AccountId = billId;
             var iconNames = icons.Select(iconName => iconName.Remove(iconName.Length - 4)).ToList();
             Icons = iconNames;
         }
@@ -24,7 +24,7 @@ namespace iSpendWebApp.Models.Transaction
         public TransactionsViewModel(int id, int accountId, string name, decimal amount, string category, int iconId, DateTime time,IEnumerable<string> icons)
         {
             TransactionId = id;
-            BillId = accountId;
+            AccountId = accountId;
             TransactionName = name;
             TransactionAmount = amount;
             Category = category;
@@ -35,7 +35,7 @@ namespace iSpendWebApp.Models.Transaction
         }
 
         public int TransactionId { get; set; }
-        public int BillId { get; set; }
+        public int AccountId { get; set; }
         [Required]
         public string TransactionName { get; set; }
         [Required]

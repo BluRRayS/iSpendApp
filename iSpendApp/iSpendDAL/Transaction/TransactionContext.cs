@@ -27,7 +27,7 @@ namespace iSpendDAL.Transaction
             {
                 while (reader.Read())
                 {
-                    billTransactions.Add(new TransactionDto(reader.GetInt32(0),reader.GetString(1),reader.GetDecimal(2),reader.GetString(4),reader.GetInt32(6),reader.GetDateTime(5)));
+                    billTransactions.Add(new TransactionDto(reader.GetInt32(0),reader.GetString(1),reader.GetDecimal(2),reader.GetString(4),reader.GetInt32(6),reader.GetDateTime(5),reader.GetInt32(3)));
                 }
             }
             _connection.SqlConnection.Close();
@@ -41,7 +41,7 @@ namespace iSpendDAL.Transaction
             command.Parameters.AddWithValue("@Name",transaction.TransactionName);
             command.Parameters.AddWithValue("@Amount", transaction.TransactionAmount);
             command.Parameters.AddWithValue("@Time",DateTime.Now);
-            command.Parameters.AddWithValue("@AccountId",transaction.BillId);
+            command.Parameters.AddWithValue("@AccountId",transaction.AccountId);
             command.Parameters.AddWithValue("@Category",transaction.Category);
             command.Parameters.AddWithValue("@IconId", transaction.IconId);
             command.ExecuteNonQuery();
@@ -69,7 +69,7 @@ namespace iSpendDAL.Transaction
             command.Parameters.AddWithValue("@Icon", transaction.IconId);
             command.ExecuteNonQuery();
             _connection.SqlConnection.Close();
-            GetTotalBalance(transaction.BillId);
+            GetTotalBalance(transaction.AccountId);
         }
 
         public ITransaction GetTransactionById(int id, int billId)
@@ -83,7 +83,7 @@ namespace iSpendDAL.Transaction
            {
                if (reader.Read())
                {
-                   transaction.BillId = billId;
+                   transaction.AccountId = billId;
                    transaction.TransactionId = id;
                    transaction.TransactionName = reader.GetString(0);
                    transaction.TransactionAmount = reader.GetDecimal(1);
@@ -113,6 +113,64 @@ namespace iSpendDAL.Transaction
             }
             _connection.SqlConnection.Close();
             return categories;
+        }
+
+        public IEnumerable<ITransaction> GetAccountScheduledTransactions(int id)
+        {
+            var transactions = new List<TransactionDto>();
+            var command = new SqlCommand("SELECT Id,Name,Amount,Category,IconId,TimeOfTransaction,AccountId FROM dbo.[ScheduledTransactions] WHERE AccountId = @Id", _connection.SqlConnection);
+            command.Parameters.AddWithValue("@Id", id);
+            _connection.SqlConnection.Open();
+            command.ExecuteNonQuery();
+            using (var reader = command.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+                    transactions.Add(new TransactionDto(reader.GetInt32(0), reader.GetString(1), reader.GetDecimal(2), reader.GetString(3), reader.GetInt32(4), reader.GetDateTime(5), reader.GetInt32(6)));
+                }
+            }
+            _connection.SqlConnection.Close();
+            return transactions;
+        }
+
+        public IEnumerable<ITransaction> GetAllScheduledTransactions()
+        {
+            var transactions = new List<TransactionDto>();
+            var command = new SqlCommand("SELECT Id,Name,Amount,Category,IconId,TimeOfTransaction,AccountId FROM dbo.[ScheduledTransactions]", _connection.SqlConnection);
+            _connection.SqlConnection.Open();
+            command.ExecuteNonQuery();
+            using (var reader = command.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+                    transactions.Add(new TransactionDto(reader.GetInt32(0),reader.GetString(1),reader.GetDecimal(2),reader.GetString(3),reader.GetInt32(4),reader.GetDateTime(5),reader.GetInt32(6)));
+                }
+            }
+            _connection.SqlConnection.Close();
+            return transactions;
+        }
+
+        public void RemoveScheduledTransaction(int id)
+        {
+            var command = new SqlCommand("REMOVE FROM dbo.[ScheduledTransactions] WHERE Id = @Id",_connection.SqlConnection);
+            command.Parameters.AddWithValue("@Id", id);
+            _connection.SqlConnection.Open();
+            command.ExecuteNonQuery();
+            _connection.SqlConnection.Close();
+        }
+
+        public void AddScheduledTransaction(ITransaction transaction)
+        {
+            var command = new SqlCommand("INSERT INTO dbo.[ScheduledTransactions] (Name,Amount,TimeOfTransaction,AccountId,Category,IconId) VALUES(@Name,@Amount,@Time,@AccountId,@Category,@IconId)", _connection.SqlConnection);
+            command.Parameters.AddWithValue("@Name", transaction.TransactionName);
+            command.Parameters.AddWithValue("@Amount", transaction.TransactionAmount);
+            command.Parameters.AddWithValue("@Time", transaction.TimeOfTransaction);
+            command.Parameters.AddWithValue("@AccountId", transaction.AccountId);
+            command.Parameters.AddWithValue("@Category", transaction.Category);
+            command.Parameters.AddWithValue("@IconId", transaction.IconId);
+            _connection.SqlConnection.Open();            
+            command.ExecuteNonQuery();
+            _connection.SqlConnection.Close();
         }
 
 

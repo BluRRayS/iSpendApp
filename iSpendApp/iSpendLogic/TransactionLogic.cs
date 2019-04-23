@@ -47,5 +47,36 @@ namespace iSpendLogic
         {
             return Repository.GetCategories();
         }
+
+        public void ExecuteScheduledTransactions(DateTime executingTime)
+        {
+            //Todo: Check interval maybe each week instead of 1 time each month
+            var transactions = GetAllScheduledTransactions();
+            transactions = transactions.Where(transaction => transaction.TimeOfTransaction.Day == executingTime.Day);
+            foreach (var transaction in transactions)
+            {
+                Repository.CreateTransaction(transaction);
+            }
+        }
+
+        public IEnumerable<ITransaction> GetAllScheduledTransactions()
+        {
+            return Repository.GetAllScheduledTransactions();
+        }
+
+        public IEnumerable<ITransaction> GetAccountScheduledTransactions(int id)
+        {
+            return Repository.GetAccountScheduledTransactions(id);
+        }
+
+        public void RemoveScheduledTransaction(int id)
+        {
+            Repository.RemoveScheduledTransaction(id);
+        }
+
+        public void AddScheduledTransaction(ITransaction transaction)
+        {
+            Repository.AddScheduledTransaction(transaction);
+        }
     }
 }

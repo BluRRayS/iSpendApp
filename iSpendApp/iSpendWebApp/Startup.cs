@@ -28,7 +28,11 @@ namespace iSpendWebApp
     {
         public Startup(IConfiguration configuration)
         {
+            
             Configuration = configuration;
+            var scheduler = new Scheduler(new TransactionContext(new DatabaseConnection(Configuration.GetConnectionString("DefaultConnection"))));
+            var scheduledTransactionThread = new Thread(scheduler.Start);
+            scheduledTransactionThread.Start();
         }
 
         public IConfiguration Configuration { get; }

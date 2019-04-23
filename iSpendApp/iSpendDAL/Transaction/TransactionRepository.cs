@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using iSpendDAL.ContextInterfaces;
 using iSpendInterfaces;
 
@@ -41,6 +42,26 @@ namespace iSpendDAL.Transaction
          public IEnumerable<ICategory> GetCategories()
          {
              return _context.GetCategories();
+         }
+
+         public IEnumerable<ITransaction> GetAccountScheduledTransactions(int id)
+         {
+             return _context.GetAccountScheduledTransactions(id);
+         }
+
+         public IEnumerable<ITransaction> GetAllScheduledTransactions()
+         {
+             return _context.GetAllScheduledTransactions();
+         }
+
+         public void RemoveScheduledTransaction(int id)
+         {
+             _context.RemoveScheduledTransaction(id);
+         }
+
+         public void AddScheduledTransaction(ITransaction transaction)
+         {
+             _context.AddScheduledTransaction(transaction);
          }
     }
 }

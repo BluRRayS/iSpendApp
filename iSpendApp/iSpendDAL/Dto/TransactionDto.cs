@@ -12,7 +12,7 @@ namespace iSpendDAL.Dto
         {
             
         }
-        public TransactionDto(int id,string name,decimal amount, string category, int iconId, DateTime timeOfTransaction)
+        public TransactionDto(int id,string name,decimal amount, string category, int iconId, DateTime timeOfTransaction,int accountId)
         {
             TransactionId = id;
             TransactionName = name;
@@ -20,10 +20,11 @@ namespace iSpendDAL.Dto
             Category = category;
             IconId = iconId;
             TimeOfTransaction = timeOfTransaction;
+            AccountId = accountId;
         }
 
         public int TransactionId { get; set; }
-        public int BillId { get; set; }
+        public int AccountId { get; set; }
         public string TransactionName { get; set; }
         public decimal TransactionAmount { get; set; }
         public string Category { get; set; }
