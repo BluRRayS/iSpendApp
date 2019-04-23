@@ -13,5 +13,20 @@ namespace iSpendDAL.Invitation
         {
             _context = context;
         }
+
+        public void CreateInvite()
+        {
+           _context.CreateInvite();
+        }
+
+        public void DeleteInvite()
+        {
+            _context.DeleteInvite();
+        }
+
+        public void AcceptInvite()
+        {
+            _context.AcceptInvite();
+        }
     }
 }

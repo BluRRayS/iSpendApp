@@ -13,6 +13,7 @@ namespace iSpendWebApp.Models
         public int AccountId { get; set; }
         public int SavingsId { get; set; }
         [Required]
+        [Range(1, int.MaxValue)]
         public decimal Amount { get; set; }
         public DateTime Date { get; set; }
         public IEnumerable<ISaving> UserSavings{ get; set; }

@@ -34,7 +34,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <partial name="~/Views/Savings/CreateReservationPartialSaving.cshtml" model="@new ReservationViewModel()" />
+                <partial name="~/Views/Savings/CreateReservationPartialSaving.cshtml" model="@new ReservationViewModel(){SavingsId = Model.SavingId}" />
             </div>
         </div>
     </div>

@@ -31,7 +31,7 @@ namespace iSpendWebApp.Controllers
         [ServiceFilter(typeof(AuthorizationActionFilter))]
         public ActionResult Index()
         {
-            return RedirectToAction("Index", "Bill");
+            return RedirectToAction("Index", "Account");
         }
 
         // GET: Savings/Details/5
@@ -41,6 +41,7 @@ namespace iSpendWebApp.Controllers
             var context = _savingLogic.GetSavingById(id);
             var model = new SavingsViewModel(context.UserId,id,context.SavingName,context.SavingCurrentAmount,context.SavingsGoalAmount,context.State,context.IconId,context.GoalDate);
             ViewBag.FileProvider = _fileProvider.GetDirectoryContents("wwwroot/Icons/Savings").ToList().Select(icon => icon.Name).ToList();
+            ViewBag.Accounts = _billLogic.GetUserAccounts(HttpContext.Session.GetString("UserSession"));
             return View("~/Views/Savings/SavingDetails.cshtml",model);
         }
 
@@ -107,11 +108,11 @@ namespace iSpendWebApp.Controllers
             try
             {
                 _savingLogic.DeleteSaving(model.SavingId);
-                return RedirectToAction(nameof(Index), "Bill");
+                return RedirectToAction(nameof(Index), "Account");
             }
             catch
             {
-                return RedirectToAction("Index", "Bill");
+                return RedirectToAction("Index", "Account");
             }
         }
         // POST: Savings/AddReservation/5
@@ -124,12 +125,12 @@ namespace iSpendWebApp.Controllers
             {
                 _savingLogic.AddReservation(model);
                 _savingLogic.RefreshSavingsAmount(model.SavingsId);
-                return RedirectToAction("Index", "Bill");
+                return RedirectToAction("Index", "Account");
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
-                return RedirectToAction("Index", "Bill");
+                return RedirectToAction("Index", "Account");
             }
             
         }
@@ -138,7 +139,7 @@ namespace iSpendWebApp.Controllers
         public ActionResult CompleteSaving(int id)
         {
             _savingLogic.CompleteSaving(id);
-            return RedirectToAction("Index","Bill");
+            return RedirectToAction("Index", "Account");
         }
     }
 
