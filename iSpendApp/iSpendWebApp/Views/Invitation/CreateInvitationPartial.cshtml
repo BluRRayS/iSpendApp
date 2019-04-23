@@ -1,0 +1,42 @@
+﻿@using iSpendInterfaces
+@model iSpendWebApp.Models.InvitationViewModel
+@{
+    IEnumerable<IUser> users = ViewBag.Users;
+    IEnumerable<IAccount> accounts = ViewBag.Accounts;
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                
+                <label asp-for="UserIdReceiver" class="control-label"></label>
+                <select  asp-for="UserIdReceiver" class="form-control">
+                    @foreach (var item in users)
+                    {
+                        <option value="@item.UserId">@item.Username / @item.Email</option>
+                    }
+                </select>
+                <span asp-validation-for="UserIdReceiver" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="AccountId" class="control-label"></label>
+                <select asp-for="AccountId" class="form-control">
+                    @foreach (var item in accounts)
+                    {
+                        <option value="@item.AccountId">@item.AccountName</option>
+                    }
+                </select>
+                <span asp-validation-for="AccountId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-success" />
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

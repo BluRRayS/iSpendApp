@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using iSpendDAL;
 using iSpendDAL.ContextInterfaces;
 using iSpendDAL.User;
@@ -48,6 +49,11 @@ namespace iSpendLogic
             var encryption = new Encrypt();
             account.Password = encryption.Hash(account.Password);
             Repository.UpdateUserDetails(account);
+        }
+
+        public IEnumerable<IUser> GetAllUsers()
+        {
+            return Repository.GetAllUsers();
         }
     }
 }

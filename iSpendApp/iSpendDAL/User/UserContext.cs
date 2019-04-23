@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.SqlClient;
 using iSpendDAL.ContextInterfaces;
 using iSpendDAL.Dto;
@@ -118,6 +119,24 @@ namespace iSpendDAL.User
             command.Parameters.AddWithValue("@Email", account.Email);
             command.ExecuteNonQuery();
             _connection.SqlConnection.Close();
+        }
+
+        public IEnumerable<IUser> GetAllUsers()
+        {
+            var users = new List<IUser>();
+            var command = new SqlCommand("SELECT Id,UserName,Email FROM dbo.[User]",_connection.SqlConnection);
+            _connection.SqlConnection.Open();
+            command.ExecuteNonQuery();
+            using (var reader = command.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+                    users.Add(new UserDto(reader.GetInt32(0), reader.GetString(1), reader.GetString(2)));
+                }
+              
+            }
+            _connection.SqlConnection.Close();
+            return users;
         }
     }
 }

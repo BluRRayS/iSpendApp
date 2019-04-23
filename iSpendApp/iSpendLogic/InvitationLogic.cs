@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using iSpendDAL.ContextInterfaces;
 using iSpendDAL.Invitation;
+using iSpendInterfaces;
 
 namespace iSpendLogic
 {
@@ -15,19 +16,24 @@ namespace iSpendLogic
             Repository = new InvitationRepository(context);
         }
 
-        public void CreateInvite()
+        public void CreateInvite(IInvitation invitation)
         {
-            Repository.CreateInvite();
+            Repository.CreateInvite(invitation);
         }
 
-        public void DeleteInvite()
+        public void DeleteInvite(int id)
         {
-            Repository.DeleteInvite();
+            Repository.DeleteInvite(id);
         }
 
-        public void AcceptInvite()
+        public void AcceptInvite(int id)
         {
-            Repository.AcceptInvite();
+            Repository.AcceptInvite(id);
+        }
+
+        public IEnumerable<IInvitation> GetUserInvitations(int userId)
+        {
+           return Repository.GetUserInvitations(userId);
         }
     }
 }

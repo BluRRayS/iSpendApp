@@ -1,4 +1,5 @@
-﻿using iSpendDAL.ContextInterfaces;
+﻿using System.Collections.Generic;
+using iSpendDAL.ContextInterfaces;
 using iSpendInterfaces;
 
 namespace iSpendDAL.User
@@ -40,6 +41,11 @@ namespace iSpendDAL.User
         public void UpdateUserDetails(IUser account)
         {
             _context.UpdateUserDetails(account);
+        }
+
+        public IEnumerable<IUser> GetAllUsers()
+        {
+            return _context.GetAllUsers();
         }
     }
 }

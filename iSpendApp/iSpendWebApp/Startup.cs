@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using iSpendDAL;
 using iSpendDAL.ContextInterfaces;
+using iSpendDAL.Invitation;
 using iSpendDAL.Savings;
 using iSpendDAL.Transaction;
 using iSpendDAL.User;
@@ -58,6 +59,7 @@ namespace iSpendWebApp
             services.AddSingleton<IAccountContext, AccountContext>();
             services.AddSingleton<ITransactionContext, TransactionContext>();
             services.AddSingleton<ISavingsContext, SavingsContext>();
+            services.AddSingleton<IInvitationContext, InvitationContext>();
             services.AddTransient(_ => new DatabaseConnection(Configuration.GetConnectionString("DefaultConnection")));
             services.AddScoped<AuthorizationActionFilter>();
         }

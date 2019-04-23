@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using iSpendDAL.ContextInterfaces;
+using iSpendInterfaces;
 
 namespace iSpendDAL.Invitation
 {
@@ -14,19 +15,23 @@ namespace iSpendDAL.Invitation
             _context = context;
         }
 
-        public void CreateInvite()
+        public void CreateInvite(IInvitation invitation)
         {
-           _context.CreateInvite();
+           _context.CreateInvite(invitation);
         }
 
-        public void DeleteInvite()
+        public void DeleteInvite(int id)
         {
-            _context.DeleteInvite();
+            _context.DeleteInvite(id);
         }
 
-        public void AcceptInvite()
+        public void AcceptInvite(int id)
         {
-            _context.AcceptInvite();
+            _context.AcceptInvite(id);
+        }
+        public IEnumerable<IInvitation> GetUserInvitations(int userId)
+        {
+            return _context.GetUserInvitations(userId);
         }
     }
 }
