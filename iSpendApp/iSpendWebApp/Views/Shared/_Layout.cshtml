@@ -1,4 +1,6 @@
 ﻿@using Microsoft.AspNetCore.Http
+@{ var messageCount = Context.Session.GetInt32("MessageCount");
+}
 <!DOCTYPE html>
 <html>
 <head>
@@ -51,10 +53,11 @@
                     }
                     @if (Context.Session.GetString("UserSession") != null)
                     {
-                        <li><a asp-area="" asp-controller="Account" asp-action="Index"><i class="glyphicon glyphicon-piggy-bank"></i>My Accounts</a></li>
+                        <li><a asp-area="" asp-controller="Account" asp-action="Index"><i class="glyphicon glyphicon-piggy-bank"></i> My Accounts</a></li>
                         <li><a asp-area="" asp-controller="User" asp-action="Details"><i class="glyphicon glyphicon-user"></i> Profile</a></li>
-                        <li><a asp-area="" asp-controller="Invitation" asp-action="Index"><i class="glyphicon glyphicon-envelope"></i>Messages</a></li>
-                        <li><a asp-area="" asp-controller="User" asp-action="Logout"><i class="glyphicon glyphicon-log-out "></i>Logout</a></li>
+                        <li><a asp-area="" asp-controller="Invitation" asp-action="Index"><i class="glyphicon glyphicon-envelope"></i> Messages <span class="badge" style="background-color: #DC3545">@messageCount</span>
+                        </a></li>
+                        <li><a asp-area="" asp-controller="User" asp-action="Logout"><i class="glyphicon glyphicon-log-out "></i> Logout</a></li>
                     }
                 </ul>
 

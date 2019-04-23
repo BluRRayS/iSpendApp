@@ -1,2 +1,3 @@
 ﻿icon display when creating bill and transaction and saving plan. (Maybe use DB)
 Change Css DataTables import file.
+For Scheduled Transactions use a threaded scheduler class that has an interval of 24 hours and getting the scheduled transactions from database.

@@ -18,10 +18,12 @@ namespace iSpendWebApp.Controllers
     public class UserController : Controller
     {
         private readonly IUserContext _userContext;
+        private readonly InvitationLogic _invitationLogic;
 
-        public UserController(IUserContext userContext)
+        public UserController(IUserContext userContext, IInvitationContext invitationContext)
         {
             _userContext = userContext;
+            _invitationLogic = new InvitationLogic(invitationContext);
         }
 
 
@@ -50,7 +52,7 @@ namespace iSpendWebApp.Controllers
             {
                 HttpContext.Session.SetString("UserSession", username);
                 HttpContext.Session.SetInt32("UserId", accountLogic.GetAccountByUsername(username).UserId);
-                RedirectToAction("Index", "Home");
+                HttpContext.Session.SetInt32("MessageCount",_invitationLogic.GetUserInvitations(accountLogic.GetAccountByUsername(username).UserId).Count());
                 return RedirectToAction("Index", "Home");
             }
             return RedirectToAction("Login");
