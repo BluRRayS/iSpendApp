@@ -32,6 +32,7 @@ namespace iSpendWebApp.Controllers
             ViewBag.Users = _userLogic.GetAllUsers();
             var context = _invitationLogic.GetUserInvitations((int) HttpContext.Session.GetInt32("UserId"));
             var model = context.Select(invite => new InvitationViewModel(invite)).ToList();
+            HttpContext.Session.SetInt32("MessageCount",model.Count);
             return View("~/Views/Invitation/Invitations.cshtml", model);
         }
 

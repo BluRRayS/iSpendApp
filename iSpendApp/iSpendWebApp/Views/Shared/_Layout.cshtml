@@ -44,7 +44,7 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
+                    <li><a asp-area="" asp-controller="Home" asp-action="Index"><i class="glyphicon glyphicon-home"></i> Home</a></li>
                     @if (Context.Session.GetString("UserSession") == null)
                     {
                         <li><a asp-area="" asp-controller="User" asp-action="Create">Register</a></li>

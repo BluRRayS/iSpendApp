@@ -1,0 +1,83 @@
+﻿@model iSpendWebApp.Models.Transaction.TransactionsViewModel
+@{
+    var imagePath = "";
+    var count = 0;
+}
+<div class="row">
+    <div class="col-md-12">
+        <form asp-action="CreateScheduledTransaction">
+            @Html.HiddenFor(model => model.AccountId)
+            @Html.HiddenFor(modelItem => modelItem.Icons)
+            <div class="form-group">
+                <label asp-for="TransactionName" class="control-label"></label>
+                <input asp-for="TransactionName" class="form-control" />
+                <span asp-validation-for="TransactionName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TransactionAmount" class="control-label"></label>
+                <input asp-for="TransactionAmount" class="form-control" />
+                <span asp-validation-for="TransactionAmount" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Category" class="control-label"></label>
+                <Select asp-for="Category" asp-items="ViewBag.Categories" class="form-control"></Select>
+                <span asp-validation-for="Category" class="text-danger"></span>
+            </div>
+
+            <div class="row">
+                <div class="col-xs-3">
+                    <p>Preview:</p>
+                </div>
+                <div class="col-xs-3">
+                    <div id="ImgDisplay" class="panel-default"></div>
+                </div>
+                <div class="form-group">
+                    <div class="col-xs-6">
+                        <label asp-for="IconId" class="control-label"></label>
+                        <select asp-for="IconId" class="form-control" id="IdMenu">
+                            @foreach (var icon in Model.Icons)
+                            {
+                                imagePath = Url.Content("~/Icons/Category/" + icon + ".png");
+                                <option value="@count" title="@imagePath">@icon</option>
+                                count++;
+                            }
+                        </select>
+                    </div>
+                    <span asp-validation-for="IconId" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="TimeOfTransaction" class="control-label"></label>
+                <div class="input-group date" id="datetimepicker1">
+                    <input asp-for="TimeOfTransaction" type="text" class="form-control" />
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+            </div>
+            <div class="form-group left">
+                <input type="submit" value="Create" class="btn btn-success" />
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+<script>
+    $("#IdMenu").on('change', function () {
+        $('#ImgDisplay').empty();
+        $('#ImgDisplay').append('<img src="' + $(this).find('option:selected').attr('title') + '" />');
+    });
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#datetimepicker1').datetimepicker({
+            locale: 'nl',
+            minDate: moment(),
+        });
+    });
+</script>

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using iSpendDAL.ContextInterfaces;
 using iSpendLogic;
 using iSpendWebApp.Models.Transaction;
@@ -49,7 +50,7 @@ namespace iSpendWebApp.Controllers
             }
             if (!userHasAccess)
             {
-                return RedirectToAction("Index", "Bill");
+                return RedirectToAction("Index", "Account");
             }
 
             var categoriesContext = _transactionLogic.GetCategories();
@@ -131,7 +132,23 @@ namespace iSpendWebApp.Controllers
         public ActionResult Delete(int id, int billId)
         {
             _transactionLogic.DeleteTransaction(id, billId);
-            return RedirectToAction("Index", "Bill");
+            return RedirectToAction("Index", "Account");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [ServiceFilter(typeof(AuthorizationActionFilter))]
+        public ActionResult CreateScheduledTransaction(TransactionsViewModel model)
+        {
+            try
+            {
+                _transactionLogic.AddScheduledTransaction(model);
+                return RedirectToAction("Index");
+            }
+            catch
+            {
+                return RedirectToAction("Index");
+            }
         }
     }
 }
