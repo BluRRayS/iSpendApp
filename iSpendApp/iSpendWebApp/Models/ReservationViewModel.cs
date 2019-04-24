@@ -9,6 +9,20 @@ namespace iSpendWebApp.Models
 {
     public class ReservationViewModel:IReservation
     {
+        public ReservationViewModel(IReservation reserve)
+        {
+            ReservationId = reserve.ReservationId;
+            AccountId = reserve.AccountId;
+            SavingsId = reserve.SavingsId;
+            Amount = reserve.Amount;
+            Date = reserve.Date;
+        }
+
+        public ReservationViewModel()
+        {
+            
+        }
+
         public int ReservationId { get; set; }
         public int AccountId { get; set; }
         public int SavingsId { get; set; }

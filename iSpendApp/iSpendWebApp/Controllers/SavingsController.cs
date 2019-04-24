@@ -17,13 +17,13 @@ namespace iSpendWebApp.Controllers
     {
         private readonly IFileProvider _fileProvider;
         private readonly SavingLogic _savingLogic;
-        private readonly AccountLogic _billLogic;
+        private readonly AccountLogic _accountLogic;
 
-        public SavingsController(ISavingsContext context, IAccountContext billContext, IFileProvider fileProvider)
+        public SavingsController(ISavingsContext context, IAccountContext accountContext, IFileProvider fileProvider)
         {
             _savingLogic = new SavingLogic(context);
             _fileProvider = fileProvider;
-            _billLogic = new AccountLogic(billContext);
+            _accountLogic = new AccountLogic(accountContext);
         }
 
 
@@ -38,10 +38,14 @@ namespace iSpendWebApp.Controllers
         [ServiceFilter(typeof(AuthorizationActionFilter))]
         public ActionResult Details(int id)
         {
-            var context = _savingLogic.GetSavingById(id);
-            var model = new SavingsViewModel(context.UserId,id,context.SavingName,context.SavingCurrentAmount,context.SavingsGoalAmount,context.State,context.IconId,context.GoalDate);
+            var reservationsContext = _savingLogic.GetSavingReservations(id);
+            ViewBag.Reservations = reservationsContext.Select(reserve => new ReservationViewModel(reserve));
+
+            var savingContext = _savingLogic.GetSavingById(id);
+            var model = new SavingsViewModel(savingContext.UserId,id,savingContext.SavingName,savingContext.SavingCurrentAmount,savingContext.SavingsGoalAmount,savingContext.State,savingContext.IconId,savingContext.GoalDate);
             ViewBag.FileProvider = _fileProvider.GetDirectoryContents("wwwroot/Icons/Savings").ToList().Select(icon => icon.Name).ToList();
-            ViewBag.Accounts = _billLogic.GetUserAccounts(HttpContext.Session.GetString("UserSession"));
+            ViewBag.Accounts = _accountLogic.GetUserAccounts(HttpContext.Session.GetString("UserSession"));
+            ViewBag.Savings = _savingLogic.GetOngoingUserSavings((int)HttpContext.Session.GetInt32("UserId"));
             return View("~/Views/Savings/SavingDetails.cshtml",model);
         }
 
@@ -49,7 +53,7 @@ namespace iSpendWebApp.Controllers
         [ServiceFilter(typeof(AuthorizationActionFilter))]
         public ActionResult Create()
         {
-            ViewBag.Bills = _billLogic.GetUserAccounts(HttpContext.Session.GetString("UserSession")) ;
+            ViewBag.Bills = _accountLogic.GetUserAccounts(HttpContext.Session.GetString("UserSession")) ;
             ViewBag.FileProvider = _fileProvider.GetDirectoryContents("wwwroot/Icons/Savings").ToList().Select(icon => icon.Name).ToList();
             return View("~/Views/Savings/CreateSaving.cshtml");
         }

@@ -1,0 +1,50 @@
+﻿@using iSpendInterfaces
+@model IEnumerable<iSpendWebApp.Models.ReservationViewModel>
+@{ IEnumerable<IAccount> accounts = ViewBag.Accounts;
+}
+
+<table class="table table-hover table-striped table-responsive" id="ReservationTable">
+    <thead>
+    <tr>
+        <th>
+            Account
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Amount)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Date)
+        </th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    @if (Model != null)
+    {
+        foreach (var item in Model)
+         {
+             <tr>
+                 <td>
+                     @accounts.First(account => account.AccountId == item.AccountId).AccountName
+                 </td>
+                 <td>
+                     @Html.DisplayFor(modelItem => item.Amount)
+                 </td>
+                 <td>
+                     @item.Date.ToString("dd/MM/yyyy")
+                 </td>
+                 <td>
+                     <input type="button" value="Edit" class="btn btn-warning" onclick="location.href = '@Url.Action("Edit", "", new {id = item.ReservationId})'"/>
+                     <input type="button" value="Delete" class="btn btn-danger" onclick="location.href = '@Url.Action("Delete", "", new {id = item.ReservationId})'"/>
+                 </td>
+             </tr>
+         }
+    }
+    </tbody>
+</table>
+
+<script>
+    $(document).ready(function () {
+        $('#ReservationTable').DataTable();
+    });
+</script>

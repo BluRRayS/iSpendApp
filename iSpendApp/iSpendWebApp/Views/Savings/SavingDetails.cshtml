@@ -1,9 +1,11 @@
 ﻿
+@using iSpendInterfaces.Helpers
 @using iSpendWebApp.Models.Savings
 @model iSpendWebApp.Models.Savings.SavingsViewModel
 
 @{
     ViewData["Title"] = "SavingDetails";
+    var percentage = Math.Round((Model.SavingCurrentAmount / Model.SavingsGoalAmount) * 100);
 }
 
 @*Modal RemoveSaving*@
@@ -56,12 +58,26 @@
         </div>
     </div>
 </div>
+<div style="margin-top: 2rem" class="jumbotron">
+    <img style="margin-top:2rem" class="center-block" src="~/Icons/Savings/Goal.png" alt="" />
+    <h2 class="text-center"> @Html.DisplayFor(model => model.SavingName)</h2>
+    <div class="center-block">
+        @if (Model.State == SavingState.Completed)
+        {
+            <input type="button" class="btn btn-success" value="Complete" onclick="location.href = @Url.Action("CompleteSaving","Savings",new {id = Model.SavingId})" />
+        }
+        else
+        {
+            <p class="text-center">€ @Html.DisplayFor(model => model.SavingCurrentAmount) of € @Html.DisplayFor(model => model.SavingsGoalAmount)</p><br />
+            <div class="ldBar label-center" style="width:80%;height:9rem;margin:auto" id="progress" data-preset="line" data-value="@percentage" data-stroke="data:ldbar/res,gradient(0,1,#D2FF52,#91E842)"></div>
+        }
+    </div>
+    <p class="text-center text-info">@{ var daysLeft = Math.Floor((Model.GoalDate - DateTime.Now).TotalDays);} You have @daysLeft day(s) left to complete your saving!</p>
+</div>
 
-<h2>Saving Details</h2>
-
-<div class="row btn-group">
+<div class="row btn-group center-block">
     <!-- Button trigger modal AddReservation -->
-    <button type="button" class="btn btn-default" data-toggle="modal" data-target="#AddReservationModal">Reserve Money</button>
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#AddReservationModal">Reserve Money</button>
     <!-- Button trigger modal EditSaving -->
     <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#EditSavingModal">Edit Saving</button>
     <!-- Button trigger modal DeleteSaving -->
@@ -69,48 +85,13 @@
         Delete Saving
     </button>
 </div>
+<hr />
+<div class=" container">
+    <div class="row">
+        <partial name="~/Views/Shared/Reservations.cshtml" model="@ViewBag.Reservations"/>
+    </div>
+</div>
 
-<div>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.SavingId)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.SavingId)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.SavingName)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.SavingName)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.SavingCurrentAmount)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.SavingCurrentAmount)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.SavingsGoalAmount)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.SavingsGoalAmount)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.State)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.State)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.IconId)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.IconId)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+
+<link rel="stylesheet" type="text/css" href="~/css/site.css" />
+<script type="text/javascript" src="~/js/loading-bar.js"></script>

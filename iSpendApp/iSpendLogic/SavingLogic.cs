@@ -78,5 +78,10 @@ namespace iSpendLogic
             Repository.CompleteSaving(saving);
             Repository.UpdateSaving(saving);            
         }
+
+        public IEnumerable<IReservation> GetSavingReservations(int id)
+        {
+            return Repository.GetSavingsReservations(id);
+        }
     }
 }
