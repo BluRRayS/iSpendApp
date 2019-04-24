@@ -68,8 +68,13 @@ namespace iSpendWebApp.Controllers
             ViewBag.Accounts = _accountLogic.GetUserAccounts(HttpContext.Session.GetString("UserSession"));
             ViewBag.Users = _userLogic.GetAllUsers();
 
-            var context = _transactionLogic.GetBillTransactions(id);
-            var model = context.Select(trans => new TransactionsViewModel(trans.TransactionId, trans.AccountId, trans.TransactionName, trans.TransactionAmount, trans.Category, trans.IconId, trans.TimeOfTransaction, _fileProvider.GetDirectoryContents("wwwroot/Icons/Bill").ToList().Select(icon => icon.Name).ToList())).ToList();
+            var transactionsContext = _transactionLogic.GetBillTransactions(id);
+            var transactions = transactionsContext.Select(trans => new TransactionsViewModel(trans.TransactionId, trans.AccountId, trans.TransactionName, trans.TransactionAmount, trans.Category, trans.IconId, trans.TimeOfTransaction, _fileProvider.GetDirectoryContents("wwwroot/Icons/Bill").ToList().Select(icon => icon.Name).ToList())).ToList();
+
+            var scheduledTransactionsContext = _transactionLogic.GetAccountScheduledTransactions(id);
+            var scheduledTransactions = scheduledTransactionsContext.Select(trans => new TransactionsViewModel(trans.TransactionId, trans.AccountId, trans.TransactionName, trans.TransactionAmount, trans.Category, trans.IconId, trans.TimeOfTransaction, _fileProvider.GetDirectoryContents("wwwroot/Icons/Bill").ToList().Select(icon => icon.Name).ToList())).ToList();
+
+            var model = new TransactionOverviewViewModel(transactions,scheduledTransactions);
             return View("~/Views/Transaction/Transactions.cshtml", model);
         }
 

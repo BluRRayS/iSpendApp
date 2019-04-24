@@ -1,5 +1,9 @@
 ﻿@model IEnumerable<iSpendWebApp.Models.Transaction.TransactionsViewModel>
 
+
+
+
+<p class="info" style="font-weight: bold">Total: @Model.Sum(trans => trans.TransactionAmount)</p>
 <table id="TransactionTable" class="table table-striped table-hover">
     <thead>
         <tr>
@@ -54,7 +58,7 @@
                         @Html.DisplayFor(modelItem => item.Category)
                     </td>
                     <td>
-                        @item.TimeOfTransaction.ToShortDateString()
+                        @{var date = item.TimeOfTransaction.ToString("dd") + "-" + DateTime.Now.ToString("MMM");}@date
                     </td>
                     <td>
                         <input type="button" value="Edit" class="btn btn-warning" onclick="location.href = '@Url.Action("EditScheduled", "Transaction", new {id = item.TransactionId, billId = ViewBag.BillId})'" />

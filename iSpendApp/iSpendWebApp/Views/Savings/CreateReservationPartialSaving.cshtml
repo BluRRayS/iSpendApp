@@ -25,15 +25,6 @@
                 <span asp-validation-for="Amount" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Date" class="control-label"></label>
-                <div class='input-group date' id='datetimepicker2'>
-                    <input asp-for="Date" type='text' class="form-control" />
-                    <span class="input-group-addon">
-                        <span class="glyphicon glyphicon-calendar"></span>
-                    </span>
-                </div>
-            </div>
-            <div class="form-group">
                 <input type="submit" value="Reserve" class="btn btn-success" />
             </div>
         </form>
@@ -43,23 +34,3 @@
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
-
-<script type="text/javascript">
-    $(document).ready(function () {
-        $('#datetimepicker1').datetimepicker({
-            locale: 'nl',
-            minDate: moment()
-        });
-        $('#datetimepicker2').datetimepicker({
-            useCurrent: false, //Important! See issue #1075
-            locale: 'nl',
-            minDate: moment()
-        });
-        $("#datetimepicker1").on("dp.change", function (e) {
-            $('#datetimepicker2').data("DateTimePicker").minDate(e.date);
-        });
-        $("#datetimepicker2").on("dp.change", function (e) {
-            $('#datetimepicker1').data("DateTimePicker").maxDate(e.date);
-        });
-    });
-</script>

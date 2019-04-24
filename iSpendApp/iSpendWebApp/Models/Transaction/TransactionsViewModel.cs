@@ -37,12 +37,16 @@ namespace iSpendWebApp.Models.Transaction
         public int TransactionId { get; set; }
         public int AccountId { get; set; }
         [Required]
+        [Display(Name = "Name")]
         public string TransactionName { get; set; }
         [Required]
         [DataType(DataType.Currency)]
+        [Display(Name = "Amount")]
         public decimal TransactionAmount { get; set; }
         public string Category { get; set; }
+        [Display(Name = "Icon")]
         public int IconId { get; set; }
+        [Display(Name = "Time Of Transaction")]
         public DateTime TimeOfTransaction { get; set; }
         public List<string> Icons { get; set; }
     }

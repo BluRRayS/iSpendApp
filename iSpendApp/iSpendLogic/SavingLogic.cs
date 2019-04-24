@@ -53,6 +53,7 @@ namespace iSpendLogic
 
         public void AddReservation(IReservation reservation)
         {
+            reservation.Date = DateTime.Now;
             var saving = Repository.GetSavingById(reservation.SavingsId);
             if (reservation.Amount + saving.SavingCurrentAmount > saving.SavingsGoalAmount) throw  new Exception("Reservation precedes goal");
             else if (reservation.Amount + saving.SavingCurrentAmount == saving.SavingsGoalAmount)
@@ -75,8 +76,7 @@ namespace iSpendLogic
             var saving = Repository.GetSavingById(id);
             saving.State = SavingState.Paid;
             Repository.CompleteSaving(saving);
-            Repository.UpdateSaving(saving);
-            
+            Repository.UpdateSaving(saving);            
         }
     }
 }
