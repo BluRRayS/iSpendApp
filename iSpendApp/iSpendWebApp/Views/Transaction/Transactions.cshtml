@@ -48,7 +48,7 @@
 </div>
 
 @*Modal ShareAccount*@
-<div class="modal fade" id="AddReservationModal" tabindex="-1" role="dialog" aria-labelledby="AddReservationModalTitle" aria-hidden="true">
+<div class="modal fade" id="ShareAccountModal" tabindex="-1" role="dialog" aria-labelledby="AddReservationModalTitle" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -58,7 +58,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <partial name="~/Views/Savings/CreateReservationPartial.cshtml" model="@new ReservationViewModel(){AccountId = ViewBag.BillId}" />
+                <partial name="~/Views/Invitation/CreateInvitationPartial.cshtml" model="@new InvitationViewModel()" />
             </div>
         </div>
     </div>
@@ -91,83 +91,99 @@
         <input type="button" value="Delete Bill" class="btn btn-danger" onclick="location.href = '@Url.Action("Delete", "Account", new {id = ViewBag.BillId})'" />
         <!-- Button trigger modal AddScheduledTransaction -->
         <button type="button" class="btn btn-info" data-toggle="modal" data-target="#Scheduled">Add Scheduled Transaction</button>
+        <button class="btn btn-primary" id="ShowScheduledBtn">Show Scheduled</button>
         <!-- Button trigger modal AddReservation -->
         <button type="button" class="btn btn-default" data-toggle="modal" data-target="#AddReservationModal">Reserve Money</button>
         <!-- Button trigger modal ShareAccount -->
-        <button type="button" class="btn btn-primary" data-toggle="modal" datat-target="#ShareAccountModal">Share Account</button>
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ShareAccountModal">Share Account</button>
     </div>
 </div>
+<hr />
 
 
 <hr />
 <table id="TransactionTable" class="table table-striped table-hover">
     <thead>
-        <tr>
-            <th>
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TransactionName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TransactionAmount)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Category)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TimeOfTransaction)
-            </th>
-            <th></th>
-        </tr>
+    <tr>
+        <th>
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TransactionName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TransactionAmount)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Category)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TimeOfTransaction)
+        </th>
+        <th></th>
+    </tr>
     </thead>
     @if (Model != null)
     {
         <tbody>
-            @foreach (var item in Model)
-            {
-                <tr>
-                    <td>
-                        @{
-                            var imageName = ViewBag.FileProvider[item.IconId];
-                            var imagePath = Url.Content("~/Icons/Category/" + imageName);
-                        }
-                        <img src="@imagePath" alt="Icons/Category/0.png" />
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.TransactionName)
-                    </td>
-                    @if (item.TransactionAmount >= 0)
-                    {
-                        <td style="color: limegreen">
-                            @Html.DisplayFor(modelItem => item.TransactionAmount)
-                        </td>
-
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @{
+                        var imageName = ViewBag.FileProvider[item.IconId];
+                        var imagePath = Url.Content("~/Icons/Category/" + imageName);
                     }
+                    <img src="@imagePath" alt="Icons/Category/0.png" />
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TransactionName)
+                </td>
+                @if (item.TransactionAmount >= 0)
+                {
+                    <td style="color: limegreen">
+                        @Html.DisplayFor(modelItem => item.TransactionAmount)
+                    </td>
 
-                    @if (item.TransactionAmount < 0)
-                    {
-                        <td style="color: red">
-                            @Html.DisplayFor(modelItem => item.TransactionAmount)
-                        </td>
-                    }
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Category)
+                }
+
+                @if (item.TransactionAmount < 0)
+                {
+                    <td style="color: red">
+                        @Html.DisplayFor(modelItem => item.TransactionAmount)
                     </td>
-                    <td>
-                        @item.TimeOfTransaction.ToShortDateString()
-                    </td>
-                    <td>
-                        <input type="button" value="Edit" class="btn btn-warning" onclick="location.href = '@Url.Action("Edit", "Transaction", new {id = item.TransactionId, billId = ViewBag.BillId})'" />
-                        <input type="button" value="Delete" class="btn btn-danger" onclick="location.href = '@Url.Action("Delete", "Transaction", new {id = item.TransactionId, accountId = ViewBag.BillId})'" />
-                    </td>
-                </tr>
-            }
+                }
+                <td>
+                    @Html.DisplayFor(modelItem => item.Category)
+                </td>
+                <td>
+                    @item.TimeOfTransaction.ToShortDateString()
+                </td>
+                <td>
+                    <input type="button" value="Edit" class="btn btn-warning" onclick="location.href = '@Url.Action("Edit", "Transaction", new {id = item.TransactionId, billId = ViewBag.BillId})'" />
+                    <input type="button" value="Delete" class="btn btn-danger" onclick="location.href = '@Url.Action("Delete", "Transaction", new {id = item.TransactionId, accountId = ViewBag.BillId})'" />
+                </td>
+            </tr>
+        }
         </tbody>
     }
 </table>
 
+<div class="row" id="ScheduledRow">
+    <h3 class="text-center">Scheduled Transactions</h3>
+    <div style="background-color: azure">
+        <partial name="~/Views/Transaction/ScheduledTransactionsPartial.cshtml" model="new List<TransactionsViewModel>()"/>
+    </div>
+</div>
+
 <script>
     $(document).ready(function () {
         $('#TransactionTable').DataTable();
+        $("#ScheduledRow").toggle();
+    });
+</script>
+
+<script>
+    $("#ShowScheduledBtn").click(function () {
+        $("#ScheduledRow").toggle(600);
     });
 </script>

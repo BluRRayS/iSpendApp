@@ -1,0 +1,73 @@
+﻿@model IEnumerable<iSpendWebApp.Models.Transaction.TransactionsViewModel>
+
+<table id="TransactionTable" class="table table-striped table-hover">
+    <thead>
+        <tr>
+            <th>
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TransactionName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TransactionAmount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Category)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TimeOfTransaction)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    @if (Model != null)
+    {
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @{
+                            var imageName = ViewBag.FileProvider[item.IconId];
+                            var imagePath = Url.Content("~/Icons/Category/" + imageName);
+                        }
+                        <img src="@imagePath" alt="Icons/Category/0.png" />
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TransactionName)
+                    </td>
+                    @if (item.TransactionAmount >= 0)
+                    {
+                        <td style="color: limegreen">
+                            @Html.DisplayFor(modelItem => item.TransactionAmount)
+                        </td>
+
+                    }
+
+                    @if (item.TransactionAmount < 0)
+                    {
+                        <td style="color: red">
+                            @Html.DisplayFor(modelItem => item.TransactionAmount)
+                        </td>
+                    }
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Category)
+                    </td>
+                    <td>
+                        @item.TimeOfTransaction.ToShortDateString()
+                    </td>
+                    <td>
+                        <input type="button" value="Edit" class="btn btn-warning" onclick="location.href = '@Url.Action("EditScheduled", "Transaction", new {id = item.TransactionId, billId = ViewBag.BillId})'" />
+                        <input type="button" value="Delete" class="btn btn-danger" onclick="location.href = '@Url.Action("DeleteScheduled", "Transaction", new {id = item.TransactionId, accountId = ViewBag.BillId})'" />
+                    </td>
+                </tr>
+            }
+        </tbody>
+    }
+</table>
+
+<script>
+    $(document).ready(function () {
+        $('#TransactionTable').DataTable();
+    });
+</script>
