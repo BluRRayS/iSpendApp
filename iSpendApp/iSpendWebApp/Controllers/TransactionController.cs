@@ -37,10 +37,11 @@ namespace iSpendWebApp.Controllers
 
         // GET: Transaction
         [ServiceFilter(typeof(AuthorizationActionFilter))]
-        public ActionResult Index(int id,string billName,decimal balance)
+        public ActionResult Index(int id)
         {
             var userHasAccess = false;
             var usersContext = _accountLogic.GetAccountUsers(id).ToList();
+
             foreach (var user in usersContext)
             {
                 if (user.Username == HttpContext.Session.GetString("UserSession"))
@@ -53,13 +54,15 @@ namespace iSpendWebApp.Controllers
                 return RedirectToAction("Index", "Account");
             }
 
+            var accountDetails = _accountLogic.GetAccountById(id);
+
             var categoriesContext = _transactionLogic.GetCategories();
             var categories = categoriesContext.Select(category => new SelectListItem(category.Name, category.Name)).ToList();
             ViewBag.Categories = categories;
 
             ViewBag.BillId = id;
-            ViewBag.BillName = billName;
-            ViewBag.Balance = balance;
+            ViewBag.BillName = accountDetails.AccountName;
+            ViewBag.Balance = accountDetails.AccountBalance;
             ViewBag.FileProvider = _fileProvider.GetDirectoryContents("wwwroot/Icons/Category").ToList().Select(icon => icon.Name).ToList();
             ViewBag.Savings = _savingLogic.GetOngoingUserSavings((int)HttpContext.Session.GetInt32("UserId"));
 
@@ -90,7 +93,7 @@ namespace iSpendWebApp.Controllers
             {
                 _transactionLogic.CreateTransaction(model);
                 _accountLogic.RefreshAccountBalance(model.AccountId);
-                return RedirectToAction(nameof(Index), new { id = model.AccountId });
+                return RedirectToAction(nameof(Index), "Transaction", new { id = model.AccountId });
             }
             catch
             {
@@ -119,20 +122,20 @@ namespace iSpendWebApp.Controllers
             {
                 _transactionLogic.UpdateTransaction(id, model);
 
-                return RedirectToAction("Index", "Transaction", model.AccountId);
+                return RedirectToAction("Index", "Transaction", new{id = model.AccountId});
             }
             catch
             {
-                return View("~/Views/Transaction/EditTransaction.cshtml");
+                return View("~/Views/Transaction/EditTransaction.cshtml",model);
             }
         }
 
         // GET: Transaction/Delete/5
         [ServiceFilter(typeof(AuthorizationActionFilter))]
-        public ActionResult Delete(int id, int billId)
+        public ActionResult Delete(int id, int accountId)
         {
-            _transactionLogic.DeleteTransaction(id, billId);
-            return RedirectToAction("Index", "Account");
+            _transactionLogic.DeleteTransaction(id, accountId);
+            return RedirectToAction("Index","Transaction", new {id = accountId});
         }
 
         [HttpPost]
@@ -143,11 +146,11 @@ namespace iSpendWebApp.Controllers
             try
             {
                 _transactionLogic.AddScheduledTransaction(model);
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", "Transaction", new {id = model.AccountId});
             }
             catch
             {
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", "Transaction", new { id = model.AccountId});
             }
         }
     }

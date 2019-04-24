@@ -21,7 +21,7 @@
         {
             foreach (var item in Model.Accounts)
             {
-                <div class="col-sm-4" onclick="location.href = '@Url.Action("Index", "Transaction", new {id = item.AccountId, billName = item.AccountName, balance = item.AccountBalance})'">
+                <div class="col-sm-4" onclick="location.href = '@Url.Action("Index", "Transaction", new {id = item.AccountId})'">
                     <partial name="~/Views/Account/BillPartial.cshtml" model="@item" />
                 </div>
 
