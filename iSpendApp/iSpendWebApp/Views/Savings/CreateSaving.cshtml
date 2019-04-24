@@ -31,7 +31,7 @@
                 <select asp-for="WithdrawFromBillId" class="form-control">
                     @foreach (var item in bills)
                     {
-                        <option value="@item.AccountBalance">@item.AccountName - €@item.AccountBalance</option>
+                        <option value="@item.AccountId">@item.AccountName - €@item.AccountBalance</option>
                     }
                 </select>
                 <span asp-validation-for="WithdrawFromBillId" class="text-danger"></span>
