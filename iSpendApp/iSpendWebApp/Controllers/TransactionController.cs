@@ -167,8 +167,9 @@ namespace iSpendWebApp.Controllers
         [ServiceFilter(typeof(AuthorizationActionFilter))]
         public ActionResult EditScheduledTransaction(TransactionsViewModel model)
         {
-            if(!@ModelState.IsValid) return  RedirectToAction("EditScheduledTransaction","Transaction",new {id = model.TransactionId})
-            try
+            if (!@ModelState.IsValid)
+                return RedirectToAction("EditScheduledTransaction", "Transaction", new {id = model.TransactionId});
+            try          
             {
                 _transactionLogic.EditScheduledTransaction(model);
                 return RedirectToAction("Index", "Transaction", new { id = model.AccountId });
@@ -194,7 +195,8 @@ namespace iSpendWebApp.Controllers
         [ServiceFilter(typeof(AuthorizationActionFilter))]
         public ActionResult DeleteScheduledTransaction(TransactionsViewModel model)
         {
-            if (!@ModelState.IsValid) return RedirectToAction("DeleteScheduledTransaction", "Transaction", new { id = model.TransactionId })
+            if (!@ModelState.IsValid)
+                return RedirectToAction("DeleteScheduledTransaction", "Transaction", new {id = model.TransactionId});
             try
             {
                 _transactionLogic.RemoveScheduledTransaction(model.TransactionId);
