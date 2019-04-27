@@ -160,5 +160,60 @@ namespace iSpendWebApp.Controllers
                 return RedirectToAction("Index", "Transaction", new { id = model.AccountId});
             }
         }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [ServiceFilter(typeof(AuthorizationActionFilter))]
+        public ActionResult EditScheduledTransaction(TransactionsViewModel model)
+        {
+            if(!@ModelState.IsValid) return  RedirectToAction("EditScheduledTransaction","Transaction",new {id = model.TransactionId})
+            try
+            {
+                _transactionLogic.EditScheduledTransaction(model);
+                return RedirectToAction("Index", "Transaction", new { id = model.AccountId });
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return RedirectToAction("Index", "Transaction", new { id = model.AccountId }); throw;
+            }
+        }
+
+        [HttpGet]
+        [ServiceFilter(typeof(AuthorizationActionFilter))]
+        public ActionResult EditScheduledTransaction(int id)
+        {
+            var context = _transactionLogic.GetScheduledTransactionById(id);
+            var model = new TransactionsViewModel(context.TransactionId,context.AccountId,context.TransactionName,context.TransactionAmount,context.Category,context.IconId,context.TimeOfTransaction, _fileProvider.GetDirectoryContents("wwwroot/Icons/Category").ToList().Select(icon => icon.Name).ToList());
+            return View("EditScheduledTransactionPartial",model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [ServiceFilter(typeof(AuthorizationActionFilter))]
+        public ActionResult DeleteScheduledTransaction(TransactionsViewModel model)
+        {
+            if (!@ModelState.IsValid) return RedirectToAction("DeleteScheduledTransaction", "Transaction", new { id = model.TransactionId })
+            try
+            {
+                _transactionLogic.RemoveScheduledTransaction(model.TransactionId);
+                return RedirectToAction("Index", "Transaction", new { id = model.AccountId });
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return RedirectToAction("Index", "Transaction", new { id = model.AccountId }); throw;
+            }
+        }
+
+        [HttpGet]
+        [ServiceFilter(typeof(AuthorizationActionFilter))]
+        public ActionResult DeleteScheduledTransaction(int id)
+        {
+            var context = _transactionLogic.GetScheduledTransactionById(id);
+            var model = new TransactionsViewModel(context.TransactionId, context.AccountId, context.TransactionName, context.TransactionAmount, context.Category, context.IconId, context.TimeOfTransaction, _fileProvider.GetDirectoryContents("wwwroot/Icons/Category").ToList().Select(icon => icon.Name).ToList());
+            return View("DeleteScheduledTransactionPartial", model);
+        }
     }
 }

@@ -61,8 +61,8 @@
                         @{var date = item.TimeOfTransaction.ToString("dd") + "-" + DateTime.Now.ToString("MMM");}@date
                     </td>
                     <td>
-                        <input type="button" value="Edit" class="btn btn-warning" onclick="location.href = '@Url.Action("EditScheduled", "Transaction", new {id = item.TransactionId, billId = ViewBag.BillId})'" />
-                        <input type="button" value="Delete" class="btn btn-danger" onclick="location.href = '@Url.Action("DeleteScheduled", "Transaction", new {id = item.TransactionId, accountId = ViewBag.BillId})'" />
+                        <input type="button" value="Edit" class="btn btn-warning" onclick="location.href ='@Url.Action("EditScheduledTransaction", new {id = item.TransactionId})'" />
+                        <input type="button" value="Delete" class="btn btn-danger" onclick="location.href= '@Url.Action("DeleteScheduledTransaction", new {id = item.TransactionId})'"/>
                     </td>
                 </tr>
             }

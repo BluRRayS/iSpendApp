@@ -63,5 +63,15 @@ namespace iSpendDAL.Transaction
          {
              _context.AddScheduledTransaction(transaction);
          }
+
+         public void EditScheduledTransaction(ITransaction transaction)
+         {
+             _context.EditScheduledTransaction(transaction);
+         }
+
+         public ITransaction GetScheduledTransactionById(int id)
+         {
+             return _context.GetScheduledTransactionById(id);
+         }
     }
 }

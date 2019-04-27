@@ -1,0 +1,11 @@
+﻿@model iSpendWebApp.Models.Transaction.TransactionsViewModel
+
+<h3>Are you sure you want to delete this?</h3>
+<div> 
+    <form asp-action="DeleteScheduledTransaction">
+        @Html.HiddenFor(model => model.TransactionId)
+        @Html.HiddenFor(model => model.AccountId)
+        <p> @Html.DisplayFor(model => model.TransactionName)</p>
+        <input type="submit" value="Delete" class="btn btn-danger" /> |
+    </form>
+</div>

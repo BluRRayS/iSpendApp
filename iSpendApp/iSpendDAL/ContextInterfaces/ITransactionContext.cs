@@ -17,5 +17,9 @@ namespace iSpendDAL.ContextInterfaces
         IEnumerable<ITransaction> GetAllScheduledTransactions();
         void RemoveScheduledTransaction(int id);
         void AddScheduledTransaction(ITransaction transaction);
+        void EditScheduledTransaction(ITransaction transaction);
+        void GetTotalBalance(int billId);
+        void UpdateBillBalance(int billId, decimal amount);
+        ITransaction GetScheduledTransactionById(int id);
     }
 }

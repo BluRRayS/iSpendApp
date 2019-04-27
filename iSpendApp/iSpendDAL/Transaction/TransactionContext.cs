@@ -18,6 +18,7 @@ namespace iSpendDAL.Transaction
 
         public IEnumerable<ITransaction> GetBillTransactions(int id)
         {
+            _connection.CheckConnection();
             _connection.SqlConnection.Open();
             var billTransactions = new List<TransactionDto>();
             var command = new SqlCommand("SELECT Id,Name,Amount,AccountId,Category,TimeOfTransaction,IconId FROM dbo.[Transaction] WHERE AccountId=@Id",_connection.SqlConnection);
@@ -36,6 +37,7 @@ namespace iSpendDAL.Transaction
 
         public void CreateTransaction(ITransaction transaction)
         {
+            _connection.CheckConnection();
             _connection.SqlConnection.Open();
             var command = new SqlCommand("INSERT INTO dbo.[Transaction] (Name,Amount,TimeOfTransaction,AccountId,Category,IconId) VALUES(@Name,@Amount,@Time,@AccountId,@Category,@IconId)", _connection.SqlConnection);
             command.Parameters.AddWithValue("@Name",transaction.TransactionName);
@@ -50,6 +52,7 @@ namespace iSpendDAL.Transaction
 
         public void DeleteTransaction(int id, int billId)
         {
+            _connection.CheckConnection();
             _connection.SqlConnection.Open();
             var command = new SqlCommand("DELETE FROM dbo.[Transaction] WHERE Id= @Id", _connection.SqlConnection);
             command.Parameters.AddWithValue("@Id", id);
@@ -60,6 +63,7 @@ namespace iSpendDAL.Transaction
 
         public void UpdateTransaction(int id, ITransaction transaction)
         {
+            _connection.CheckConnection();
             _connection.SqlConnection.Open();
             var command = new SqlCommand("UPDATE dbo.[Transaction] SET Name =@Name,Amount=@Amount,Category=@Category,IconId=@Icon WHERE Id = @Id", _connection.SqlConnection);
             command.Parameters.AddWithValue("@Id", id);
@@ -74,6 +78,7 @@ namespace iSpendDAL.Transaction
 
         public ITransaction GetTransactionById(int id, int billId)
         {
+            _connection.CheckConnection();
             var transaction = new TransactionDto();
            _connection.SqlConnection.Open();
            var command = new SqlCommand("SELECT Name,Amount,Category,IconId,TimeOfTransaction FROM dbo.[Transaction] WHERE Id = @Id", _connection.SqlConnection);
@@ -100,6 +105,7 @@ namespace iSpendDAL.Transaction
 
         public IEnumerable<ICategory> GetCategories()
         {
+            _connection.CheckConnection();
             var categories = new List<CategoryDto>();
             _connection.SqlConnection.Open();
             var command = new SqlCommand("SELECT Id,Name,IconId FROM dbo.[Categories]",_connection.SqlConnection);
@@ -117,6 +123,7 @@ namespace iSpendDAL.Transaction
 
         public IEnumerable<ITransaction> GetAccountScheduledTransactions(int id)
         {
+            _connection.CheckConnection();
             var transactions = new List<TransactionDto>();
             var command = new SqlCommand("SELECT Id,Name,Amount,Category,IconId,TimeOfTransaction,AccountId FROM dbo.[ScheduledTransactions] WHERE AccountId = @Id", _connection.SqlConnection);
             command.Parameters.AddWithValue("@Id", id);
@@ -135,6 +142,7 @@ namespace iSpendDAL.Transaction
 
         public IEnumerable<ITransaction> GetAllScheduledTransactions()
         {
+            _connection.CheckConnection();
             var transactions = new List<TransactionDto>();
             var command = new SqlCommand("SELECT Id,Name,Amount,Category,IconId,TimeOfTransaction,AccountId FROM dbo.[ScheduledTransactions]", _connection.SqlConnection);
             _connection.SqlConnection.Open();
@@ -152,7 +160,8 @@ namespace iSpendDAL.Transaction
 
         public void RemoveScheduledTransaction(int id)
         {
-            var command = new SqlCommand("REMOVE FROM dbo.[ScheduledTransactions] WHERE Id = @Id",_connection.SqlConnection);
+            _connection.CheckConnection();
+            var command = new SqlCommand("DELETE FROM dbo.[ScheduledTransactions] WHERE Id = @Id",_connection.SqlConnection);
             command.Parameters.AddWithValue("@Id", id);
             _connection.SqlConnection.Open();
             command.ExecuteNonQuery();
@@ -161,6 +170,7 @@ namespace iSpendDAL.Transaction
 
         public void AddScheduledTransaction(ITransaction transaction)
         {
+            _connection.CheckConnection();
             var command = new SqlCommand("INSERT INTO dbo.[ScheduledTransactions] (Name,Amount,TimeOfTransaction,AccountId,Category,IconId) VALUES(@Name,@Amount,@Time,@AccountId,@Category,@IconId)", _connection.SqlConnection);
             command.Parameters.AddWithValue("@Name", transaction.TransactionName);
             command.Parameters.AddWithValue("@Amount", transaction.TransactionAmount);
@@ -173,9 +183,27 @@ namespace iSpendDAL.Transaction
             _connection.SqlConnection.Close();
         }
 
-
-        private void GetTotalBalance(int billId)
+        public void EditScheduledTransaction(ITransaction transaction)
         {
+            _connection.CheckConnection();
+            var command = new SqlCommand("UPDATE dbo.[ScheduledTransactions] SET Name =@Name,Amount=@Amount,TimeOfTransaction=@Time,AccountId=@AccountId,Category=@Category,IconId=@Icon WHERE Id = @Id ", _connection.SqlConnection);
+            command.Parameters.AddWithValue("@Name", transaction.TransactionName);
+            command.Parameters.AddWithValue("@Amount", transaction.TransactionAmount);
+            command.Parameters.AddWithValue("@Time", transaction.TimeOfTransaction);
+            command.Parameters.AddWithValue("@AccountId", transaction.AccountId);
+            command.Parameters.AddWithValue("@Category", transaction.Category);
+            command.Parameters.AddWithValue("@Icon", transaction.IconId);
+            command.Parameters.AddWithValue("@Id", transaction.TransactionId);
+            _connection.SqlConnection.Open();
+            command.ExecuteNonQuery();
+            _connection.SqlConnection.Close();
+
+        }
+
+
+        public void GetTotalBalance(int billId)
+        {
+            _connection.CheckConnection();
             decimal sum = 0;
             _connection.SqlConnection.Open();
             var command = new SqlCommand("SELECT SUM(Cast(Amount as decimal(18,2))) FROM dbo.[Transaction] WHERE AccountId = @Id", _connection.SqlConnection);
@@ -201,14 +229,40 @@ namespace iSpendDAL.Transaction
             UpdateBillBalance(billId, sum);
         }
 
-        private void UpdateBillBalance(int billId, decimal amount)
+        public void UpdateBillBalance(int billId, decimal amount)
         {
+            _connection.CheckConnection();
             _connection.SqlConnection.Open();
             var command = new SqlCommand("UPDATE dbo.Account SET Balance = @Amount WHERE Id = @Id", _connection.SqlConnection);
             command.Parameters.AddWithValue("@Id", billId);
             command.Parameters.AddWithValue("@Amount", amount);
             command.ExecuteNonQuery();
             _connection.SqlConnection.Close();
+        }
+
+        public ITransaction GetScheduledTransactionById(int id)
+        {
+            var transaction = new TransactionDto();
+            var command = new SqlCommand("SELECT * FROM dbo.[ScheduledTransactions] WHERE Id = @Id",_connection.SqlConnection);
+            command.Parameters.AddWithValue("@Id", id);
+            _connection.CheckConnection();
+            _connection.SqlConnection.Open();
+            command.ExecuteNonQuery();
+            using (var reader = command.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+                    transaction.TransactionId = id;
+                    transaction.AccountId = reader.GetInt32(1);
+                    transaction.TimeOfTransaction = reader.GetDateTime(2);
+                    transaction.TransactionAmount = reader.GetDecimal(3);
+                    transaction.Category = reader.GetString(4);
+                    transaction.IconId = reader.GetInt32(5);
+                    transaction.TransactionName = reader.GetString(6);
+                }
+            }
+            _connection.SqlConnection.Close();
+            return transaction;
         }
     }
 }
