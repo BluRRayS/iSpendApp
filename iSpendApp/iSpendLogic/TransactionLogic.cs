@@ -69,6 +69,11 @@ namespace iSpendLogic
             return Repository.GetAccountScheduledTransactions(id);
         }
 
+        public void EditScheduledTransaction(ITransaction transaction)
+        {
+            Repository.EditScheduledTransaction(transaction);
+        }
+
         public void RemoveScheduledTransaction(int id)
         {
             Repository.RemoveScheduledTransaction(id);
@@ -77,6 +82,11 @@ namespace iSpendLogic
         public void AddScheduledTransaction(ITransaction transaction)
         {
             Repository.AddScheduledTransaction(transaction);
+        }
+
+        public ITransaction GetScheduledTransactionById(int id)
+        {
+            return Repository.GetScheduledTransactionById(id);
         }
     }
 }
