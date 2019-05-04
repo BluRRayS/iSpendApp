@@ -20,7 +20,7 @@ namespace iSpendWebApp
         {
             while (true)
             {
-                if (DateTime.Now.Hour != 0) continue;
+                if (DateTime.Now.Hour != 16) continue;
                 _transactionLogic.ExecuteScheduledTransactions(DateTime.Now);
                 Thread.Sleep(3601000); //1 hour and a second just to be sure :)
             }           
