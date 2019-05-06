@@ -100,3 +100,12 @@ body {
 .ldBar.no-percent .ldBar-label:after {
     content: ""
 }
+
+.overviewCard {
+    transition: ease-in-out 0.2s;
+    -webkit-transition: ease-in-out 0.2s;
+}
+.overviewCard:hover {
+    transform: scale(1.1);
+    -webkit-transform: scale(1.1);
+}

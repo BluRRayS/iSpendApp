@@ -54,6 +54,34 @@
     </div>
 </div>
 
+
+<script type="text/javascript">
+    var LastInsertedEmail;
+    $('#Email').on('keyup',
+        function (e) {
+            if ($(this).val() === LastInsertedEmail) {
+                return false;
+            }
+
+            if (!e.target.checkValidity()) {
+                alert('test');
+                return false;
+            }
+
+            $.ajax({
+                url: "/User/ValidateEmail?Email=" + $(this).val(),
+                type: "GET"
+            }).done(function(data) {
+                if (data == true) {
+                    alert('valid');
+                } else {
+                    alert('invalid');
+                }
+            }).fail(function(err) {
+                console.log(err);
+            });
+        });
+</script>
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }

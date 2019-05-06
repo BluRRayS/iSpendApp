@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Transactions;
 using iSpendDAL.ContextInterfaces;
 using iSpendInterfaces;
 
@@ -61,7 +62,7 @@ namespace iSpendDAL.Transaction
 
          public void AddScheduledTransaction(ITransaction transaction)
          {
-             _context.AddScheduledTransaction(transaction);
+            _context.AddScheduledTransaction(transaction);
          }
 
          public void EditScheduledTransaction(ITransaction transaction)

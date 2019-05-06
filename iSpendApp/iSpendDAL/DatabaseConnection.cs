@@ -1,26 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
+﻿using System.Data;
 using System.Data.SqlClient;
-using System.Text;
 
 namespace iSpendDAL
 {
     public class DatabaseConnection
     {
+        private readonly string _connectionString;
         public DatabaseConnection(string connectionString)
         {
-            SqlConnection = new SqlConnection(connectionString);
+            _connectionString = connectionString;
         }
 
-        public void CheckConnection()
-        {
-            if (SqlConnection.State == ConnectionState.Open)
-            {
-                SqlConnection.Close();
-            }
-        }
-
-        internal SqlConnection SqlConnection { get; }
+        internal SqlConnection SqlConnection => new SqlConnection(_connectionString);
     }
 }
