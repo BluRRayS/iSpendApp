@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using iSpendDAL.ContextInterfaces;
 using iSpendLogic;
 using iSpendWebApp.Models.Transaction;
@@ -7,8 +8,10 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Runtime.InteropServices.ComTypes;
+using CsvHelper;
 using iSpendInterfaces;
 using iSpendWebApp.Controllers.ActionFilters;
+using iSpendWebApp.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Rewrite.Internal;
 using Microsoft.Extensions.FileProviders;
@@ -216,6 +219,55 @@ namespace iSpendWebApp.Controllers
             var context = _transactionLogic.GetScheduledTransactionById(id);
             var model = new TransactionsViewModel(context.TransactionId, context.AccountId, context.TransactionName, context.TransactionAmount, context.Category, context.IconId, context.TimeOfTransaction, _fileProvider.GetDirectoryContents("wwwroot/Icons/Category").ToList().Select(icon => icon.Name).ToList());
             return View("DeleteScheduledTransactionPartial", model);
+        }
+
+        [HttpPost]
+        [ServiceFilter(typeof(AuthorizationActionFilter))]
+        public ActionResult ImportTransactions(ImportTransactionsViewModel model)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    var accountId = model.AccountId;
+                    using (var reader = new StreamReader(model.Transactions.OpenReadStream()))
+                    using (var csv = new CsvReader(reader))
+                    {
+                        csv.Configuration.Delimiter = ",";
+                        csv.Configuration.HasHeaderRecord = true;
+                        //csv.Configuration.RegisterClassMap<RabobankTransactionsMap>();
+                        var good = new List<RabobankTransactions>();
+                        var bad = new List<string>();
+                        var isRecordBad = false;
+                        csv.Configuration.BadDataFound = context =>
+                        {
+                            isRecordBad = true;
+                            bad.Add(context.RawRecord);
+                        };
+                        while (csv.Read())
+                        {
+                            var record = csv.GetRecord<RabobankTransactions>();
+                            if (!isRecordBad)
+                            {
+                                record.TimeOfTransaction.ToString("yyyy-MM-dd");
+                                good.Add(record);
+                            }
+
+                            isRecordBad = false;
+                        }
+                        _transactionLogic.ImportTransactions(good, accountId);
+                        good.Clear();
+                        bad.Clear();
+                    }
+                }
+                   
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+            return RedirectToAction("Index", "Transaction", new {id = model.AccountId});
         }
     }
 }

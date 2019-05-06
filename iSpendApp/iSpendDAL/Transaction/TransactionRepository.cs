@@ -73,5 +73,10 @@ namespace iSpendDAL.Transaction
          {
              return _context.GetScheduledTransactionById(id);
          }
+
+         public void ImportTransactions(IEnumerable<ITransaction> transactions)
+         {
+             _context.ImportTransactions(transactions);
+         }
     }
 }

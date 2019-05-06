@@ -1,0 +1,23 @@
+﻿@model iSpendWebApp.Models.ImportTransactionsViewModel
+
+<hr />
+<div class="row">
+    <div class="col-md-12">
+        <form asp-action="ImportTransactions" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            @Html.HiddenFor(modelItem=> modelItem.AccountId)
+            <div class="form-group">
+                <label asp-for="Transactions" class="control-label"></label>
+                <input asp-for="Transactions" type="file" class="form-control" />
+                <span asp-validation-for="Transactions" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-success" />
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

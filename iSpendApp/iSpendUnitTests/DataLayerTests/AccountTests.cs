@@ -12,7 +12,7 @@ namespace iSpendUnitTests
 
         public AccountTests()
         {
-            _accountLogic = new UserLogic(new AccountContextMock());
+           // _accountLogic = new UserLogic(new AccountContextMock());
         }
 
         [Fact]

@@ -73,6 +73,7 @@
         }
     </div>
     <p class="text-center text-info">@{ var daysLeft = Math.Floor((Model.GoalDate - DateTime.Now).TotalDays);} You have @daysLeft day(s) left to complete your saving!</p>
+    <p class="text-center text-info"> To complete this saving you will need to deposit €@{ var AmountADay = Math.Round(((double) (Model.SavingsGoalAmount - Model.SavingCurrentAmount) / daysLeft),2);} @AmountADay every day. </p>
 </div>
 
 <div class="row btn-group center-block">

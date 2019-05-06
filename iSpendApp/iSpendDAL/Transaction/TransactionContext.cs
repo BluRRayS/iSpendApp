@@ -42,7 +42,7 @@ namespace iSpendDAL.Transaction
             var command = new SqlCommand("INSERT INTO dbo.[Transaction] (Name,Amount,TimeOfTransaction,AccountId,Category,IconId) VALUES(@Name,@Amount,@Time,@AccountId,@Category,@IconId)", _connection.SqlConnection);
             command.Parameters.AddWithValue("@Name",transaction.TransactionName);
             command.Parameters.AddWithValue("@Amount", transaction.TransactionAmount);
-            command.Parameters.AddWithValue("@Time",DateTime.Now);
+            command.Parameters.AddWithValue("@Time",transaction.TimeOfTransaction);
             command.Parameters.AddWithValue("@AccountId",transaction.AccountId);
             command.Parameters.AddWithValue("@Category",transaction.Category);
             command.Parameters.AddWithValue("@IconId", transaction.IconId);
@@ -263,6 +263,14 @@ namespace iSpendDAL.Transaction
             }
             _connection.SqlConnection.Close();
             return transaction;
+        }
+
+        public void ImportTransactions(IEnumerable<ITransaction> transactions)
+        {
+            foreach (var item in transactions)
+            {
+                CreateTransaction(item);
+            }
         }
     }
 }

@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Transactions;
 using iSpendDAL.ContextInterfaces;
 using iSpendDAL.Transaction;
 using iSpendInterfaces;
+using iSpendLogic.Models;
 
 namespace iSpendLogic
 {
@@ -25,6 +27,7 @@ namespace iSpendLogic
 
         public void CreateTransaction(ITransaction transaction)
         {
+            transaction.TimeOfTransaction = DateTime.Now;
             Repository.CreateTransaction(transaction);
         }
 
@@ -51,9 +54,16 @@ namespace iSpendLogic
         public void ExecuteScheduledTransactions(DateTime executingTime)
         {
             //Todo: Check interval maybe each week instead of 1 time each month
+            //Todo: Check if month days higher than month max days works!
             var transactions = GetAllScheduledTransactions();
-            transactions = transactions.Where(transaction => transaction.TimeOfTransaction.Day == executingTime.Day);
-            foreach (var transaction in transactions)
+            var days = DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month);
+            var transactionsToExecute = transactions = transactions.Where(transaction => transaction.TimeOfTransaction.Day == executingTime.Day);
+            if (transactions.Any(t => t.TimeOfTransaction.Day > days && executingTime.Day == days))
+            {
+                transactionsToExecute =transactions = transactions.Where(t => t.TimeOfTransaction.Day > days);
+            }
+
+            foreach (var transaction in transactionsToExecute)
             {
                 Repository.CreateTransaction(transaction);
             }
@@ -87,6 +97,12 @@ namespace iSpendLogic
         public ITransaction GetScheduledTransactionById(int id)
         {
             return Repository.GetScheduledTransactionById(id);
+        }
+
+        public void ImportTransactions(IEnumerable<ITransactionsFile> uploads,int accountId)
+        {
+            var transactions = uploads.Select(item => new Models.Transaction(0, item.Name, item.Amount, "Upload", 0, item.TimeOfTransaction, accountId)).ToList();
+            Repository.ImportTransactions(transactions);
         }
     }
 }
