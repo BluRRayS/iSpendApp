@@ -13,48 +13,34 @@ namespace iSpendWebApp.Controllers
 {
     public class StatisticsController : Controller
     {
-        private readonly AccountLogic _accountLogic;
-        private readonly TransactionLogic _transactionLogic;
+        private readonly StatisticsLogic _statisticsLogic;
 
         public StatisticsController(IAccountContext accountContext, ITransactionContext transactionContext)
         {
-            _accountLogic = new AccountLogic(accountContext);
-            _transactionLogic = new TransactionLogic(transactionContext);
+            _statisticsLogic = new StatisticsLogic(accountContext, transactionContext);
         }
 
         [HttpGet]
         [ServiceFilter(typeof(AuthorizationActionFilter))]
         public IActionResult Index()
         {
-            var accountIds = _accountLogic.GetUserAccounts(HttpContext.Session.GetString("UserSession"));
-            var transactions = new List<ITransaction>();
-            foreach (var id in accountIds)
-            {
-                transactions.AddRange(_transactionLogic.GetBillTransactions(id.AccountId).ToList());
-            }
+            //Todo:Move logic to a logic class
+            var categoryStats =
+                _statisticsLogic.GetUserCategoryStatistics(HttpContext.Session.GetString("UserSession"));
 
-            transactions = transactions.Where(trans =>
-                (trans.Category != "Upload") && (trans.Category != "Start" )&&( trans.Category != "SavingPlan")).ToList();       
-            var categories= transactions.Select(trans => trans.Category).Distinct().ToList();
-
-            var avgCostCategories = new List<decimal>();
-            foreach (var category in categories)
-            {
-                avgCostCategories.Add(transactions.Where(trans => trans.Category == category).Sum(trans => trans.TransactionAmount));
-            }
             var timeStamps = new List<DateTime>();
             var accountBalance = new List<decimal>();
             for (var i = 0; i < 6; i++)
             {
                 timeStamps.Add((DateTime.Now).AddDays(i));
-                accountBalance.Add(new Random().Next(0,900));
+                accountBalance.Add(new Random().Next(0, 900));
             }
-           
 
 
 
-            ViewBag.Categories = Newtonsoft.Json.JsonConvert.SerializeObject(categories); 
-            ViewBag.CategoriesCosts = Newtonsoft.Json.JsonConvert.SerializeObject(avgCostCategories);
+
+            ViewBag.Categories = Newtonsoft.Json.JsonConvert.SerializeObject(categoryStats.Categories);
+            ViewBag.CategoriesCosts = Newtonsoft.Json.JsonConvert.SerializeObject(categoryStats.AvgCostPerCategory);
             ViewBag.TimeStamps = Newtonsoft.Json.JsonConvert.SerializeObject(timeStamps);
             ViewBag.AccountBalance = Newtonsoft.Json.JsonConvert.SerializeObject(accountBalance);
 

@@ -57,10 +57,11 @@ namespace iSpendLogic
             //Todo: Check if month days higher than month max days works!
             var transactions = GetAllScheduledTransactions();
             var days = DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month);
-            var transactionsToExecute = transactions = transactions.Where(transaction => transaction.TimeOfTransaction.Day == executingTime.Day);
-            if (transactions.Any(t => t.TimeOfTransaction.Day > days && executingTime.Day == days))
+            var transactionsToExecute = transactions = transactions.Where(transaction => transaction.TimeOfTransaction.Day == executingTime.Day).ToList();
+            var enumerable = transactions.ToList();
+            if (enumerable.Any(t => t.TimeOfTransaction.Day > days && executingTime.Day == days))
             {
-                transactionsToExecute =transactions = transactions.Where(t => t.TimeOfTransaction.Day > days);
+                transactionsToExecute =transactions = enumerable.Where(t => t.TimeOfTransaction.Day > days);
             }
 
             foreach (var transaction in transactionsToExecute)
