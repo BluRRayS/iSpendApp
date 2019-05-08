@@ -6,11 +6,11 @@
 
 @{
     ViewData["Title"] = "Transactions";
-
+    var currency = CultureInfo.CurrentUICulture.NumberFormat.CurrencySymbol;
 }
 
 <h2 class="text-center" align="center">@ViewBag.BillName</h2>
-<h2 class="text-center" align="center">€@Model.Transactions.Sum(model => model.TransactionAmount)</h2>
+<h2 class="text-center" align="center">@currency@Model.Transactions.Sum(model => model.TransactionAmount)</h2>
 <hr />
 
 

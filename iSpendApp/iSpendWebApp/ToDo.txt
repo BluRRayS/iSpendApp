@@ -2,5 +2,5 @@
 Change Css DataTables import file.
 Add Salt for users.
  IMPORTANT:   Remove Scheduled transactions from database when removing an account !!!!!! Stored Procedrure :)
- Date's like 30 or 31st scheduled transactions fix.
 Beter selection System for sharing accounts
+Culture Info for all html elements.

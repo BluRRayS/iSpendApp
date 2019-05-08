@@ -10,7 +10,7 @@ namespace iSpendWebApp.Models.User
 
         [Display(Name = "Username")]
         [Required(ErrorMessage = "A username is required.")]
-        [MinLength(4)]
+        [MinLength(4,ErrorMessage = "The minimum length of a username is 4!")]
         public string Username { get; set; }
 
         [Display(Name = "Email Address")]

@@ -21,7 +21,10 @@ body {
 
 /* Make .svg files in the carousel display properly in older browsers */
 .carousel-inner .item img[src$=".svg"] {
-    width: 100%;
+    position: relative;
+    width: auto;
+    overflow: hidden;
+    height: 20vh;
 }
 
 /* QR code generator */

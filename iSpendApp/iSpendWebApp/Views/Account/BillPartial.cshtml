@@ -1,12 +1,14 @@
-﻿@using iSpendInterfaces
+﻿@using System.Globalization
+@using iSpendInterfaces
 @model iSpendWebApp.Models.Account.AccountViewModel
 @{
     List<string> imageNames = ViewBag.FileProvider;
     var imageName = imageNames[Model.IconId];
     var imagePath = Url.Content("~/Icons/Bill/" + imageName);
     decimal reservation = 0;
+    var currency = CultureInfo.CurrentUICulture.NumberFormat.CurrencySymbol; 
 
-    if (Model.Reservations != null)
+if (Model.Reservations != null)
     {
         reservation = Model.Reservations.Sum(res => res.Amount);
     }
@@ -22,13 +24,13 @@
             @Html.DisplayFor(model => model.AccountBalance)<br />
             @if (reservation > 0)
             {
-                <i>€@reserved</i><br />
-                <i>€@reservation is reserved</i><br />
+                <i>@currency @reserved</i><br />
+                <i>@currency @reservation is reserved</i><br />
             }
             else
             {
-                <br/>
-                <br/>
+                <br />
+                <br />
             }
         </div>
     </div>

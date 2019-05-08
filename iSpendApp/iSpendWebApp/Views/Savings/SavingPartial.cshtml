@@ -1,9 +1,11 @@
-﻿@using iSpendInterfaces.Helpers
+﻿@using System.Globalization
+@using iSpendInterfaces.Helpers
 @model iSpendWebApp.Models.Savings.SavingsViewModel
 
 @{
     //var imagePath = Url.Content("~/Icons/Bill/"+Model.IconId+".png");
     var percentage = Math.Round((Model.SavingCurrentAmount / Model.SavingsGoalAmount) * 100);
+    var currency = CultureInfo.CurrentUICulture.NumberFormat.CurrencySymbol;
 }
 
 <div align="Center">
@@ -19,7 +21,7 @@
             }
             else
             {
-            <p>€ @Html.DisplayFor(model => model.SavingCurrentAmount) of € @Html.DisplayFor(model => model.SavingsGoalAmount)</p><br />
+            <p>@currency @Html.DisplayFor(model => model.SavingCurrentAmount) of @currency @Html.DisplayFor(model => model.SavingsGoalAmount)</p><br />
             <div class="ldBar label-center" style="width:80%;height:10%;margin:auto" id="progress" data-preset="line" data-value="@percentage" data-stroke="data:ldbar/res,gradient(0,1,#D2FF52,#91E842)"></div>
             }
         </div>
