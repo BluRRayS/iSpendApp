@@ -16,12 +16,6 @@
         </div>
         <div class="col-md-6" style="min-height: 400px">
             <div class="well">
-                <select class="select-list" id="AccountMenu">
-                    @*@foreach (var item in accounts)
-                    {
-                        <option value="item.AccountId">item.AccountName</option>
-                    }*@
-                </select>
                 <canvas id="AccountBalanceChart">
                 </canvas>
             </div>
@@ -36,15 +30,6 @@
     </div>
 </div>
 
-@* AccountMenu *@
-<script>
-    $('#AccountMenu').change(ReloadChart())
-
-    function ReloadChart(parameters) {
-        
-    }
-
-</script>
 
 @* Category Chart *@
 <script>
@@ -89,7 +74,7 @@
  
 @* Saving Chart *@
 <script>
-    var ctx = document.getElementById('AvgCategoryChart').getContext('2d');
+    var ctx = document.getElementById('TotalBalanceChart').getContext('2d');
     var myChart = new Chart(ctx, {
         type: 'line',
         data: {
