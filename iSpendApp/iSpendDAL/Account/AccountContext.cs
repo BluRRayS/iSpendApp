@@ -35,14 +35,14 @@ namespace iSpendDAL.Account
             AddStartTransaction(Convert.ToDecimal(newAccount.AccountBalance));
         }
 
-        public void RemoveAccount(int AccountId)
+        public void RemoveAccount(int accountId)
         {
             using (var connection = _connection.SqlConnection)
             {
-                var command = new SqlCommand("DELETE FROM dbo.Account WHERE Id = @Id  DELETE FROM dbo.User_Account WHERE AccountId = @Id ", connection);
-                command.Parameters.AddWithValue("@Id", AccountId);
+                var command = new SqlCommand("DELETE FROM dbo.Account WHERE Id = @Id", connection);
+                command.Parameters.AddWithValue("@Id", accountId);
                 connection.Open();
-                command.ExecuteNonQuery();
+                command.ExecuteNonQuery();            
                 connection.Close();
             }
         }

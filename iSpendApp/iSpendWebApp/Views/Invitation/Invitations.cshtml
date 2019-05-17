@@ -58,10 +58,10 @@
                         @users.First(user => user.UserId == item.UserIdSender).Username
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.AccountId)
+                        @accounts.First(account=> account.AccountId == item.AccountId).AccountName
                     </td>
                     <td>
-                        @item.AccountId
+                        @item.Date.ToShortDateString()
                     </td>
                     <td>
                         <button class="btn btn-success" onclick="location.href='@Url.Action("AcceptInvite", new{id=item.InvitationId})'">Accept</button>

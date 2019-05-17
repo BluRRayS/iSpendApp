@@ -132,29 +132,21 @@ namespace iSpendWebApp.Controllers
             }
         }
 
-        // GET: Account/Delete/5
-        [ServiceFilter(typeof(AuthorizationActionFilter))]
-        public ActionResult Delete(int id)
-        {
-            return View("DeleteBill");
-        }
-
-
         // POST: Account/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         [ServiceFilter(typeof(AuthorizationActionFilter))]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult Delete(AccountViewModel model)
         {
             try
             {
-                _billLogic.RemoveAccount(id);
-
+                _billLogic.RemoveAccount(model.AccountId);
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch (Exception e)
             {
-                return View("Overview");
+                Console.WriteLine(e);
+                return RedirectToAction(nameof(Index));
             }
         }
 

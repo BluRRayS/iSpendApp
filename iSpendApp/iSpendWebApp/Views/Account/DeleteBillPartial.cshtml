@@ -1,0 +1,10 @@
+﻿@model iSpendWebApp.Models.Account.AccountViewModel
+
+
+<div>  
+    <p class="text-center">Are you sure you want to delete @Model.AccountName? this action cannot be undone!</p>
+    <form asp-action="Delete" asp-controller="Account">
+        @Html.HiddenFor(modelItem => Model.AccountId)
+        <input type="submit" value="Delete" class="btn btn-danger center-block"/>
+    </form>
+</div>

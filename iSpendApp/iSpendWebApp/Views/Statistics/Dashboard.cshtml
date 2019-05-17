@@ -1,32 +1,50 @@
-﻿
+﻿@using iSpendWebApp.Models.Account
+
 @{
     ViewData["Title"] = "Dashboard";
+    List<AccountViewModel> accounts = ViewBag.Accounts;
 }
 
 <h2 class="text-center">Dashboard</h2>
 <div class="container">
     <div class="row">
         <div class="col-md-6">
-            <div class="well">
+            <div class="well" style="min-height: 400px">
                 <canvas id="CategoryChart">
                 </canvas>
             </div>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-6" style="min-height: 400px">
             <div class="well">
-                <canvas id="AvgCategoryChart">
+                <select class="select-list" id="AccountMenu">
+                    @foreach (var item in accounts)
+                    {
+                        <option value="item.AccountId">item.AccountName</option>
+                    }
+                </select>
+                <canvas id="AccountBalanceChart">
                 </canvas>
             </div>
         </div>
-        <div class="col-md-12">
+        <div class="col-md-12" style="min-height: 600px">
             <div class="well">
-                <canvas id="AccountBalanceChart">
+                <canvas id="TotalBalanceChart">
 
                 </canvas>
             </div>
         </div>
     </div>
 </div>
+
+@* AccountMenu *@
+<script>
+    $('#AccountMenu').change(ReloadChart())
+
+    function ReloadChart(parameters) {
+        
+    }
+
+</script>
 
 @* Category Chart *@
 <script>
@@ -40,7 +58,7 @@
     };
 
     var ctx = $("#CategoryChart").get(0).getContext("2d");
-    var myBarChart = new Chart(ctx,{
+    var myBarChart = new Chart(ctx, {
         type: "bar",
         data: data,
     });
@@ -54,7 +72,7 @@
             borderColor: getRandomColor(),
             borderWidth: 1,
             data: [categoriesCosts[j]]
-            }
+        }
         data.datasets.push(dataSetValue[j]);
         myBarChart.update();
     }    
