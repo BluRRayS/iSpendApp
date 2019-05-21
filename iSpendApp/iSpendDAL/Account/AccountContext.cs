@@ -21,10 +21,11 @@ namespace iSpendDAL.Account
         {
             using (var connection = _connection.SqlConnection)
             {
-                var command = new SqlCommand("INSERT INTO dbo.Account (Name,Balance,DateOfCreation) VALUES(@Name,@Balance,@DateOfCreation)", connection);
+                var command = new SqlCommand("INSERT INTO dbo.Account (Name,Balance,DateOfCreation,IconId) VALUES(@Name,@Balance,@DateOfCreation,@IconId)", connection);
                 command.Parameters.AddWithValue("@Name", newAccount.AccountName);
                 command.Parameters.AddWithValue("@Balance", newAccount.AccountBalance);
                 command.Parameters.AddWithValue("@DateOfCreation", DateTime.Now);
+                command.Parameters.AddWithValue("@IconId", newAccount.IconId);
                 var command2 = new SqlCommand("INSERT INTO dbo.User_Account (UserId,AccountId) VALUES(@UserId,(SELECT Max(Id) From Account)) ", connection);
                 command2.Parameters.AddWithValue("@UserId", userId);
                 connection.Open();

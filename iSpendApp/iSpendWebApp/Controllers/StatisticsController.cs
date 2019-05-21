@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using iSpendDAL.ContextInterfaces;
@@ -28,21 +29,15 @@ namespace iSpendWebApp.Controllers
             var categoryStats =
                 _statisticsLogic.GetUserCategoryStatistics(HttpContext.Session.GetString("UserSession"));
 
-            var timeStamps = new List<DateTime>();
-            var accountBalance = new List<decimal>();
-            for (var i = 0; i < 6; i++)
-            {
-                timeStamps.Add((DateTime.Now).AddDays(i));
-                accountBalance.Add(new Random().Next(0, 900));
-            }
+            var totalBalanceStatistics =
+                _statisticsLogic.GetTotalBalanceStatistics((int) HttpContext.Session.GetInt32("UserId"));
 
-
-
+            var months = totalBalanceStatistics.MonthNumber.Select(monthNumber => DateTimeFormatInfo.CurrentInfo.GetAbbreviatedMonthName(monthNumber)).ToList();
 
             ViewBag.Categories = Newtonsoft.Json.JsonConvert.SerializeObject(categoryStats.Categories);
             ViewBag.CategoriesCosts = Newtonsoft.Json.JsonConvert.SerializeObject(categoryStats.AvgCostPerCategory);
-            ViewBag.TimeStamps = Newtonsoft.Json.JsonConvert.SerializeObject(timeStamps);
-            ViewBag.AccountBalance = Newtonsoft.Json.JsonConvert.SerializeObject(accountBalance);
+            ViewBag.TimeStamps = Newtonsoft.Json.JsonConvert.SerializeObject(months);
+            ViewBag.AccountBalance = Newtonsoft.Json.JsonConvert.SerializeObject(totalBalanceStatistics.Balances);
 
             return View("~/Views/Statistics/Dashboard.cshtml");
         }

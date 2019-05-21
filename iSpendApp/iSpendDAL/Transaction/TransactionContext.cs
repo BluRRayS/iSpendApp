@@ -3,6 +3,7 @@ using iSpendDAL.Dto;
 using iSpendInterfaces;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 
 namespace iSpendDAL.Transaction
@@ -291,6 +292,33 @@ namespace iSpendDAL.Transaction
             {
                 CreateTransaction(item);
             }
+        }
+
+        public ITotalBalanceStatistics GetTotalBalanceStatistics(int userId)
+        {
+            var balances = new List<decimal>();
+            var monthNumbers = new List<int>();
+            using (var connection = _connection.SqlConnection)
+            {
+                var command = new SqlCommand("dbo.GetUsersTotalBalanceStatistics", connection)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
+                command.Parameters.AddWithValue("@UserId", userId);
+                connection.Open();
+                command.ExecuteNonQuery();
+                using (var reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                       balances.Add(reader.GetDecimal(0));
+                       monthNumbers.Add(reader.GetInt32(1));
+                    }                
+                }
+                connection.Close();               
+            }
+            var stats = new TotalBalanceStatisticsDto(balances,monthNumbers);
+            return stats;
         }
     }
 }

@@ -79,5 +79,10 @@ namespace iSpendDAL.Transaction
          {
              _context.ImportTransactions(transactions);
          }
+
+         public ITotalBalanceStatistics GetTotalBalanceStatistics(int userId)
+         {
+             return _context.GetTotalBalanceStatistics(userId);
+         }
     }
 }

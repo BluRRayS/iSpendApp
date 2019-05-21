@@ -22,5 +22,6 @@ namespace iSpendDAL.ContextInterfaces
         void UpdateBillBalance(int billId, decimal amount);
         ITransaction GetScheduledTransactionById(int id);
         void ImportTransactions(IEnumerable<ITransaction> transactions);
+        ITotalBalanceStatistics GetTotalBalanceStatistics(int userId);
     }
 }

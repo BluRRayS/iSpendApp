@@ -9,18 +9,18 @@
 <div class="container">
     <div class="row">
         <div class="col-md-6">
-            <div class="well" style="min-height: 400px">
-                <canvas id="CategoryChart">
-                </canvas>
-            </div>
-        </div>
-        <div class="col-md-6" style="min-height: 400px">
             <div class="well">
-                <canvas id="AccountBalanceChart">
+                <canvas id="CategoryChart" style="height: 300px;">
                 </canvas>
             </div>
         </div>
-        <div class="col-md-12" style="min-height: 600px">
+        <div class="col-md-6">
+            <div class="well">
+                <canvas id="AccountBalanceChart" style="height: 300px;">
+                </canvas>
+            </div>
+        </div>
+        <div class="col-md-12">
             <div class="well">
                 <canvas id="TotalBalanceChart">
 
@@ -46,6 +46,10 @@
     var myBarChart = new Chart(ctx, {
         type: "bar",
         data: data,
+        options: {  
+            responsive: true,
+            maintainAspectRatio: false
+        }
     });
 
     var dataSetValue = [];
@@ -72,17 +76,17 @@
     }
 </script>
  
-@* Saving Chart *@
+@* Total balance chart *@
 <script>
     var ctx = document.getElementById('TotalBalanceChart').getContext('2d');
     var myChart = new Chart(ctx, {
         type: 'line',
         data: {
-            labels: @Html.Raw(ViewBag.Categories),
+            labels: @Html.Raw(ViewBag.TimeStamps),
             datasets: [
                 {
                     label: 'Account balance',
-                    data: @Html.Raw(ViewBag.CategoriesCosts),
+                    data: @Html.Raw(ViewBag.AccountBalance),
                     borderColor: ['rgba(54, 162, 235, 1)'],
                     backgroundColor: ['rgba(54, 162, 235, 0.2)'],
                     borderWidth: 1
@@ -116,7 +120,8 @@
 
         },
         options: {
-            
+            responsive: true,
+            maintainAspectRatio: false
         }
     });
 </script>

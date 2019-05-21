@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection.Metadata.Ecma335;
-using System.Threading.Tasks;
 using iSpendDAL.ContextInterfaces;
 using iSpendInterfaces;
 using iSpendLogic;
@@ -10,7 +8,6 @@ using iSpendWebApp.Controllers.ActionFilters;
 using iSpendWebApp.Models;
 using iSpendWebApp.Models.Account;
 using iSpendWebApp.Models.Savings;
-using iSpendWebApp.Models.User;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.FileProviders;
@@ -19,13 +16,13 @@ namespace iSpendWebApp.Controllers
 {
     public class AccountController : Controller
     {
-        private readonly AccountLogic _billLogic;
+        private readonly AccountLogic _accountLogic;
         private readonly SavingLogic _savingLogic;
         private readonly IFileProvider _fileProvider;
 
         public AccountController(IAccountContext billContext, ISavingsContext savingsContext, IFileProvider fileProvider)
         {
-            _billLogic = new AccountLogic(billContext);
+            _accountLogic = new AccountLogic(billContext);
             _fileProvider = fileProvider;
             _savingLogic = new SavingLogic(savingsContext);
         }
@@ -38,8 +35,8 @@ namespace iSpendWebApp.Controllers
             {
                 ViewBag.FileProvider = _fileProvider.GetDirectoryContents("wwwroot/Icons/Bill").ToList().Select(icon => icon.Name).ToList();
 
-                var accountContext = _billLogic.GetAccountsByUsername(HttpContext.Session.GetString("UserSession"));
-                var accounts = (accountContext.Select(account => new AccountViewModel(account.AccountId, account.AccountName, account.AccountBalance, account.Transactions, account.IconId, account.UserIds, _fileProvider.GetDirectoryContents("wwwroot/Icons/Bill").ToList().Select(icon => icon.Name).ToList(), _billLogic.GetAccountReservations(account.AccountId))));
+                var accountContext = _accountLogic.GetAccountsByUsername(HttpContext.Session.GetString("UserSession"));
+                var accounts = (accountContext.Select(account => new AccountViewModel(account.AccountId, account.AccountName, account.AccountBalance, account.Transactions, account.IconId, account.UserIds, _fileProvider.GetDirectoryContents("wwwroot/Icons/Bill").ToList().Select(icon => icon.Name).ToList(), _accountLogic.GetAccountReservations(account.AccountId))));
                 
                 var savingContext = _savingLogic.GetOngoingUserSavings((int)HttpContext.Session.GetInt32("UserId"));
                 var savings = savingContext.Select(saving => new SavingsViewModel(saving.UserId, saving.SavingId, saving.SavingName, saving.SavingCurrentAmount, saving.SavingsGoalAmount, saving.State, saving.IconId, saving.GoalDate));
@@ -82,7 +79,7 @@ namespace iSpendWebApp.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    _billLogic.AddAccount(model, Convert.ToInt32(HttpContext.Session.GetInt32("UserId")));
+                    _accountLogic.AddAccount(model, Convert.ToInt32(HttpContext.Session.GetInt32("UserId")));
                 }
                 return RedirectToAction(nameof(Index));
             }
@@ -97,7 +94,7 @@ namespace iSpendWebApp.Controllers
         public ActionResult Edit(int id)
         {
             var userHasAccess = false;
-            var usersContext = _billLogic.GetAccountUsers(id).ToList();
+            var usersContext = _accountLogic.GetAccountUsers(id).ToList();
             foreach (var user in usersContext)
             {
                 if (user.Username == HttpContext.Session.GetString("UserSession"))
@@ -110,7 +107,7 @@ namespace iSpendWebApp.Controllers
             {
                 return RedirectToAction("Index", "Account");
             }
-            var context = _billLogic.GetAccountById(id);
+            var context = _accountLogic.GetAccountById(id);
             var model = new AccountViewModel(context.AccountId, context.AccountName, context.AccountBalance, context.Transactions, context.IconId, context.UserIds, _fileProvider.GetDirectoryContents("wwwroot/Icons/Bill").ToList().Select(icon => icon.Name).ToList(), new List<IReservation>());
             return View("EditBill", model);
         }
@@ -123,7 +120,7 @@ namespace iSpendWebApp.Controllers
         {
             try
             {
-                _billLogic.UpdateAccount(id, model.AccountName, model.IconId);
+                _accountLogic.UpdateAccount(id, model.AccountName, model.IconId);
                 return RedirectToAction(nameof(Index),"Account");
             }
             catch
@@ -140,7 +137,7 @@ namespace iSpendWebApp.Controllers
         {
             try
             {
-                _billLogic.RemoveAccount(model.AccountId);
+                _accountLogic.RemoveAccount(model.AccountId);
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception e)

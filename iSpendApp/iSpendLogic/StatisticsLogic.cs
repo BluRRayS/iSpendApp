@@ -37,5 +37,10 @@ namespace iSpendLogic
             return stats;
         }
 
+        public ITotalBalanceStatistics GetTotalBalanceStatistics(int userId)
+        {
+            return _transactionRepository.GetTotalBalanceStatistics(userId);
+        }
+
     }
 }
