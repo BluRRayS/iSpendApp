@@ -91,10 +91,13 @@
 <hr />
 <div class=" container">
     <div class="row">
-        <partial name="~/Views/Shared/Reservations.cshtml" model="@ViewBag.Reservations"/>
+        <partial name="~/Views/Shared/Reservations.cshtml" model="@ViewBag.Reservations" />
     </div>
 </div>
 
 
 <link rel="stylesheet" type="text/css" href="~/css/site.css" />
 <script type="text/javascript" src="~/js/loading-bar.js"></script>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

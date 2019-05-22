@@ -7,6 +7,7 @@ using iSpendLogic;
 using iSpendWebApp.Controllers.ActionFilters;
 using iSpendWebApp.Models;
 using iSpendWebApp.Models.Savings;
+using iSpendWebApp.Models.Transaction;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.FileProviders;
@@ -76,13 +77,6 @@ namespace iSpendWebApp.Controllers
             }
         }
 
-        // GET: Savings/Edit/5
-        [ServiceFilter(typeof(AuthorizationActionFilter))]
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
         // POST: Savings/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -119,6 +113,7 @@ namespace iSpendWebApp.Controllers
                 return RedirectToAction("Index", "Account");
             }
         }
+
         // POST: Savings/AddReservation/5
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -145,6 +140,43 @@ namespace iSpendWebApp.Controllers
             _savingLogic.CompleteSaving(id);
             return RedirectToAction("Index", "Account");
         }
+
+        [HttpGet]
+        [ServiceFilter(typeof(AuthorizationActionFilter))]
+        public ActionResult DeleteReservation(int id)
+        {
+            try
+            {
+                var model = new ReservationViewModel(_savingLogic.GetReservationById(id));
+                return View("~/Views/Savings/DeleteReservationPartial.cshtml", model);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return RedirectToAction("Index", "Savings");
+            }
+           
+        }
+        
+
+        [HttpPost]
+        [ServiceFilter(typeof(AuthorizationActionFilter))]
+        public ActionResult DeleteReservation(ReservationViewModel model)
+        {
+            try
+            {
+                
+                _savingLogic.DeleteReservation(model.ReservationId);
+                return RedirectToAction("Details", "Savings", new { id = model.SavingsId });
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return RedirectToAction("Details", "Savings", new { id = model.SavingsId });
+            }
+           
+        }
+
     }
 
 }

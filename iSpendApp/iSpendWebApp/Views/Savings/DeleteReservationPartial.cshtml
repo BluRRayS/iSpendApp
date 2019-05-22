@@ -1,0 +1,14 @@
+﻿@model iSpendWebApp.Models.ReservationViewModel
+
+
+
+    <div class="col-md-12">
+        Are you sure you want to delete reservation?
+        <form asp-action="DeleteReservation">
+            @Html.HiddenFor(modelItem => modelItem.SavingsId)
+            @Html.HiddenFor(modelItem => modelItem.ReservationId)
+            <input type="submit" value="Delete" class="btn btn-danger"/>
+        </form>
+    </div>
+    
+

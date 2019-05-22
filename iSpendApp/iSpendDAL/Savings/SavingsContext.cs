@@ -219,5 +219,41 @@ namespace iSpendDAL.Savings
             }
         }
 
+        public IReservation GetReservationById(int id)
+        {
+            var reservation = new ReservationDto();
+            using (var connection = _connection.SqlConnection)
+            {
+                var command = new SqlCommand("SELECT ReservationId,SavingsId,AccountId,Amount,Date FROM dbo.Reservations WHERE ReservationId = @Id",connection);
+                command.Parameters.AddWithValue("@Id", id);
+                connection.Open();
+                command.ExecuteNonQuery();
+                using (var reader = command.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        reservation.ReservationId = reader.GetInt32(0);
+                        reservation.SavingsId = reader.GetInt32(1);
+                        reservation.AccountId = reader.GetInt32(2);
+                        reservation.Amount = reader.GetDecimal(3);
+                        reservation.Date = reader.GetDateTime(4);
+                    }
+                }
+                connection.Close();
+            }
+            return reservation;
+        }
+
+        public void DeleteReservation(int id)
+        {
+            using (var connection = _connection.SqlConnection)
+            {
+                var command = new SqlCommand("DELETE FROM dbo.Reservations WHERE ReservationId = @Id", connection);
+                command.Parameters.AddWithValue("@Id", id);
+                connection.Open();
+                command.ExecuteNonQuery();
+                connection.Close();
+            }
+        }
     }
 }

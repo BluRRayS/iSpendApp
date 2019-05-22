@@ -24,6 +24,7 @@ namespace iSpendWebApp.Models.Savings
         public decimal SavingsGoalAmount { get; set; }
         public SavingState State { get; set; }
         public int IconId { get; set; }
+        [Required]
         public DateTime GoalDate { get; set; }
         [Required]
         public int WithdrawFromBillId { get; set; }

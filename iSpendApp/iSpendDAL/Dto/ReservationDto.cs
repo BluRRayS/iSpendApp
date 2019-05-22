@@ -7,6 +7,10 @@ namespace iSpendDAL.Dto
 {
     internal class ReservationDto:IReservation
     {
+        public ReservationDto()
+        {
+        }
+
         public ReservationDto(int reservationId, int accountId, int savingsId, decimal amount, DateTime date)
         {
             ReservationId = reservationId;

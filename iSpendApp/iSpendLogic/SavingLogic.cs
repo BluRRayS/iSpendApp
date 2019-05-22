@@ -83,5 +83,15 @@ namespace iSpendLogic
         {
             return Repository.GetSavingsReservations(id);
         }
+
+        public IReservation GetReservationById(int id)
+        {
+            return Repository.GetReservationById(id);
+        }
+
+        public void DeleteReservation(int id)
+        {
+            Repository.DeleteReservation(id);
+        }
     }
 }

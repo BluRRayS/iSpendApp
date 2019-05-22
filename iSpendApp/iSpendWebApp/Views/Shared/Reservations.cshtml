@@ -33,9 +33,8 @@
                  <td>
                      @item.Date.ToString("dd/MM/yyyy")
                  </td>
-                 <td>
-                     <input type="button" value="Edit" class="btn btn-warning" onclick="location.href = '@Url.Action("Edit", "", new {id = item.ReservationId})'"/>
-                     <input type="button" value="Delete" class="btn btn-danger" onclick="location.href = '@Url.Action("Delete", "", new {id = item.ReservationId})'"/>
+                 <td>                  
+                     <input type="button" value="Delete" class="btn btn-danger" onclick="location.href = '@Url.Action("DeleteReservation", "Savings", new {id = item.ReservationId})'"/>
                  </td>
              </tr>
          }

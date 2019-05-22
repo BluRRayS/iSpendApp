@@ -64,5 +64,15 @@ namespace iSpendDAL.Savings
         {
             _context.CompleteSaving(saving);
         }
+
+        public IReservation GetReservationById(int id)
+        {
+            return  _context.GetReservationById(id);
+        }
+
+        public void DeleteReservation(int id)
+        {
+            _context.DeleteReservation(id);
+        }
     }
 }

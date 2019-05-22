@@ -16,5 +16,7 @@ namespace iSpendDAL.ContextInterfaces
         int GetNewSavingId();
         void CompleteSaving(ISaving saving);
         void RemoveReservations(int id);
+        IReservation GetReservationById(int id);
+        void DeleteReservation(int id);
     }
 }
