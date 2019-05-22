@@ -7,15 +7,11 @@ using iSpendWebApp.Models.Transaction;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
-using System.Runtime.InteropServices.ComTypes;
 using CsvHelper;
-using iSpendInterfaces;
 using iSpendWebApp.Controllers.ActionFilters;
 using iSpendWebApp.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.Rewrite.Internal;
 using Microsoft.Extensions.FileProviders;
-using Microsoft.Extensions.Logging.Console.Internal;
 
 namespace iSpendWebApp.Controllers
 {
@@ -81,7 +77,6 @@ namespace iSpendWebApp.Controllers
             return View("~/Views/Transaction/Transactions.cshtml", model);
         }
 
-
         // GET: Transaction/Create
         [ServiceFilter(typeof(AuthorizationActionFilter))]
         public ActionResult Create(int id)
@@ -107,7 +102,7 @@ namespace iSpendWebApp.Controllers
             }
             catch
             {
-                return RedirectToAction("Create", "Transaction");
+                return RedirectToAction("Index", "Transaction", new {id = model.AccountId});
             }
         }
 
@@ -163,7 +158,6 @@ namespace iSpendWebApp.Controllers
                 return RedirectToAction("Index", "Transaction", new { id = model.AccountId});
             }
         }
-
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -235,7 +229,6 @@ namespace iSpendWebApp.Controllers
                     {
                         csv.Configuration.Delimiter = ",";
                         csv.Configuration.HasHeaderRecord = true;
-                        //csv.Configuration.RegisterClassMap<RabobankTransactionsMap>();
                         var good = new List<RabobankTransactions>();
                         var bad = new List<string>();
                         var isRecordBad = false;

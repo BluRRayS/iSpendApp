@@ -224,3 +224,7 @@
         $("#ScheduledRow").toggle(600);
     });
 </script>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -1,5 +1,4 @@
 ﻿icon display when creating bill and transaction and saving plan. (Maybe use DB)
 Add Salt for users.
- IMPORTANT:   Remove Scheduled transactions from database when removing an account !!!!!! Stored Procedrure :)
 Beter selection System for sharing accounts
 
