@@ -194,8 +194,8 @@
                         @item.TimeOfTransaction.ToString("dd-MM-yyyy")
                     </td>
                     <td>
-                        <input type="button" value="Edit" class="btn btn-warning" onclick="location.href ='@Url.Action("Edit", new {id = item.TransactionId})'" />
-                        <input type="button" value="Delete" class="btn btn-danger" onclick="location.href = '@Url.Action("Delete", new {id = item.TransactionId})'" />
+                        <input type="button" value="Edit" class="btn btn-warning" onclick="location.href ='@Url.Action("Edit", new {id = item.TransactionId, accountId = item.AccountId})'" />
+                        <input type="button" value="Delete" class="btn btn-danger" onclick="location.href = '@Url.Action("Delete", new {id = item.TransactionId, accountId = item.AccountId})'" />
                     </td>'
                 </tr>
             }

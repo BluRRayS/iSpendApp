@@ -108,12 +108,12 @@ namespace iSpendWebApp.Controllers
 
         // GET: Transaction/Edit/5
         [ServiceFilter(typeof(AuthorizationActionFilter))]
-        public ActionResult Edit(int id, int billId)
+        public ActionResult Edit(int id, int accountId)
         {
-            var context = _transactionLogic.GetTransactionById(id, billId);
+            var context = _transactionLogic.GetTransactionById(id, accountId);
             var categoriesContext = _transactionLogic.GetCategories();
             var categories = categoriesContext.Select(category => category.Name).ToList();
-            var model = new TransactionsViewModel(context.TransactionId, context.AccountId, context.TransactionName, context.TransactionAmount, context.Category, context.IconId, context.TimeOfTransaction, _fileProvider.GetDirectoryContents("wwwroot/Icons/Category").ToList().Select(icon => icon.Name).ToList());
+            var model = new TransactionsViewModel(context.TransactionId, accountId, context.TransactionName, context.TransactionAmount, context.Category, context.IconId, context.TimeOfTransaction, _fileProvider.GetDirectoryContents("wwwroot/Icons/Category").ToList().Select(icon => icon.Name).ToList());
             return View("~/Views/Transaction/EditTransaction.cshtml", model);
         }
 
@@ -126,7 +126,7 @@ namespace iSpendWebApp.Controllers
             try
             {
                 _transactionLogic.UpdateTransaction(id, model);
-
+                _accountLogic.RefreshAccountBalance(model.AccountId);
                 return RedirectToAction("Index", "Transaction", new{id = model.AccountId});
             }
             catch
@@ -139,8 +139,18 @@ namespace iSpendWebApp.Controllers
         [ServiceFilter(typeof(AuthorizationActionFilter))]
         public ActionResult Delete(int id, int accountId)
         {
-            _transactionLogic.DeleteTransaction(id, accountId);
-            return RedirectToAction("Index","Transaction", new {id = accountId});
+            try
+            {
+                _transactionLogic.DeleteTransaction(id, accountId);
+                _accountLogic.RefreshAccountBalance(accountId);
+                return RedirectToAction("Index", "Transaction", new { id = accountId });
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return View("Error");
+            }
+           
         }
 
         [HttpPost]
@@ -251,6 +261,7 @@ namespace iSpendWebApp.Controllers
                         _transactionLogic.ImportTransactions(good, accountId);
                         good.Clear();
                         bad.Clear();
+                        _accountLogic.RefreshAccountBalance(accountId);
                     }
                 }
                    

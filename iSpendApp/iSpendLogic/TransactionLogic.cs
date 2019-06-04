@@ -31,9 +31,9 @@ namespace iSpendLogic
             Repository.CreateTransaction(transaction);
         }
 
-        public void DeleteTransaction(int id, int billId)
+        public void DeleteTransaction(int id, int accountId)
         {
-            Repository.DeleteTransaction(id, billId);
+            Repository.DeleteTransaction(id, accountId);
         }
 
         public void UpdateTransaction(int id, ITransaction transaction)
@@ -41,9 +41,9 @@ namespace iSpendLogic
             Repository.UpdateTransaction(id,transaction);
         }
 
-        public ITransaction GetTransactionById(int id,int billId)
+        public ITransaction GetTransactionById(int id,int accountId)
         {
-            return Repository.GetTransactionById(id,billId);
+            return Repository.GetTransactionById(id,accountId);
         }
 
         public IEnumerable<ICategory> GetCategories()
